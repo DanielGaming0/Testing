@@ -1,0 +1,159 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.header .logo {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+header nav ul li {
+    display: inline;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+header nav ul li a:hover {
+    color: #f39c12;
+}
+
+.home {
+    height: 100vh;
+    background-image: url('https://via.placeholder.com/1920x1080');
+    background-size: cover;
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.home h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.home p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.cta-button {
+    background-color: #f39c12;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+    background-color: #e67e22;
+}
+
+section {
+    padding: 80px 40px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.about, .services, .portfolio, .contact {
+    background-color: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+}
+
+.service-card {
+    display: inline-block;
+    width: 30%;
+    background-color: #ecf0f1;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.service-card:hover {
+    transform: scale(1.05);
+}
+
+.portfolio-item {
+    display: inline-block;
+    width: 30%;
+    margin: 10px;
+    text-align: center;
+}
+
+.portfolio-item img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+form input, form textarea {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    background-color: #f39c12;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+footer {
+    background-color: #1a1a1a;
+    color: white;
+    text-align: center;
+    padding: 20px;
+  }
