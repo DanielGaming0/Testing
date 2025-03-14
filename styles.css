@@ -1,90 +1,124 @@
 body {
-    margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #0e0e0e;
-    color: white;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
 }
 
 header {
-    background-color: #0e0e0e;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    border-bottom: 1px solid #333;
+    background-color: #333;
+    color: white;
 }
 
 .logo {
-    font-weight: bold;
     font-size: 24px;
+    font-weight: bold;
 }
 
-.contact {
-    font-size: 14px;
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
 }
 
-.status {
-    color: lightgreen;
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.signup-btn {
+    background-color: #4CAF50;
+    padding: 8px 16px;
+    border-radius: 5px;
+}
+
+#menuToggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
 }
 
 .hero {
     text-align: center;
-    padding: 60px 20px;
+    padding: 50px 20px;
+    background-color: #4CAF50;
+    color: white;
 }
 
 .hero h1 {
-    font-size: 40px;
-    margin-bottom: 10px;
+    font-size: 36px;
+    margin-bottom: 20px;
 }
 
 .hero p {
     font-size: 18px;
-    color: #ccc;
+    margin-bottom: 30px;
 }
 
-.buttons {
-    margin-top: 30px;
-}
-
-.btn {
+.cta-buttons .btn {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
     text-decoration: none;
-    padding: 12px 24px;
-    border-radius: 25px;
-    font-weight: bold;
-    display: inline-block;
-    margin: 10px;
+    border-radius: 5px;
+    margin: 0 10px;
 }
 
-.primary {
-    background-color: white;
-    color: black;
-}
-
-.secondary {
-    background-color: transparent;
-    border: 1px solid white;
-    color: white;
-}
-
-.features {
-    padding: 40px 20px;
-    max-width: 800px;
-    margin: auto;
-}
-
-.feature-box {
-    background-color: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 8px;
+footer {
+    text-align: center;
     padding: 20px;
-    margin-bottom: 20px;
-}
-
-.feature-box h3 {
-    margin-top: 0;
+    background-color: #333;
     color: white;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
-.feature-box p {
-    color: #ccc;
+@media (max-width: 768px) {
+    nav {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: #333;
+        padding: 10px;
+    }
+
+    nav ul {
+        flex-direction: column;
+    }
+
+    nav ul li {
+        margin: 10px 0;
+    }
+
+    #menuToggle {
+        display: block;
+    }
+
+    .hero {
+        padding: 30px 10px;
+    }
+
+    .hero h1 {
+        font-size: 28px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
 }
