@@ -1,37 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Altare Clone</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Altare - Game Hosting</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
     <header>
         <div class="logo">ALTARE</div>
-        <div class="contact">help@altare.pro | +1 (561) 571-0232 | <span class="status">Systems operational</span></div>
+        <nav id="navMenu">
+            <ul>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="#">Community</a></li>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Login</a></li>
+                <li><a href="#" class="signup-btn">Sign up free</a></li>
+            </ul>
+        </nav>
+        <button id="menuToggle">☰</button>
     </header>
 
-    <div class="hero">
-        <h1>Game hosting.<br>For everyone.</h1>
-        <p>Get started with a free 24/7 server in just 60 seconds. No credit card required. Altare provides reliable, high-performance game servers for everyone.</p>
-        <div class="buttons">
-            <a href="#" class="btn primary">Create your server</a>
-            <a href="#" class="btn secondary">Learn more</a>
-        </div>
-    </div>
+    <main>
+        <section class="hero">
+            <h1>Game hosting. For everyone.</h1>
+            <p>Get started with a free 24/7 server in just 60 seconds. No credit card required. Altare provides reliable, high-performance game servers for everyone.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn">Create your server</a>
+                <a href="#" class="btn">Learn more</a>
+            </div>
+        </section>
+    </main>
 
-    <div class="features">
-        <div class="feature-box">
-            <h3>It's Free</h3>
-            <p>Create unlimited free servers that stay online 24/7, with no hidden costs or purchases. Only purchase extra coins if you choose to!</p>
-        </div>
-        <div class="feature-box">
-            <h3>Blazing Fast Setup</h3>
-            <p>Get your server up and running in less than 60 seconds thanks to our Krypton powered daemon instead of Pterodactyl Wings.</p>
-        </div>
-    </div>
+    <footer>
+        <p>help@altare.pro | +1 (561) 571-0232 | Systems operational</p>
+    </footer>
 
+    <script src="script.js"></script>
 </body>
 </html>
