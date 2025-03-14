@@ -1,9 +1,8 @@
-// script.js
-document.addEventListener('DOMContentLoaded', function() {
-    const menuIcon = document.getElementById('menu-icon');
-    const navLinks = document.querySelector('.nav-links');
-
-    menuIcon.addEventListener('click', function() {
-        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-    });
+document.getElementById('menuToggle').addEventListener('click', function() {
+    var navMenu = document.getElementById('navMenu');
+    if (navMenu.style.display === 'block') {
+        navMenu.style.display = 'none';
+    } else {
+        navMenu.style.display = 'block';
+    }
 });
