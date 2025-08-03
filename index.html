@@ -3,38 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Altare - Game Hosting</title>
+    <title>Modern Slides - Navegação Interativa</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>
 <body>
-    <header>
-        <div class="logo">ALTARE</div>
-        <nav id="navMenu">
-            <ul>
-                <li><a href="#">Pricing</a></li>
-                <li><a href="#">Community</a></li>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Login</a></li>
-                <li><a href="#" class="signup-btn">Sign up free</a></li>
-            </ul>
-        </nav>
-        <button id="menuToggle">☰</button>
-    </header>
+    <div class="slider-container">
+        <!-- Navigation Buttons -->
+        <button class="nav-btn nav-btn-prev" id="prevBtn" aria-label="Slide anterior">
+            <i data-feather="chevron-left"></i>
+        </button>
+        <button class="nav-btn nav-btn-next" id="nextBtn" aria-label="Próximo slide">
+            <i data-feather="chevron-right"></i>
+        </button>
 
-    <main>
-        <section class="hero">
-            <h1>Game hosting. For everyone.</h1>
-            <p>Get started with a free 24/7 server in just 60 seconds. No credit card required. Altare provides reliable, high-performance game servers for everyone.</p>
-            <div class="cta-buttons">
-                <a href="#" class="btn">Create your server</a>
-                <a href="#" class="btn">Learn more</a>
+        <!-- Slides Container -->
+        <div class="slides-wrapper" id="slidesWrapper">
+            <!-- Slide 1 - Welcome/Hero -->
+            <div class="slide slide-1 active" data-slide="1">
+                <div class="slide-background">
+                    <img src="assets/slide1.jpg" alt="Slide 1 Background" class="slide-image">
+                    <div class="slide-overlay"></div>
+                </div>
+                <div class="slide-content">
+                    <div class="content-wrapper">
+                        <h1 class="slide-title">Bem-vindo ao Futuro</h1>
+                        <p class="slide-description">Uma experiência visual moderna e interativa que leva você através de uma jornada única.</p>
+                        <div class="slide-cta">
+                            <button class="cta-button">Começar Agora</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
-    </main>
 
-    <footer>
-        <p>help@altare.pro | +1 (561) 571-0232 | Systems operational</p>
-    </footer>
+            <!-- Slide 2 - Innovation -->
+            <div class="slide slide-2" data-slide="2">
+                <div class="slide-background">
+                    <img src="assets/slide2.jpg" alt="Slide 2 Background" class="slide-image">
+                    <div class="slide-overlay"></div>
+                </div>
+                <div class="slide-content">
+                    <div class="content-wrapper">
+                        <h2 class="slide-title">Inovação em Movimento</h2>
+                        <p class="slide-description">Tecnologias avançadas que transformam ideias em realidade através de soluções criativas.</p>
+                        <div class="features-grid">
+                            <div class="feature-item">
+                                <i data-feather="zap"></i>
+                                <span>Rápido</span>
+                            </div>
+                            <div class="feature-item">
+                                <i data-feather="shield"></i>
+                                <span>Seguro</span>
+                            </div>
+                            <div class="feature-item">
+                                <i data-feather="trending-up"></i>
+                                <span>Eficiente</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 - Design -->
+            <div class="slide slide-3" data-slide="3">
+                <div class="slide-background">
+                    <img src="assets/slide3.jpg" alt="Slide 3 Background" class="slide-image">
+                    <div class="slide-overlay"></div>
+                </div>
+                <div class="slide-content">
+                    <div class="content-wrapper">
+                        <h2 class="slide-title">Design Excepcional</h2>
+                        <p class="slide-description">Cada detalhe foi cuidadosamente planejado para oferecer uma experiência visual única e memorável.</p>
+                        <div class="stats-container">
+                            <div class="stat-item">
+                                <span class="stat-number">100%</span>
+                                <span class="stat-label">Responsivo</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">5</span>
+                                <span class="stat-label">Seções Únicas</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">∞</span>
+                                <span class="stat-label">Possibilidades</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4 - Performance -->
+            <div class="slide slide-4" data-slide="4">
+                <div class="slide-background">
+                    <img src="assets/slide4.jpg" alt="Slide 4 Background" class="slide-image">
+                    <div class="slide-overlay"></div>
+                </div>
+                <div class="slide-content">
+                    <div class="content-wrapper">
+                        <h2 class="slide-title">Performance Otimizada</h2>
+                        <p class="slide-description">Carregamento rápido, transições suaves e uma experiência fluida em todos os dispositivos.</p>
+                        <div class="progress-bars">
+                            <div class="progress-item">
+                                <span class="progress-label">Velocidade</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <span class="progress-label">Responsividade</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 98%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <span class="progress-label">Acessibilidade</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 92%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5 - Contact/Final -->
+            <div class="slide slide-5" data-slide="5">
+                <div class="slide-background">
+                    <img src="assets/slide5.jpg" alt="Slide 5 Background" class="slide-image">
+                    <div class="slide-overlay"></div>
+                </div>
+                <div class="slide-content">
+                    <div class="content-wrapper">
+                        <h2 class="slide-title">Vamos Conectar</h2>
+                        <p class="slide-description">Pronto para transformar suas ideias em realidade? Entre em contato e vamos começar esta jornada juntos.</p>
+                        <div class="contact-actions">
+                            <button class="action-button primary">
+                                <i data-feather="mail"></i>
+                                Enviar Mensagem
+                            </button>
+                            <button class="action-button secondary">
+                                <i data-feather="phone"></i>
+                                Ligar Agora
+                            </button>
+                        </div>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i data-feather="github"></i></a>
+                            <a href="#" class="social-link"><i data-feather="linkedin"></i></a>
+                            <a href="#" class="social-link"><i data-feather="twitter"></i></a>
+                            <a href="#" class="social-link"><i data-feather="instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide Indicators -->
+        <div class="slide-indicators" id="slideIndicators">
+            <button class="indicator active" data-slide="1" aria-label="Ir para slide 1"></button>
+            <button class="indicator" data-slide="2" aria-label="Ir para slide 2"></button>
+            <button class="indicator" data-slide="3" aria-label="Ir para slide 3"></button>
+            <button class="indicator" data-slide="4" aria-label="Ir para slide 4"></button>
+            <button class="indicator" data-slide="5" aria-label="Ir para slide 5"></button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar-global" id="progressBar"></div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
