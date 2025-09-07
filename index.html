@@ -108,70 +108,159 @@
             z-index: 10;
         }
 
-        /* CORES DIFERENTES PARA CADA SLIDE */
-        .slide:nth-child(1) { background: linear-gradient(135deg, #3498db, #2c3e50); }
-        .slide:nth-child(2) { background: linear-gradient(135deg, #e74c3c, #c0392b); }
-        .slide:nth-child(3) { background: linear-gradient(135deg, #2ecc71, #27ae60); }
-        .slide:nth-child(4) { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
-        .slide:nth-child(5) { background: linear-gradient(135deg, #f1c40f, #f39c12); }
-        .slide:nth-child(6) { background: linear-gradient(135deg, #1abc9c, #16a085); }
-        .slide:nth-child(7) { background: linear-gradient(135deg, #e67e22, #d35400); }
-        .slide:nth-child(8) { background: linear-gradient(135deg, #34495e, #2c3e50); }
-        .slide:nth-child(9) { background: linear-gradient(135deg, #e84393, #fd79a8); }
+        /* CORES AZUIS COM INTENSIDADE CRESCENTE */
+        .slide:nth-child(1) { 
+            background: linear-gradient(135deg, #0066cc, #003366);
+            background: radial-gradient(circle at center, #0077cc 0%, #004480 70%, #00264d 100%);
+        }
+        .slide:nth-child(2) { background: linear-gradient(135deg, #0077cc, #004480); }
+        .slide:nth-child(3) { background: linear-gradient(135deg, #0088ee, #005599); }
+        .slide:nth-child(4) { background: linear-gradient(135deg, #0099ff, #0066aa); }
+        .slide:nth-child(5) { background: linear-gradient(135deg, #00aaff, #0077bb); }
+        .slide:nth-child(6) { background: linear-gradient(135deg, #00bbff, #0088cc); }
+        .slide:nth-child(7) { background: linear-gradient(135deg, #00ccff, #0099dd); }
+        .slide:nth-child(8) { background: linear-gradient(135deg, #00ddff, #00aaff); }
+        .slide:nth-child(9) { background: linear-gradient(135deg, #00eeff, #00bbff); }
 
-        /* CAPA */
+        /* CAPA ESPECIAL */
         .cover {
             text-align: center;
-            padding: 2rem;
-            max-width: 900px;
-            width: 90%;
+            max-width: 100%;
+            width: 100%;
             position: relative;
             overflow: hidden;
             transform: translateZ(20px);
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            padding: 3rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 40, 85, 0.7);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+            padding: 4rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 119, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 153, 255, 0.3) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .cover-content {
+            max-width: 900px;
+            width: 90%;
+            z-index: 2;
         }
 
         .cover h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 5rem;
+            font-size: 5.5rem;
             margin-bottom: 1.5rem;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-            letter-spacing: 2px;
-            animation: glow 2s infinite alternate;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+            letter-spacing: 3px;
+            animation: titleGlow 3s infinite alternate;
             font-weight: 900;
-            color: #fff;
+            color: #ffffff;
+            line-height: 1.1;
+            text-transform: uppercase;
         }
 
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #3498db, 0 0 40px #3498db;
+        @keyframes titleGlow {
+            0% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 40px rgba(0, 136, 255, 0.5);
             }
-            to {
-                text-shadow: 0 0 20px #fff, 0 0 30px #2ecc71, 0 0 40px #2ecc71, 0 0 50px #2ecc71;
+            100% {
+                text-shadow: 0 0 30px rgba(255, 255, 255, 0.9), 0 0 60px rgba(0, 136, 255, 0.7), 0 0 80px rgba(0, 136, 255, 0.5);
             }
         }
 
         .cover p {
-            font-size: 2.2rem;
-            opacity: 0.9;
-            margin-bottom: 2.5rem;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
             font-weight: 300;
             color: rgba(255, 255, 255, 0.9);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
         }
 
         .cover .subtitle {
             font-style: italic;
-            font-size: 1.8rem;
-            color: #f1c40f;
-            font-weight: bold;
+            font-size: 2rem;
+            color: #a8e6ff;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-top: 2rem;
+            letter-spacing: 4px;
+            margin-top: 3rem;
+            text-shadow: 0 0 15px rgba(168, 230, 255, 0.7);
+            animation: subtitlePulse 4s infinite alternate;
+        }
+
+        @keyframes subtitlePulse {
+            0% {
+                opacity: 0.7;
+                transform: scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1.02);
+            }
+        }
+
+        .cover-image {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 8px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 40px rgba(0, 136, 255, 0.5);
+            margin: 2.5rem auto;
+            display: block;
+            animation: coverPulse 4s infinite alternate;
+            background: linear-gradient(135deg, #00aaff, #0077cc);
+            padding: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: rotate(45deg);
+            animation: shine 5s infinite linear;
+        }
+
+        @keyframes shine {
+            0% {
+                left: -50%;
+            }
+            100% {
+                left: 150%;
+            }
+        }
+
+        @keyframes coverPulse {
+            0% {
+                transform: scale(0.98);
+                box-shadow: 0 0 30px rgba(0, 136, 255, 0.4);
+            }
+            100% {
+                transform: scale(1.02);
+                box-shadow: 0 0 60px rgba(0, 136, 255, 0.8);
+            }
         }
 
         /* SLIDES DE CONTEÚDO */
@@ -236,12 +325,12 @@
             transform: translateX(-50%);
             width: 100px;
             height: 4px;
-            background: #f1c40f;
+            background: #a8e6ff;
             border-radius: 2px;
         }
 
         .content-slide h3 {
-            color: #f1c40f;
+            color: #a8e6ff;
             margin: 2.2rem 0 1.2rem 0;
             font-size: 2rem;
             position: relative;
@@ -257,7 +346,7 @@
             left: 0;
             width: 100%;
             height: 3px;
-            background: linear-gradient(90deg, #f1c40f, transparent);
+            background: linear-gradient(90deg, #a8e6ff, transparent);
             border-radius: 3px;
         }
 
@@ -285,7 +374,7 @@
 
         .content-slide li::before {
             content: '•';
-            color: #f1c40f;
+            color: #a8e6ff;
             font-size: 2rem;
             position: absolute;
             left: 0;
@@ -293,7 +382,7 @@
         }
 
         .content-slide strong {
-            color: #f1c40f;
+            color: #a8e6ff;
             font-weight: 700;
         }
 
@@ -324,7 +413,7 @@
                 box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
             }
             100% {
-                box-shadow: 0 0 30px rgba(241, 196, 15, 0.4);
+                box-shadow: 0 0 30px rgba(168, 230, 255, 0.4);
             }
         }
 
@@ -410,7 +499,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #f1c40f;
+            background: #a8e6ff;
             border-radius: 50%;
             transform: scale(0);
             transition: var(--transition);
@@ -522,11 +611,16 @@
         /* RESPONSIVIDADE */
         @media (max-width: 992px) {
             .cover h1 {
-                font-size: 3.5rem;
+                font-size: 4rem;
             }
             
             .cover p {
-                font-size: 1.8rem;
+                font-size: 2rem;
+            }
+            
+            .cover-image {
+                width: 220px;
+                height: 220px;
             }
             
             .content-slide {
@@ -551,11 +645,20 @@
 
         @media (max-width: 768px) {
             .cover h1 {
-                font-size: 2.8rem;
+                font-size: 3rem;
             }
             
             .cover p {
+                font-size: 1.6rem;
+            }
+            
+            .cover .subtitle {
                 font-size: 1.5rem;
+            }
+            
+            .cover-image {
+                width: 180px;
+                height: 180px;
             }
             
             .content-slide {
@@ -588,11 +691,21 @@
 
         @media (max-width: 480px) {
             .cover h1 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
             }
             
             .cover p {
+                font-size: 1.3rem;
+            }
+            
+            .cover .subtitle {
                 font-size: 1.2rem;
+                letter-spacing: 2px;
+            }
+            
+            .cover-image {
+                width: 150px;
+                height: 150px;
             }
             
             .content-slide {
@@ -641,11 +754,13 @@
     <div class="slides-container">
         <!-- Capa -->
         <div class="slide cover active">
-            <h1>APRESENTAÇÃO PERFEITA</h1>
-            <p>Uma Jornada pelo Naturalismo na Literatura</p>
-            <div class="subtitle">palaime</div>
-            <div class="round-image">
-                <img src="assets/imagem1.jpg" alt="Naturalismo" width="220" height="220">
+            <div class="cover-content">
+                <h1>APRESENTAÇÃO PERFEITA</h1>
+                <p>Uma Jornada pelo Naturalismo na Literatura</p>
+                <div class="cover-image">
+                    <img src="assets/imagem1.jpg" alt="Naturalismo" width="280" height="280">
+                </div>
+                <div class="subtitle">palaime</div>
             </div>
         </div>
         
@@ -882,7 +997,7 @@
                     
                     // Aplicar animações diferentes conforme a direção
                     if (i === currentSlide) {
-                        const content = slide.querySelector('.content-slide, .cover');
+                        const content = slide.querySelector('.content-slide, .cover-content');
                         if (content) {
                             content.classList.remove('animate-left', 'animate-right', 'animate-zoom', 'animate-fade');
                             void content.offsetWidth; // Reinicia a animação
@@ -908,7 +1023,7 @@
                 currentSlide = n;
                 
                 // Aplicar animação de entrada
-                const currentContent = slides[currentSlide].querySelector('.content-slide, .cover');
+                const currentContent = slides[currentSlide].querySelector('.content-slide, .cover-content');
                 if (currentContent) {
                     currentContent.classList.remove('animate-left', 'animate-right', 'animate-zoom', 'animate-fade');
                     void currentContent.offsetWidth; // Reinicia a animação
@@ -929,7 +1044,7 @@
                     goToSlide(currentSlide + 1);
                 } else {
                     // Voltar para o primeiro slide com animação especial
-                    const currentContent = slides[currentSlide].querySelector('.content-slide, .cover');
+                    const currentContent = slides[currentSlide].querySelector('.content-slide, .cover-content');
                     if (currentContent) {
                         currentContent.classList.add('animate-zoom');
                     }
@@ -947,7 +1062,7 @@
                     goToSlide(currentSlide - 1);
                 } else {
                     // Ir para o último slide com animação especial
-                    const currentContent = slides[currentSlide].querySelector('.content-slide, .cover');
+                    const currentContent = slides[currentSlide].querySelector('.content-slide, .cover-content');
                     if (currentContent) {
                         currentContent.classList.add('animate-zoom');
                     }
