@@ -3,29 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apresentação em Slides</title>
+    <title>Apresentação Perfeita - Naturalismo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ESTILOS GERAIS */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
+        :root {
+            --color-primary: #3498db;
+            --color-secondary: #2ecc71;
+            --color-accent: #e74c3c;
+            --color-background: #2c3e50;
+            --color-text: #2c3e50;
+            --color-light: #ecf0f1;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
         body {
-            background-color: #2c3e50;
-            color: #333;
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            color: var(--color-text);
             height: 100vh;
             overflow: hidden;
+            position: relative;
         }
-        
+
+        /* Efeito de partículas no fundo */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+
+        /* CONTAINER PRINCIPAL */
         .slides-container {
             position: relative;
             width: 100%;
             height: 100vh;
             overflow: hidden;
+            perspective: 1000px;
         }
-        
+
+        /* ESTILOS DOS SLIDES */
         .slide {
             position: absolute;
             top: 0;
@@ -38,68 +82,217 @@
             align-items: center;
             padding: 2rem;
             opacity: 0;
-            transition: opacity 0.5s ease;
-            background-color: #fff;
+            visibility: hidden;
+            transition: var(--transition);
+            transform-style: preserve-3d;
         }
-        
+
         .slide.active {
             opacity: 1;
+            visibility: visible;
             z-index: 10;
         }
-        
+
+        /* CAPA */
         .cover {
             background: linear-gradient(135deg, #3498db, #2c3e50);
             color: white;
             text-align: center;
-        }
-        
-        .cover h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .cover p {
-            font-size: 1.5rem;
-            opacity: 0.9;
-        }
-        
-        .content-slide {
-            background-color: #ecf0f1;
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
             max-width: 800px;
             width: 90%;
+            position: relative;
+            overflow: hidden;
+            transform: translateZ(20px);
         }
-        
-        .content-slide h2 {
-            color: #2c3e50;
-            font-size: 2.2rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 3px solid #3498db;
+
+        .cover::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+            transform: rotate(30deg);
         }
-        
-        .content-slide h3 {
-            color: #3498db;
-            margin: 1.2rem 0 0.8rem 0;
-        }
-        
-        .content-slide p {
-            line-height: 1.6;
+
+        .cover h1 {
+            font-size: 4rem;
             margin-bottom: 1rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            animation: glow 2s infinite alternate;
         }
-        
-        .content-slide ul {
-            margin-left: 1.5rem;
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #3498db, 0 0 40px #3498db;
+            }
+            to {
+                text-shadow: 0 0 20px #fff, 0 0 30px #2ecc71, 0 0 40px #2ecc71, 0 0 50px #2ecc71;
+            }
+        }
+
+        .cover p {
+            font-size: 1.8rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .cover .subtitle {
+            font-style: italic;
+            font-size: 1.5rem;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        /* SLIDES DE CONTEÚDO */
+        .content-slide {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            max-width: 900px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            transform: translateZ(20px);
+        }
+
+        .content-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            transform: translate(40%, -40%);
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .content-slide::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background: var(--color-secondary);
+            border-radius: 50%;
+            transform: translate(-40%, 40%);
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .content-slide h2 {
+            color: var(--color-primary);
+            font-size: 2.8rem;
             margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 4px solid var(--color-secondary);
+            text-align: center;
+            position: relative;
         }
-        
+
+        .content-slide h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--color-accent);
+            border-radius: 2px;
+        }
+
+        .content-slide h3 {
+            color: var(--color-accent);
+            margin: 1.8rem 0 1rem 0;
+            font-size: 1.8rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .content-slide h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-accent), transparent);
+            border-radius: 3px;
+        }
+
+        .content-slide p {
+            line-height: 1.7;
+            margin-bottom: 1.2rem;
+            font-size: 1.2rem;
+            text-align: justify;
+        }
+
+        .content-slide ul {
+            margin-left: 2rem;
+            margin-bottom: 1.8rem;
+        }
+
         .content-slide li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            position: relative;
+            padding-left: 1.5rem;
         }
-        
+
+        .content-slide li::before {
+            content: '•';
+            color: var(--color-secondary);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -0.3rem;
+        }
+
+        .content-slide strong {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        /* Imagem redonda */
+        .round-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--color-primary);
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            margin: 1.5rem auto;
+            display: block;
+            animation: pulse 3s infinite alternate;
+            transition: var(--transition);
+        }
+
+        .round-image:hover {
+            transform: scale(1.05) rotate(5deg);
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 30px rgba(46, 204, 113, 0.6);
+            }
+        }
+
+        /* NAVEGAÇÃO */
         .navigation {
             position: fixed;
             top: 50%;
@@ -110,60 +303,244 @@
             z-index: 100;
             transform: translateY(-50%);
         }
-        
+
         .nav-btn {
-            background-color: rgba(255, 255, 255, 0.8);
-            color: #2c3e50;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
             border: none;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            animation: bounce 2s infinite alternate;
         }
-        
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-10px);
+            }
+        }
+
         .nav-btn:hover {
-            background-color: #3498db;
-            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
-        
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* INDICADORES DE SLIDE */
         .slide-indicators {
             position: fixed;
-            bottom: 20px;
+            bottom: 30px;
             left: 0;
             width: 100%;
             display: flex;
             justify-content: center;
             z-index: 100;
+            gap: 15px;
         }
-        
+
         .indicator {
-            width: 12px;
-            height: 12px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.5);
-            margin: 0 5px;
+            background: rgba(255, 255, 255, 0.5);
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: var(--transition);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .indicator.active {
-            background-color: white;
-            transform: scale(1.2);
+
+        .indicator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: 50%;
+            transform: scale(0);
+            transition: var(--transition);
+        }
+
+        .indicator.active::before {
+            transform: scale(1);
+        }
+
+        .indicator:hover {
+            transform: scale(1.3);
+        }
+
+        /* ANIMAÇÕES ESPECÍFICAS */
+        @keyframes slideInFromLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-100px) rotate(-10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) rotate(0);
+            }
+        }
+
+        @keyframes slideInFromRight {
+            0% {
+                opacity: 0;
+                transform: translateX(100px) rotate(10deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) rotate(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes zoomIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Animações para elementos específicos */
+        .animate-left {
+            animation: slideInFromLeft 0.8s ease-out forwards;
+        }
+
+        .animate-right {
+            animation: slideInFromRight 0.8s ease-out forwards;
+        }
+
+        .animate-fade {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        .animate-zoom {
+            animation: zoomIn 0.8s ease-out forwards;
+        }
+
+        /* Efeito de flutuação para elementos */
+        .float-element {
+            animation: floatElement 5s infinite ease-in-out;
+        }
+
+        @keyframes floatElement {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* FOOTER */
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            right: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            z-index: 101;
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 768px) {
+            .cover h1 {
+                font-size: 2.5rem;
+            }
+            
+            .cover p {
+                font-size: 1.3rem;
+            }
+            
+            .content-slide {
+                padding: 2rem;
+            }
+            
+            .content-slide h2 {
+                font-size: 2rem;
+            }
+            
+            .nav-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .round-image {
+                width: 140px;
+                height: 140px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cover h1 {
+                font-size: 2rem;
+            }
+            
+            .content-slide {
+                padding: 1.5rem;
+            }
+            
+            .content-slide h2 {
+                font-size: 1.8rem;
+            }
+            
+            .content-slide h3 {
+                font-size: 1.5rem;
+            }
+            
+            .nav-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Efeito de partículas de fundo -->
+    <div class="particles" id="particles"></div>
+    
     <div class="slides-container">
         <!-- Capa -->
         <div class="slide cover active">
             <h1>APRESENTAÇÃO PERFEITA</h1>
-            <p>Uma jornada pelo Naturalismo na literatura brasileira</p>
+            <p>Uma Jornada pelo Naturalismo na Literatura</p>
+            <div class="subtitle">palaime</div>
+            <div class="round-image">
+                <img src="https://placehold.co/200x200/3498db/FFFFFF?text=Naturalismo" alt="Naturalismo" width="200" height="200">
+            </div>
         </div>
         
         <!-- Slide 1 -->
@@ -171,6 +548,10 @@
             <div class="content-slide">
                 <h2>NATURALISMO</h2>
                 <p>Deu início em 1881 com a obra <strong>O Mulato</strong> de <strong>Aluísio de Azevedo</strong>, e logo em seguida a obra <strong>O Cortiço</strong>.</p>
+                
+                <div class="round-image float-element">
+                    <img src="https://placehold.co/200x200/2ecc71/FFFFFF?text=O+Cortiço" alt="O Cortiço" width="200" height="200">
+                </div>
                 
                 <h3>CARACTERÍSTICAS:</h3>
                 <ul>
@@ -188,6 +569,10 @@
                 <h2>CONTEXTO HISTÓRICO</h2>
                 <p>O Naturalismo surgiu no Brasil durante a segunda metade do século XIX, influenciado pelas teorias científicas europeias.</p>
                 
+                <div class="round-image float-element">
+                    <img src="https://placehold.co/200x200/e74c3c/FFFFFF?text=Séc.+XIX" alt="Século XIX" width="200" height="200">
+                </div>
+                
                 <h3>FATORES IMPORTANTES:</h3>
                 <ul>
                     <li>Influência do Positivismo de Auguste Comte</li>
@@ -203,6 +588,10 @@
             <div class="content-slide">
                 <h2>PRINCIPAIS AUTORES</h2>
                 <p>O Naturalismo brasileiro teve como expoentes alguns dos maiores nomes da literatura nacional.</p>
+                
+                <div class="round-image float-element">
+                    <img src="https://placehold.co/200x200/9b59b6/FFFFFF?text=Autores" alt="Autores" width="200" height="200">
+                </div>
                 
                 <h3>ESCRITORES DESTACADOS:</h3>
                 <ul>
@@ -220,6 +609,10 @@
                 <h2>O MULATO (1881)</h2>
                 <p>Primeiro romance naturalista brasileiro, que critica o preconceito racial e a hipocrisia social.</p>
                 
+                <div class="round-image float-element">
+                    <img src="https://placehold.co/200x200/3498db/FFFFFF?text=O+Mulato" alt="O Mulato" width="200" height="200">
+                </div>
+                
                 <h3>PRINCIPAIS TEMAS:</h3>
                 <ul>
                     <li>Preconceito racial na sociedade maranhense</li>
@@ -235,6 +628,10 @@
             <div class="content-slide">
                 <h2>O CORTIÇO (1890)</h2>
                 <p>Considerada a obra-prima do Naturalismo brasileiro, retrata a vida coletiva em um cortiço carioca.</p>
+                
+                <div class="round-image float-element">
+                    <img src="https://placehold.co/200x200/2ecc71/FFFFFF?text=O+Cortiço" alt="O Cortiço" width="200" height="200">
+                </div>
                 
                 <h3>ASPECTOS PRINCIPAIS:</h3>
                 <ul>
@@ -252,6 +649,10 @@
                 <h2>O ATENEU (1888)</h2>
                 <p>Romance de Raul Pompéia que mistura características naturalistas e realistas.</p>
                 
+                <div class="round-image float-element">
+                    <img src="https://placehold.co/200x200/e74c3c/FFFFFF?text=O+Ateneu" alt="O Ateneu" width="200" height="200">
+                </div>
+                
                 <h3>CARACTERÍSTICAS:</h3>
                 <ul>
                     <li>Narrativa em primeira pessoa</li>
@@ -268,6 +669,10 @@
                 <h2>NATURALISMO × REALISMO</h2>
                 <p>Embora sejam movimentos contemporâneos e com semelhanças, apresentam diferenças fundamentais.</p>
                 
+                <div class="round-image float-element">
+                    <img src="https://placehold.co/200x200/9b59b6/FFFFFF?text=Comparação" alt="Comparação" width="200" height="200">
+                </div>
+                
                 <h3>DIFERENÇAS PRINCIPAIS:</h3>
                 <ul>
                     <li>Naturalismo: ênfase no determinismo biológico e social</li>
@@ -283,6 +688,10 @@
             <div class="content-slide">
                 <h2>LEGADO DO NATURALISMO</h2>
                 <p>O movimento naturalista deixou importantes contribuições para a literatura brasileira.</p>
+                
+                <div class="round-image float-element">
+                    <img src="https://placehold.co/200x200/3498db/FFFFFF?text=Legado" alt="Legado" width="200" height="200">
+                </div>
                 
                 <h3>CONTRIBUIÇÕES:</h3>
                 <ul>
@@ -304,14 +713,50 @@
         <!-- Os indicadores serão gerados via JavaScript -->
     </div>
 
+    <div class="footer">
+        Apresentação Perfecta - Naturalismo
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const slides = document.querySelectorAll('.slide');
             const prevBtn = document.querySelector('.prev-btn');
             const nextBtn = document.querySelector('.next-btn');
             const indicatorsContainer = document.querySelector('.slide-indicators');
+            const particlesContainer = document.getElementById('particles');
             
             let currentSlide = 0;
+            
+            // Criar partículas de fundo
+            function createParticles() {
+                const colors = ['#3498db', '#2ecc71', '#e74c3c', '#f1c40f', '#9b59b6'];
+                for (let i = 0; i < 30; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    // Tamanho aleatório
+                    const size = Math.random() * 50 + 10;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    
+                    // Cor aleatória
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.backgroundColor = color;
+                    
+                    // Posição aleatória
+                    particle.style.left = `${Math.random() * 100}%`;
+                    particle.style.top = `${Math.random() * 100}%`;
+                    
+                    // Duração da animação aleatória
+                    const duration = Math.random() * 20 + 10;
+                    particle.style.animationDuration = `${duration}s`;
+                    
+                    // Atraso aleatório
+                    particle.style.animationDelay = `-${Math.random() * 20}s`;
+                    
+                    particlesContainer.appendChild(particle);
+                }
+            }
             
             // Criar indicadores
             slides.forEach((_, i) => {
@@ -328,6 +773,22 @@
             function updateSlide() {
                 slides.forEach((slide, i) => {
                     slide.classList.toggle('active', i === currentSlide);
+                    
+                    // Aplicar animações diferentes conforme a direção
+                    if (i === currentSlide) {
+                        const content = slide.querySelector('.content-slide, .cover');
+                        if (content) {
+                            content.classList.remove('animate-left', 'animate-right', 'animate-zoom', 'animate-fade');
+                            void content.offsetWidth; // Reinicia a animação
+                            
+                            // Aplicar animação baseada na direção
+                            if (i > currentSlide) {
+                                content.classList.add('animate-left');
+                            } else {
+                                content.classList.add('animate-right');
+                            }
+                        }
+                    }
                 });
                 
                 indicators.forEach((indicator, i) => {
@@ -337,20 +798,59 @@
             
             // Função para ir para um slide específico
             function goToSlide(n) {
+                const prevSlide = currentSlide;
                 currentSlide = n;
+                
+                // Aplicar animação de entrada
+                const currentContent = slides[currentSlide].querySelector('.content-slide, .cover');
+                if (currentContent) {
+                    currentContent.classList.remove('animate-left', 'animate-right', 'animate-zoom', 'animate-fade');
+                    void currentContent.offsetWidth; // Reinicia a animação
+                    
+                    if (currentSlide > prevSlide) {
+                        currentContent.classList.add('animate-right');
+                    } else {
+                        currentContent.classList.add('animate-left');
+                    }
+                }
+                
                 updateSlide();
             }
             
             // Avançar slide
             function nextSlide() {
-                currentSlide = (currentSlide + 1) % slides.length;
-                updateSlide();
+                if (currentSlide < slides.length - 1) {
+                    goToSlide(currentSlide + 1);
+                } else {
+                    // Voltar para o primeiro slide com animação especial
+                    const currentContent = slides[currentSlide].querySelector('.content-slide, .cover');
+                    if (currentContent) {
+                        currentContent.classList.add('animate-zoom');
+                    }
+                    
+                    setTimeout(() => {
+                        currentSlide = 0;
+                        updateSlide();
+                    }, 500);
+                }
             }
             
             // Voltar slide
             function prevSlide() {
-                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-                updateSlide();
+                if (currentSlide > 0) {
+                    goToSlide(currentSlide - 1);
+                } else {
+                    // Ir para o último slide com animação especial
+                    const currentContent = slides[currentSlide].querySelector('.content-slide, .cover');
+                    if (currentContent) {
+                        currentContent.classList.add('animate-zoom');
+                    }
+                    
+                    setTimeout(() => {
+                        currentSlide = slides.length - 1;
+                        updateSlide();
+                    }, 500);
+                }
             }
             
             // Event listeners para os botões
@@ -361,6 +861,8 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'ArrowRight') nextSlide();
                 if (e.key === 'ArrowLeft') prevSlide();
+                if (e.key === 'Home') goToSlide(0);
+                if (e.key === 'End') goToSlide(slides.length - 1);
             });
             
             // Navegação por swipe em dispositivos móveis
@@ -387,6 +889,17 @@
                     prevSlide();
                 }
             }
+            
+            // Inicializar
+            createParticles();
+            updateSlide();
+            
+            // Animação automática opcional (descomente se desejar)
+            /*
+            setInterval(() => {
+                nextSlide();
+            }, 8000);
+            */
         });
     </script>
 </body>
