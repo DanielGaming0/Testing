@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apresentação Perfecta - Naturalismo</title>
+    <title>Inteligência Artificial - Revolução Tecnológica</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
@@ -263,7 +263,7 @@
             }
         }
 
-        /* SLIDES DE CONTEÚDO */
+        /* SLIDES DE CONTEÚDO - ESTILOS DO SEGUNDO SITE */
         .content-slide {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -384,6 +384,92 @@
         .content-slide strong {
             color: #a8e6ff;
             font-weight: 700;
+        }
+
+        /* Layout de conteúdo com imagem (estilo do segundo site) */
+        .content-wrap {
+            display: flex;
+            gap: 60px;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .text {
+            flex: 1;
+            max-width: 700px;
+        }
+
+        .slide-image-container {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .image-frame {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slide-image {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-caption {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            font-style: italic;
+            margin-top: 12px;
+            padding: 0 10px;
+        }
+
+        /* Info cards (estilo do segundo site) */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            color: #a8e6ff;
+            margin-bottom: 16px;
+        }
+
+        .info-card h3 {
+            font-size: 18px;
+            margin: 0 0 12px;
+            color: #a8e6ff;
+        }
+
+        .info-card p {
+            font-size: 14px;
+            margin: 0;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         /* Imagem redonda */
@@ -641,6 +727,22 @@
                 width: 180px;
                 height: 180px;
             }
+            
+            .content-wrap {
+                gap: 40px;
+            }
+            
+            .slide-image-container {
+                width: 40%;
+            }
+            
+            .slide-image {
+                height: 300px;
+            }
+            
+            .info-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
@@ -686,6 +788,36 @@
             .round-image {
                 width: 150px;
                 height: 150px;
+            }
+            
+            .slide {
+                padding: 32px 24px;
+                flex-direction: column;
+                overflow-y: auto;
+            }
+            
+            .content-wrap {
+                flex-direction: column;
+                gap: 32px;
+            }
+            
+            .text {
+                max-width: 100%;
+            }
+            
+            .slide-image-container {
+                width: 100%;
+                order: -1;
+                margin-bottom: 20px;
+            }
+            
+            .slide-image {
+                height: 250px;
+                max-width: 100%;
+            }
+            
+            .info-cards {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -744,6 +876,14 @@
                 width: 16px;
                 height: 16px;
             }
+            
+            .slide {
+                padding: 24px 16px;
+            }
+            
+            .slide-image {
+                height: 200px;
+            }
         }
     </style>
 </head>
@@ -755,172 +895,174 @@
         <!-- Capa -->
         <div class="slide cover active">
             <div class="cover-content">
-                <h1>APRESENTAÇÃO PERFEITA</h1>
-                <p>Uma Jornada pelo Naturalismo na Literatura</p>
+                <h1>INTELIGÊNCIA ARTIFICIAL</h1>
+                <p>A Revolução Tecnológica do Século XXI</p>
                 <div class="cover-image">
-                    <img src="assets/imagem1.jpg" alt="Naturalismo" width="280" height="280">
+                    <i class="fas fa-robot" style="font-size: 120px; color: white; line-height: 260px;"></i>
                 </div>
-                <div class="subtitle">palaime</div>
+                <div class="subtitle">Tecnologia e Inovação</div>
             </div>
         </div>
         
         <!-- Slide 1 -->
         <div class="slide">
             <div class="content-slide">
-                <h2>NATURALISMO</h2>
-                <p>Deu início em 1881 com a obra <strong>O Mulato</strong> de <strong>Aluísio de Azevedo</strong>, e logo em seguida a obra <strong>O Cortiço</strong>.</p>
+                <h2>O QUE É INTELIGÊNCIA ARTIFICIAL?</h2>
+                <p>A Inteligência Artificial (IA) é um campo da ciência da computação dedicado à criação de sistemas capazes de realizar tarefas que normalmente exigiriam inteligência humana, como percepção visual, reconhecimento de fala, tomada de decisão e tradução entre idiomas.</p>
                 
-                <div class="round-image float-element">
-                    <img src="assets/imagem2.jpg" alt="O Cortiço" width="220" height="220">
+                <div class="content-wrap">
+                    <div class="text">
+                        <h3>CONCEITOS FUNDAMENTAIS:</h3>
+                        <ul>
+                            <li><strong>Aprendizado de Máquina:</strong> Sistemas que aprendem com dados</li>
+                            <li><strong>Redes Neurais:</strong> Modelos inspirados no cérebro humano</li>
+                            <li><strong>Processamento de Linguagem Natural:</strong> Computadores entendendo linguagem humana</li>
+                            <li><strong>Visão Computacional:</strong> Máquinas interpretando imagens</li>
+                        </ul>
+                    </div>
+                    <div class="slide-image-container">
+                        <div class="image-frame">
+                            <div style="background: linear-gradient(135deg, #00aaff, #0077cc); height: 350px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-brain" style="font-size: 100px; color: white;"></i>
+                            </div>
+                        </div>
+                        <div class="image-caption">Representação simbólica da Inteligência Artificial</div>
+                    </div>
                 </div>
-                
-                <h3>CARACTERÍSTICAS:</h3>
-                <ul>
-                    <li>Riqueza de detalhes</li>
-                    <li>Determinismo Social</li>
-                    <li>Zoomorfização</li>
-                    <li>Tratamento da obra como um experimento científico (Darwinismo)</li>
-                </ul>
             </div>
         </div>
         
         <!-- Slide 2 -->
         <div class="slide">
             <div class="content-slide">
-                <h2>CONTEXTO HISTÓRICO</h2>
-                <p>O Naturalismo surgiu no Brasil durante a segunda metade do século XIX, influenciado pelas teorias científicas europeias.</p>
+                <h2>HISTÓRIA DA INTELIGÊNCIA ARTIFICIAL</h2>
+                <p>A IA tem suas raízes na década de 1950, quando o termo foi cunhado por John McCarthy. Desde então, passou por vários "invernos" e "primaveras" de desenvolvimento, com avanços significativos nas últimas décadas.</p>
                 
-                <div class="round-image float-element">
-                    <img src="assets/imagem3.jpg" alt="Século XIX" width="220" height="220">
+                <div class="content-wrap">
+                    <div class="text">
+                        <h3>MARCOS IMPORTANTES:</h3>
+                        <ul>
+                            <li><strong>1950:</strong> Teste de Turing proposto por Alan Turing</li>
+                            <li><strong>1956:</strong> Conferência de Dartmouth marca o nascimento da IA</li>
+                            <li><strong>1997:</strong> Deep Blue da IBM vence o campeão de xadrez Garry Kasparov</li>
+                            <li><strong>2011:</strong> IBM Watson vence o Jeopardy!</li>
+                            <li><strong>2016:</strong> AlphaGo da DeepMind vence campeão de Go</li>
+                        </ul>
+                    </div>
+                    <div class="slide-image-container">
+                        <div class="image-frame">
+                            <div style="background: linear-gradient(135deg, #00bbff, #0088cc); height: 350px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-history" style="font-size: 100px; color: white;"></i>
+                            </div>
+                        </div>
+                        <div class="image-caption">Linha do tempo do desenvolvimento da IA</div>
+                    </div>
                 </div>
-                
-                <h3>FATORES IMPORTANTES:</h3>
-                <ul>
-                    <li>Influência do Positivismo de Auguste Comte</li>
-                    <li>Teorias evolucionistas de Charles Darwin</li>
-                    <li>Determinismo de Hippolyte Taine</li>
-                    <li>Abordagem científica da sociedade e do comportamento humano</li>
-                </ul>
             </div>
         </div>
         
         <!-- Slide 3 -->
         <div class="slide">
             <div class="content-slide">
-                <h2>PRINCIPAIS AUTORES</h2>
-                <p>O Naturalismo brasileiro teve como expoentes alguns dos maiores nomes da literatura nacional.</p>
+                <h2>APLICAÇÕES DA INTELIGÊNCIA ARTIFICIAL</h2>
+                <p>A IA está transformando diversos setores da sociedade, desde saúde e educação até transporte e entretenimento, com aplicações práticas que impactam nosso dia a dia.</p>
                 
-                <div class="round-image float-element">
-                    <img src="assets/imagem4.jpg" alt="Autores" width="220" height="220">
+                <div class="info-cards">
+                    <div class="info-card">
+                        <div class="card-icon"><i class="fas fa-stethoscope"></i></div>
+                        <h3>Saúde</h3>
+                        <p>Diagnóstico médico, descoberta de medicamentos e cirurgia robótica</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="card-icon"><i class="fas fa-car"></i></div>
+                        <h3>Transporte</h3>
+                        <p>Carros autônomos, otimização de tráfego e sistemas de navegação</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <h3>Educação</h3>
+                        <p>Ensino personalizado, tutores inteligentes e avaliação automática</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="card-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <h3>Varejo</h3>
+                        <p>Recomendações personalizadas, gestão de estoque e atendimento automatizado</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="card-icon"><i class="fas fa-money-bill-wave"></i></div>
+                        <h3>Finanças</h3>
+                        <p>Detecção de fraudes, investimentos algorítmicos e atendimento ao cliente</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="card-icon"><i class="fas fa-film"></i></div>
+                        <h3>Entretenimento</h3>
+                        <p>Recomendações de conteúdo, criação artística e efeitos visuais</p>
+                    </div>
                 </div>
-                
-                <h3>ESCRITORES DESTACADOS:</h3>
-                <ul>
-                    <li><strong>Aluísio Azevedo</strong> - O Mulato, O Cortiço</li>
-                    <li><strong>Raul Pompéia</strong> - O Ateneu</li>
-                    <li><strong>Adolfo Caminha</strong> - Bom-Crioulo, A Normalista</li>
-                    <li><strong>Júlio Ribeiro</strong> - A Carne</li>
-                </ul>
             </div>
         </div>
         
         <!-- Slide 4 -->
         <div class="slide">
             <div class="content-slide">
-                <h2>O MULATO (1881)</h2>
-                <p>Primeiro romance naturalista brasileiro, que critica o preconceito racial e a hipocrisia social.</p>
+                <h2>DESAFIOS ÉTICOS DA INTELIGÊNCIA ARTIFICIAL</h2>
+                <p>O rápido avanço da IA levanta importantes questões éticas e sociais que precisam ser abordadas para garantir que a tecnologia seja desenvolvida e implementada de forma responsável.</p>
                 
-                <div class="round-image float-element">
-                    <img src="assets/imagem5.jpg" alt="O Mulato" width="220" height="220">
+                <div class="content-wrap">
+                    <div class="text">
+                        <h3>PRINCIPAIS PREOCUPAÇÕES:</h3>
+                        <ul>
+                            <li><strong>Privacidade:</strong> Coleta e uso de dados pessoais</li>
+                            <li><strong>Vieses algorítmicos:</strong> Discriminação embutida em sistemas de IA</li>
+                            <li><strong>Transparência:</strong> "Caixa preta" em algoritmos complexos</li>
+                            <li><strong>Deslocamento de trabalhadores:</strong> Automação de empregos</li>
+                            <li><strong>Responsabilidade:</strong> Quem é responsável quando sistemas de IA falham?</li>
+                            <li><strong>Superinteligência:</strong> Riscos de sistemas de IA descontrolados</li>
+                        </ul>
+                    </div>
+                    <div class="slide-image-container">
+                        <div class="image-frame">
+                            <div style="background: linear-gradient(135deg, #00ccff, #0099dd); height: 350px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-balance-scale" style="font-size: 100px; color: white;"></i>
+                            </div>
+                        </div>
+                        <div class="image-caption">Equilibrando inovação e responsabilidade ética</div>
+                    </div>
                 </div>
-                
-                <h3>PRINCIPAIS TEMAS:</h3>
-                <ul>
-                    <li>Preconceito racial na sociedade maranhense</li>
-                    <li>Crítica ao clero e à religiosidade hipócrita</li>
-                    <li>Determinismo social e biológico</li>
-                    <li>Análise patológica dos personagens</li>
-                </ul>
             </div>
         </div>
         
         <!-- Slide 5 -->
         <div class="slide">
             <div class="content-slide">
-                <h2>O CORTIÇO (1890)</h2>
-                <p>Considerada a obra-prima do Naturalismo brasileiro, retrata a vida coletiva em um cortiço carioca.</p>
+                <h2>O FUTURO DA INTELIGÊNCIA ARTIFICIAL</h2>
+                <p>O futuro da IA promete avanços ainda mais transformadores, com potencial para revolucionar praticamente todos os aspectos da vida humana, mas também apresenta desafios significativos que precisam ser enfrentados.</p>
                 
-                <div class="round-image float-element">
-                    <img src="assets/imagem6.jpg" alt="O Cortiço" width="220" height="220">
+                <div class="content-wrap">
+                    <div class="text">
+                        <h3>TENDÊNCIAS FUTURAS:</h3>
+                        <ul>
+                            <li><strong>IA explicável:</strong> Sistemas que podem explicar suas decisões</li>
+                            <li><strong>IA geral:</strong> Sistemas com inteligência mais ampla e flexível</li>
+                            <li><strong>IA quântica:</strong> Combinação de IA com computação quântica</li>
+                            <li><strong>Neuro-simbólica:</strong> Integração de aprendizado de máquina e raciocínio simbólico</li>
+                            <li><strong>IA para benefício social:</strong> Aplicações para enfrentar desafios globais</li>
+                        </ul>
+                    </div>
+                    <div class="slide-image-container">
+                        <div class="image-frame">
+                            <div style="background: linear-gradient(135deg, #00ddff, #00aaff); height: 350px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-rocket" style="font-size: 100px; color: white;"></i>
+                            </div>
+                        </div>
+                        <div class="image-caption">O futuro promissor da inteligência artificial</div>
+                    </div>
                 </div>
-                
-                <h3>ASPECTOS PRINCIPAIS:</h3>
-                <ul>
-                    <li>Personagem coletivo (o cortiço como protagonista)</li>
-                    <li>Zoomorfização (animalização dos personagens)</li>
-                    <li>Determinismo ambiental e social</li>
-                    <li>Naturalismo como instrumento de análise social</li>
-                </ul>
-            </div>
-        </div>
-        
-        <!-- Slide 6 -->
-        <div class="slide">
-            <div class="content-slide">
-                <h2>O ATENEU (1888)</h2>
-                <p>Romance de Raul Pompéia que mistura características naturalistas e realistas.</p>
-                
-                <div class="round-image float-element">
-                    <img src="assets/imagem7.jpg" alt="O Ateneu" width="220" height="220">
-                </div>
-                
-                <h3>CARACTERÍSTICAS:</h3>
-                <ul>
-                    <li>Narrativa em primeira pessoa</li>
-                    <li>Crítica ao sistema educacional brasileiro</li>
-                    <li>Análise psicológica dos personagens</li>
-                    <li>Descrições minuciosas do ambiente escolar</li>
-                </ul>
-            </div>
-        </div>
-        
-        <!-- Slide 7 -->
-        <div class="slide">
-            <div class="content-slide">
-                <h2>NATURALISMO × REALISMO</h2>
-                <p>Embora sejam movimentos contemporâneos e com semelhanças, apresentam diferenças fundamentais.</p>
-                
-                <div class="round-image float-element">
-                    <img src="assets/imagem8.jpg" alt="Comparação" width="220" height="220">
-                </div>
-                
-                <h3>DIFERENÇAS PRINCIPAIS:</h3>
-                <ul>
-                    <li>Naturalismo: ênfase no determinismo biológico e social</li>
-                    <li>Realismo: foco na psicologia dos personagens</li>
-                    <li>Naturalismo: visão mais científica e experimental</li>
-                    <li>Realismo: abordagem mais objetiva da realidade</li>
-                </ul>
-            </div>
-        </div>
-        
-        <!-- Slide 8 -->
-        <div class="slide">
-            <div class="content-slide">
-                <h2>LEGADO DO NATURALISMO</h2>
-                <p>O movimento naturalista deixou importantes contribuições para a literatura brasileira.</p>
-                
-                <div class="round-image float-element">
-                    <img src="assets/imagem9.jpg" alt="Legado" width="220" height="220">
-                </div>
-                
-                <h3>CONTRIBUIÇÕES:</h3>
-                <ul>
-                    <li>Abordagem de temas sociais controversos</li>
-                    <li>Inovações na construção de personagens e ambientes</li>
-                    <li>Influência em movimentos literários posteriores</li>
-                    <li>Representação crítica da sociedade brasileira do século XIX</li>
-                </ul>
             </div>
         </div>
     </div>
@@ -935,7 +1077,7 @@
     </div>
 
     <div class="footer">
-        Apresentação Perfecta - Naturalismo
+        Inteligência Artificial - Revolução Tecnológica
     </div>
 
     <script>
