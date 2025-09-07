@@ -3,255 +3,391 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Bancário</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Apresentação em Slides</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Arial', sans-serif;
         }
         
         body {
-            background-color: #f0f2f5;
-            color: #1a1a1a;
-            padding: 16px;
-            max-width: 400px;
-            margin: 0 auto;
-            min-height: 100vh;
+            background-color: #2c3e50;
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
         }
         
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
+        .slides-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
         }
         
-        .logo {
-            font-weight: 700;
-            font-size: 20px;
-        }
-        
-        .notifications {
-            background: #e6e6e6;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .account-balance {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .balance-label {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 8px;
-        }
-        
-        .balance-amount {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-        
-        .other-banks {
-            font-size: 14px;
-            color: #666;
-            padding-top: 16px;
-            border-top: 1px solid #f0f2f5;
-        }
-        
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        
-        .action {
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            background-color: #fff;
         }
         
-        .action-circle {
-            background: white;
-            width: 60px;
-            height: 60px;
+        .slide.active {
+            opacity: 1;
+            z-index: 10;
+        }
+        
+        .cover {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            text-align: center;
+        }
+        
+        .cover h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cover p {
+            font-size: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .content-slide {
+            background-color: #ecf0f1;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 90%;
+        }
+        
+        .content-slide h2 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .content-slide h3 {
+            color: #3498db;
+            margin: 1.2rem 0 0.8rem 0;
+        }
+        
+        .content-slide p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .content-slide ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .content-slide li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .navigation {
+            position: fixed;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 100;
+            transform: translateY(-50%);
+        }
+        
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #2c3e50;
+            border: none;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
             display: flex;
-            align-items: center;
             justify-content: center;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .action-label {
-            font-size: 13px;
-            text-align: center;
-            color: #333;
-        }
-        
-        .my-cards {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 20px;
-            display: flex;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
         
-        .checkbox {
-            margin-right: 16px;
-            width: 24px;
-            height: 24px;
-            border: 2px solid #0066ff;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .checkbox i {
-            color: #0066ff;
-            font-size: 18px;
-            display: none;
-        }
-        
-        .checkbox.checked i {
-            display: block;
-        }
-        
-        .shopping-promo {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .promo-title {
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 18px;
-        }
-        
-        .promo-subtitle {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .card-tabs {
-            display: flex;
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .tab {
-            flex: 1;
-            padding: 16px;
-            text-align: center;
-            font-weight: 600;
-        }
-        
-        .tab.active {
-            background: #0066ff;
+        .nav-btn:hover {
+            background-color: #3498db;
             color: white;
         }
         
-        .pix {
-            color: #0066ff;
+        .slide-indicators {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 100;
         }
         
-        .pay {
-            color: #00a896;
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         
-        .transfer {
-            color: #ff9500;
-        }
-        
-        .recharge {
-            color: #ff375f;
+        .indicator.active {
+            background-color: white;
+            transform: scale(1.2);
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">Meu Banco</div>
-        <div class="notifications">
-            <i class="fas fa-bell"></i>
+    <div class="slides-container">
+        <!-- Capa -->
+        <div class="slide cover active">
+            <h1>APRESENTAÇÃO PERFEITA</h1>
+            <p>Uma jornada pelo Naturalismo na literatura brasileira</p>
         </div>
-    </header>
-    
-    <div class="account-balance">
-        <div class="balance-label">Conta</div>
-        <div class="balance-amount">R$ 4.543,96</div>
-        <div class="other-banks">R$ 0,00 em outros bancos</div>
+        
+        <!-- Slide 1 -->
+        <div class="slide">
+            <div class="content-slide">
+                <h2>NATURALISMO</h2>
+                <p>Deu início em 1881 com a obra <strong>O Mulato</strong> de <strong>Aluísio de Azevedo</strong>, e logo em seguida a obra <strong>O Cortiço</strong>.</p>
+                
+                <h3>CARACTERÍSTICAS:</h3>
+                <ul>
+                    <li>Riqueza de detalhes</li>
+                    <li>Determinismo Social</li>
+                    <li>Zoomorfização</li>
+                    <li>Tratamento da obra como um experimento científico (Darwinismo)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 2 -->
+        <div class="slide">
+            <div class="content-slide">
+                <h2>CONTEXTO HISTÓRICO</h2>
+                <p>O Naturalismo surgiu no Brasil durante a segunda metade do século XIX, influenciado pelas teorias científicas europeias.</p>
+                
+                <h3>FATORES IMPORTANTES:</h3>
+                <ul>
+                    <li>Influência do Positivismo de Auguste Comte</li>
+                    <li>Teorias evolucionistas de Charles Darwin</li>
+                    <li>Determinismo de Hippolyte Taine</li>
+                    <li>Abordagem científica da sociedade e do comportamento humano</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 3 -->
+        <div class="slide">
+            <div class="content-slide">
+                <h2>PRINCIPAIS AUTORES</h2>
+                <p>O Naturalismo brasileiro teve como expoentes alguns dos maiores nomes da literatura nacional.</p>
+                
+                <h3>ESCRITORES DESTACADOS:</h3>
+                <ul>
+                    <li><strong>Aluísio Azevedo</strong> - O Mulato, O Cortiço</li>
+                    <li><strong>Raul Pompéia</strong> - O Ateneu</li>
+                    <li><strong>Adolfo Caminha</strong> - Bom-Crioulo, A Normalista</li>
+                    <li><strong>Júlio Ribeiro</strong> - A Carne</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 4 -->
+        <div class="slide">
+            <div class="content-slide">
+                <h2>O MULATO (1881)</h2>
+                <p>Primeiro romance naturalista brasileiro, que critica o preconceito racial e a hipocrisia social.</p>
+                
+                <h3>PRINCIPAIS TEMAS:</h3>
+                <ul>
+                    <li>Preconceito racial na sociedade maranhense</li>
+                    <li>Crítica ao clero e à religiosidade hipócrita</li>
+                    <li>Determinismo social e biológico</li>
+                    <li>Análise patológica dos personagens</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 5 -->
+        <div class="slide">
+            <div class="content-slide">
+                <h2>O CORTIÇO (1890)</h2>
+                <p>Considerada a obra-prima do Naturalismo brasileiro, retrata a vida coletiva em um cortiço carioca.</p>
+                
+                <h3>ASPECTOS PRINCIPAIS:</h3>
+                <ul>
+                    <li>Personagem coletivo (o cortiço como protagonista)</li>
+                    <li>Zoomorfização (animalização dos personagens)</li>
+                    <li>Determinismo ambiental e social</li>
+                    <li>Naturalismo como instrumento de análise social</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 6 -->
+        <div class="slide">
+            <div class="content-slide">
+                <h2>O ATENEU (1888)</h2>
+                <p>Romance de Raul Pompéia que mistura características naturalistas e realistas.</p>
+                
+                <h3>CARACTERÍSTICAS:</h3>
+                <ul>
+                    <li>Narrativa em primeira pessoa</li>
+                    <li>Crítica ao sistema educacional brasileiro</li>
+                    <li>Análise psicológica dos personagens</li>
+                    <li>Descrições minuciosas do ambiente escolar</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 7 -->
+        <div class="slide">
+            <div class="content-slide">
+                <h2>NATURALISMO × REALISMO</h2>
+                <p>Embora sejam movimentos contemporâneos e com semelhanças, apresentam diferenças fundamentais.</p>
+                
+                <h3>DIFERENÇAS PRINCIPAIS:</h3>
+                <ul>
+                    <li>Naturalismo: ênfase no determinismo biológico e social</li>
+                    <li>Realismo: foco na psicologia dos personagens</li>
+                    <li>Naturalismo: visão mais científica e experimental</li>
+                    <li>Realismo: abordagem mais objetiva da realidade</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 8 -->
+        <div class="slide">
+            <div class="content-slide">
+                <h2>LEGADO DO NATURALISMO</h2>
+                <p>O movimento naturalista deixou importantes contribuições para a literatura brasileira.</p>
+                
+                <h3>CONTRIBUIÇÕES:</h3>
+                <ul>
+                    <li>Abordagem de temas sociais controversos</li>
+                    <li>Inovações na construção de personagens e ambientes</li>
+                    <li>Influência em movimentos literários posteriores</li>
+                    <li>Representação crítica da sociedade brasileira do século XIX</li>
+                </ul>
+            </div>
+        </div>
     </div>
     
-    <div class="quick-actions">
-        <div class="action">
-            <div class="action-circle pix">
-                <i class="fas fa-qrcode fa-lg"></i>
-            </div>
-            <div class="action-label">Área Pix</div>
-        </div>
-        <div class="action">
-            <div class="action-circle pay">
-                <i class="fas fa-barcode fa-lg"></i>
-            </div>
-            <div class="action-label">Pagar</div>
-        </div>
-        <div class="action">
-            <div class="action-circle transfer">
-                <i class="fas fa-exchange-alt fa-lg"></i>
-            </div>
-            <div class="action-label">Transferir</div>
-        </div>
-        <div class="action">
-            <div class="action-circle recharge">
-                <i class="fas fa-mobile-alt fa-lg"></i>
-            </div>
-            <div class="action-label">Recarga</div>
-        </div>
+    <div class="navigation">
+        <button class="nav-btn prev-btn">&lt;</button>
+        <button class="nav-btn next-btn">&gt;</button>
     </div>
     
-    <div class="my-cards">
-        <div class="checkbox" id="card-checkbox">
-            <i class="fas fa-check"></i>
-        </div>
-        <div class="action-label">Meus cartões</div>
-    </div>
-    
-    <div class="shopping-promo">
-        <div class="promo-title">Aproveite os descontos e possibilidades do Shopping</div>
-        <div class="promo-subtitle">Encontre ofertas exclusivas nas suas lojas favoritas</div>
-    </div>
-    
-    <div class="card-tabs">
-        <div class="tab">Cartão</div>
-        <div class="tab active">Fatura</div>
+    <div class="slide-indicators">
+        <!-- Os indicadores serão gerados via JavaScript -->
     </div>
 
     <script>
-        // Script para alternar o checkbox
-        document.getElementById('card-checkbox').addEventListener('click', function() {
-            this.classList.toggle('checked');
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+            const indicatorsContainer = document.querySelector('.slide-indicators');
+            
+            let currentSlide = 0;
+            
+            // Criar indicadores
+            slides.forEach((_, i) => {
+                const indicator = document.createElement('div');
+                indicator.classList.add('indicator');
+                if (i === 0) indicator.classList.add('active');
+                indicator.addEventListener('click', () => goToSlide(i));
+                indicatorsContainer.appendChild(indicator);
+            });
+            
+            const indicators = document.querySelectorAll('.indicator');
+            
+            // Função para atualizar os slides
+            function updateSlide() {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === currentSlide);
+                });
+                
+                indicators.forEach((indicator, i) => {
+                    indicator.classList.toggle('active', i === currentSlide);
+                });
+            }
+            
+            // Função para ir para um slide específico
+            function goToSlide(n) {
+                currentSlide = n;
+                updateSlide();
+            }
+            
+            // Avançar slide
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                updateSlide();
+            }
+            
+            // Voltar slide
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                updateSlide();
+            }
+            
+            // Event listeners para os botões
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+            
+            // Navegação por teclado
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') nextSlide();
+                if (e.key === 'ArrowLeft') prevSlide();
+            });
+            
+            // Navegação por swipe em dispositivos móveis
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            document.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+            
+            document.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+            
+            function handleSwipe() {
+                const minSwipeDistance = 50;
+                
+                if (touchEndX < touchStartX && touchStartX - touchEndX > minSwipeDistance) {
+                    nextSlide();
+                }
+                
+                if (touchEndX > touchStartX && touchEndX - touchStartX > minSwipeDistance) {
+                    prevSlide();
+                }
+            }
         });
     </script>
 </body>
-    </html>
+</html>
