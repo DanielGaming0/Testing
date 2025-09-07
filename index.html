@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apresentação Perfeita - Naturalismo</title>
+    <title>Apresentação Perfecta - Naturalismo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ESTILOS GERAIS */
@@ -11,7 +14,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
 
         :root {
@@ -27,7 +30,7 @@
 
         body {
             background: linear-gradient(135deg, #1a2a3a, #2c3e50);
-            color: var(--color-text);
+            color: var(--color-light);
             height: 100vh;
             overflow: hidden;
             position: relative;
@@ -85,6 +88,18 @@
             visibility: hidden;
             transition: var(--transition);
             transform-style: preserve-3d;
+            overflow: hidden;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4));
+            z-index: -1;
         }
 
         .slide.active {
@@ -93,38 +108,43 @@
             z-index: 10;
         }
 
+        /* CORES DIFERENTES PARA CADA SLIDE */
+        .slide:nth-child(1) { background: linear-gradient(135deg, #3498db, #2c3e50); }
+        .slide:nth-child(2) { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .slide:nth-child(3) { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .slide:nth-child(4) { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .slide:nth-child(5) { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+        .slide:nth-child(6) { background: linear-gradient(135deg, #1abc9c, #16a085); }
+        .slide:nth-child(7) { background: linear-gradient(135deg, #e67e22, #d35400); }
+        .slide:nth-child(8) { background: linear-gradient(135deg, #34495e, #2c3e50); }
+        .slide:nth-child(9) { background: linear-gradient(135deg, #e84393, #fd79a8); }
+
         /* CAPA */
         .cover {
-            background: linear-gradient(135deg, #3498db, #2c3e50);
-            color: white;
             text-align: center;
             padding: 2rem;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            max-width: 800px;
+            max-width: 900px;
             width: 90%;
             position: relative;
             overflow: hidden;
             transform: translateZ(20px);
-        }
-
-        .cover::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
-            transform: rotate(30deg);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .cover h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
             text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
             letter-spacing: 2px;
             animation: glow 2s infinite alternate;
+            font-weight: 900;
+            color: #fff;
         }
 
         @keyframes glow {
@@ -137,29 +157,36 @@
         }
 
         .cover p {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             opacity: 0.9;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .cover .subtitle {
             font-style: italic;
-            font-size: 1.5rem;
-            color: #e74c3c;
+            font-size: 1.8rem;
+            color: #f1c40f;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 2rem;
         }
 
         /* SLIDES DE CONTEÚDO */
         .content-slide {
-            background: linear-gradient(135deg, #ffffff, #f8f9fa);
-            padding: 3rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 3.5rem;
             border-radius: 25px;
-            box-shadow: var(--shadow);
-            max-width: 900px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            max-width: 1000px;
             width: 90%;
             position: relative;
             overflow: hidden;
             transform: translateZ(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .content-slide::before {
@@ -169,10 +196,9 @@
             right: 0;
             width: 150px;
             height: 150px;
-            background: var(--color-accent);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             transform: translate(40%, -40%);
-            opacity: 0.1;
             z-index: -1;
         }
 
@@ -183,21 +209,23 @@
             left: 0;
             width: 200px;
             height: 200px;
-            background: var(--color-secondary);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             transform: translate(-40%, 40%);
-            opacity: 0.1;
             z-index: -1;
         }
 
         .content-slide h2 {
-            color: var(--color-primary);
-            font-size: 2.8rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 4px solid var(--color-secondary);
+            color: #fff;
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 4px solid rgba(255, 255, 255, 0.3);
             text-align: center;
             position: relative;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .content-slide h2::after {
@@ -206,18 +234,20 @@
             bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
+            width: 100px;
             height: 4px;
-            background: var(--color-accent);
+            background: #f1c40f;
             border-radius: 2px;
         }
 
         .content-slide h3 {
-            color: var(--color-accent);
-            margin: 1.8rem 0 1rem 0;
-            font-size: 1.8rem;
+            color: #f1c40f;
+            margin: 2.2rem 0 1.2rem 0;
+            font-size: 2rem;
             position: relative;
             display: inline-block;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .content-slide h3::after {
@@ -227,68 +257,74 @@
             left: 0;
             width: 100%;
             height: 3px;
-            background: linear-gradient(90deg, var(--color-accent), transparent);
+            background: linear-gradient(90deg, #f1c40f, transparent);
             border-radius: 3px;
         }
 
         .content-slide p {
-            line-height: 1.7;
-            margin-bottom: 1.2rem;
-            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
             text-align: justify;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
         }
 
         .content-slide ul {
-            margin-left: 2rem;
-            margin-bottom: 1.8rem;
+            margin-left: 2.5rem;
+            margin-bottom: 2.2rem;
         }
 
         .content-slide li {
-            margin-bottom: 0.8rem;
-            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
             position: relative;
-            padding-left: 1.5rem;
+            padding-left: 2rem;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .content-slide li::before {
             content: '•';
-            color: var(--color-secondary);
-            font-size: 1.5rem;
+            color: #f1c40f;
+            font-size: 2rem;
             position: absolute;
             left: 0;
             top: -0.3rem;
         }
 
         .content-slide strong {
-            color: var(--color-primary);
+            color: #f1c40f;
             font-weight: 700;
         }
 
         /* Imagem redonda */
         .round-image {
-            width: 180px;
-            height: 180px;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid var(--color-primary);
-            box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
-            margin: 1.5rem auto;
+            border: 6px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            margin: 2rem auto;
             display: block;
             animation: pulse 3s infinite alternate;
             transition: var(--transition);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px;
         }
 
         .round-image:hover {
             transform: scale(1.05) rotate(5deg);
-            box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         @keyframes pulse {
             0% {
-                box-shadow: 0 0 20px rgba(52, 152, 219, 0.5);
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
             }
             100% {
-                box-shadow: 0 0 30px rgba(46, 204, 113, 0.6);
+                box-shadow: 0 0 30px rgba(241, 196, 15, 0.4);
             }
         }
 
@@ -299,19 +335,19 @@
             width: 100%;
             display: flex;
             justify-content: space-between;
-            padding: 0 2rem;
+            padding: 0 2.5rem;
             z-index: 100;
             transform: translateY(-50%);
         }
 
         .nav-btn {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             border: none;
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            font-size: 1.8rem;
+            font-size: 2rem;
             cursor: pointer;
             display: flex;
             justify-content: center;
@@ -319,6 +355,8 @@
             transition: var(--transition);
             box-shadow: var(--shadow);
             animation: bounce 2s infinite alternate;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         @keyframes bounce {
@@ -332,7 +370,8 @@
 
         .nav-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.3);
         }
 
         .nav-btn:active {
@@ -342,25 +381,26 @@
         /* INDICADORES DE SLIDE */
         .slide-indicators {
             position: fixed;
-            bottom: 30px;
+            bottom: 40px;
             left: 0;
             width: 100%;
             display: flex;
             justify-content: center;
             z-index: 100;
-            gap: 15px;
+            gap: 18px;
         }
 
         .indicator {
-            width: 18px;
-            height: 18px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.3);
             cursor: pointer;
             transition: var(--transition);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             position: relative;
             overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
         .indicator::before {
@@ -370,7 +410,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            background: #f1c40f;
             border-radius: 50%;
             transform: scale(0);
             transition: var(--transition);
@@ -382,6 +422,7 @@
 
         .indicator:hover {
             transform: scale(1.3);
+            border-color: rgba(255, 255, 255, 0.5);
         }
 
         /* ANIMAÇÕES ESPECÍFICAS */
@@ -466,21 +507,55 @@
         /* FOOTER */
         .footer {
             position: fixed;
-            bottom: 10px;
-            right: 20px;
+            bottom: 15px;
+            right: 25px;
             color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
+            font-size: 1rem;
             z-index: 101;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* RESPONSIVIDADE */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             .cover h1 {
-                font-size: 2.5rem;
+                font-size: 3.5rem;
             }
             
             .cover p {
-                font-size: 1.3rem;
+                font-size: 1.8rem;
+            }
+            
+            .content-slide {
+                padding: 2.5rem;
+            }
+            
+            .content-slide h2 {
+                font-size: 2.8rem;
+            }
+            
+            .nav-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+            }
+            
+            .round-image {
+                width: 180px;
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cover h1 {
+                font-size: 2.8rem;
+            }
+            
+            .cover p {
+                font-size: 1.5rem;
             }
             
             .content-slide {
@@ -488,7 +563,15 @@
             }
             
             .content-slide h2 {
-                font-size: 2rem;
+                font-size: 2.2rem;
+            }
+            
+            .content-slide h3 {
+                font-size: 1.7rem;
+            }
+            
+            .content-slide p, .content-slide li {
+                font-size: 1.2rem;
             }
             
             .nav-btn {
@@ -498,14 +581,18 @@
             }
             
             .round-image {
-                width: 140px;
-                height: 140px;
+                width: 150px;
+                height: 150px;
             }
         }
 
         @media (max-width: 480px) {
             .cover h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
+            }
+            
+            .cover p {
+                font-size: 1.2rem;
             }
             
             .content-slide {
@@ -517,13 +604,32 @@
             }
             
             .content-slide h3 {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
+            }
+            
+            .content-slide p, .content-slide li {
+                font-size: 1rem;
             }
             
             .nav-btn {
                 width: 45px;
                 height: 45px;
-                font-size: 1.3rem;
+                font-size: 1.2rem;
+                padding: 0;
+            }
+            
+            .round-image {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .slide-indicators {
+                bottom: 25px;
+            }
+            
+            .indicator {
+                width: 16px;
+                height: 16px;
             }
         }
     </style>
@@ -539,7 +645,7 @@
             <p>Uma Jornada pelo Naturalismo na Literatura</p>
             <div class="subtitle">palaime</div>
             <div class="round-image">
-                <img src="https://placehold.co/200x200/3498db/FFFFFF?text=Naturalismo" alt="Naturalismo" width="200" height="200">
+                <img src="assets/imagem1.jpg" alt="Naturalismo" width="220" height="220">
             </div>
         </div>
         
@@ -550,7 +656,7 @@
                 <p>Deu início em 1881 com a obra <strong>O Mulato</strong> de <strong>Aluísio de Azevedo</strong>, e logo em seguida a obra <strong>O Cortiço</strong>.</p>
                 
                 <div class="round-image float-element">
-                    <img src="https://placehold.co/200x200/2ecc71/FFFFFF?text=O+Cortiço" alt="O Cortiço" width="200" height="200">
+                    <img src="assets/imagem2.jpg" alt="O Cortiço" width="220" height="220">
                 </div>
                 
                 <h3>CARACTERÍSTICAS:</h3>
@@ -570,7 +676,7 @@
                 <p>O Naturalismo surgiu no Brasil durante a segunda metade do século XIX, influenciado pelas teorias científicas europeias.</p>
                 
                 <div class="round-image float-element">
-                    <img src="https://placehold.co/200x200/e74c3c/FFFFFF?text=Séc.+XIX" alt="Século XIX" width="200" height="200">
+                    <img src="assets/imagem3.jpg" alt="Século XIX" width="220" height="220">
                 </div>
                 
                 <h3>FATORES IMPORTANTES:</h3>
@@ -590,7 +696,7 @@
                 <p>O Naturalismo brasileiro teve como expoentes alguns dos maiores nomes da literatura nacional.</p>
                 
                 <div class="round-image float-element">
-                    <img src="https://placehold.co/200x200/9b59b6/FFFFFF?text=Autores" alt="Autores" width="200" height="200">
+                    <img src="assets/imagem4.jpg" alt="Autores" width="220" height="220">
                 </div>
                 
                 <h3>ESCRITORES DESTACADOS:</h3>
@@ -610,7 +716,7 @@
                 <p>Primeiro romance naturalista brasileiro, que critica o preconceito racial e a hipocrisia social.</p>
                 
                 <div class="round-image float-element">
-                    <img src="https://placehold.co/200x200/3498db/FFFFFF?text=O+Mulato" alt="O Mulato" width="200" height="200">
+                    <img src="assets/imagem5.jpg" alt="O Mulato" width="220" height="220">
                 </div>
                 
                 <h3>PRINCIPAIS TEMAS:</h3>
@@ -630,7 +736,7 @@
                 <p>Considerada a obra-prima do Naturalismo brasileiro, retrata a vida coletiva em um cortiço carioca.</p>
                 
                 <div class="round-image float-element">
-                    <img src="https://placehold.co/200x200/2ecc71/FFFFFF?text=O+Cortiço" alt="O Cortiço" width="200" height="200">
+                    <img src="assets/imagem6.jpg" alt="O Cortiço" width="220" height="220">
                 </div>
                 
                 <h3>ASPECTOS PRINCIPAIS:</h3>
@@ -650,7 +756,7 @@
                 <p>Romance de Raul Pompéia que mistura características naturalistas e realistas.</p>
                 
                 <div class="round-image float-element">
-                    <img src="https://placehold.co/200x200/e74c3c/FFFFFF?text=O+Ateneu" alt="O Ateneu" width="200" height="200">
+                    <img src="assets/imagem7.jpg" alt="O Ateneu" width="220" height="220">
                 </div>
                 
                 <h3>CARACTERÍSTICAS:</h3>
@@ -670,7 +776,7 @@
                 <p>Embora sejam movimentos contemporâneos e com semelhanças, apresentam diferenças fundamentais.</p>
                 
                 <div class="round-image float-element">
-                    <img src="https://placehold.co/200x200/9b59b6/FFFFFF?text=Comparação" alt="Comparação" width="200" height="200">
+                    <img src="assets/imagem8.jpg" alt="Comparação" width="220" height="220">
                 </div>
                 
                 <h3>DIFERENÇAS PRINCIPAIS:</h3>
@@ -690,7 +796,7 @@
                 <p>O movimento naturalista deixou importantes contribuições para a literatura brasileira.</p>
                 
                 <div class="round-image float-element">
-                    <img src="https://placehold.co/200x200/3498db/FFFFFF?text=Legado" alt="Legado" width="200" height="200">
+                    <img src="assets/imagem9.jpg" alt="Legado" width="220" height="220">
                 </div>
                 
                 <h3>CONTRIBUIÇÕES:</h3>
@@ -729,13 +835,13 @@
             
             // Criar partículas de fundo
             function createParticles() {
-                const colors = ['#3498db', '#2ecc71', '#e74c3c', '#f1c40f', '#9b59b6'];
-                for (let i = 0; i < 30; i++) {
+                const colors = ['#3498db', '#2ecc71', '#e74c3c', '#f1c40f', '#9b59b6', '#1abc9c', '#ffffff'];
+                for (let i = 0; i < 40; i++) {
                     const particle = document.createElement('div');
                     particle.classList.add('particle');
                     
                     // Tamanho aleatório
-                    const size = Math.random() * 50 + 10;
+                    const size = Math.random() * 60 + 10;
                     particle.style.width = `${size}px`;
                     particle.style.height = `${size}px`;
                     
@@ -748,7 +854,7 @@
                     particle.style.top = `${Math.random() * 100}%`;
                     
                     // Duração da animação aleatória
-                    const duration = Math.random() * 20 + 10;
+                    const duration = Math.random() * 25 + 15;
                     particle.style.animationDuration = `${duration}s`;
                     
                     // Atraso aleatório
