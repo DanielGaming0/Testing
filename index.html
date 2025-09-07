@@ -1,75 +1,257 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interface de Banco</title>
-    <link rel="stylesheet" href="style.css">
+    <title>App Bancário</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: #1a1a1a;
+            padding: 16px;
+            max-width: 400px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 20px;
+        }
+        
+        .notifications {
+            background: #e6e6e6;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .account-balance {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .balance-label {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .other-banks {
+            font-size: 14px;
+            color: #666;
+            padding-top: 16px;
+            border-top: 1px solid #f0f2f5;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .action-circle {
+            background: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-label {
+            font-size: 13px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .my-cards {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .checkbox {
+            margin-right: 16px;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #0066ff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .checkbox i {
+            color: #0066ff;
+            font-size: 18px;
+            display: none;
+        }
+        
+        .checkbox.checked i {
+            display: block;
+        }
+        
+        .shopping-promo {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .promo-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+        
+        .promo-subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .card-tabs {
+            display: flex;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .tab.active {
+            background: #0066ff;
+            color: white;
+        }
+        
+        .pix {
+            color: #0066ff;
+        }
+        
+        .pay {
+            color: #00a896;
+        }
+        
+        .transfer {
+            color: #ff9500;
+        }
+        
+        .recharge {
+            color: #ff375f;
+        }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <header class="header">
-            <span class="header-text">Conta</span>
-            <span class="icon-right">></span>
-        </header>
-
-        <section class="balance-section">
-            <p>R$ 4.543,96</p>
-            <p class="other-banks">R$ 0,00 em outros bancos</p>
-        </section>
-
-        <section class="actions-section">
-            <div class="action-item">
-                <div class="icon-circle"></div>
-                <span>Área Pix</span>
-            </div>
-            <div class="action-item">
-                <div class="icon-circle"></div>
-                <span>Pagar</span>
-            </div>
-            <div class="action-item">
-                <div class="icon-circle"></div>
-                <span>Transferir</span>
-            </div>
-            <div class="action-item">
-                <div class="icon-circle"></div>
-                <span>Recarregar celular</span>
-            </div>
-        </section>
-
-        <section class="card-section">
-            <div class="card-box">
-                <div class="icon-left"></div>
-                <span>Meus cartões</span>
-                <span class="icon-right">></span>
-            </div>
-        </section>
-
-        <section class="shopping-section">
-            <div class="shopping-box">
-                <p>Aproveite os descontos e</p>
-                <p>possibilidades do <span class="shopping-link">Shopping</span></p>
-            </div>
-        </section>
-
-        <footer class="footer">
-            <div class="footer-item">
-                <div class="footer-icon"></div>
-                <span>Ícone</span>
-            </div>
-            <div class="footer-item">
-                <div class="footer-icon"></div>
-                <span>Ícone</span>
-            </div>
-            <div class="footer-item">
-                <div class="footer-icon"></div>
-                <span>Ícone</span>
-            </div>
-            <div class="footer-item">
-                <div class="footer-icon"></div>
-                <span>Ícone</span>
-            </div>
-        </footer>
+    <header>
+        <div class="logo">Meu Banco</div>
+        <div class="notifications">
+            <i class="fas fa-bell"></i>
+        </div>
+    </header>
+    
+    <div class="account-balance">
+        <div class="balance-label">Conta</div>
+        <div class="balance-amount">R$ 4.543,96</div>
+        <div class="other-banks">R$ 0,00 em outros bancos</div>
     </div>
+    
+    <div class="quick-actions">
+        <div class="action">
+            <div class="action-circle pix">
+                <i class="fas fa-qrcode fa-lg"></i>
+            </div>
+            <div class="action-label">Área Pix</div>
+        </div>
+        <div class="action">
+            <div class="action-circle pay">
+                <i class="fas fa-barcode fa-lg"></i>
+            </div>
+            <div class="action-label">Pagar</div>
+        </div>
+        <div class="action">
+            <div class="action-circle transfer">
+                <i class="fas fa-exchange-alt fa-lg"></i>
+            </div>
+            <div class="action-label">Transferir</div>
+        </div>
+        <div class="action">
+            <div class="action-circle recharge">
+                <i class="fas fa-mobile-alt fa-lg"></i>
+            </div>
+            <div class="action-label">Recarga</div>
+        </div>
+    </div>
+    
+    <div class="my-cards">
+        <div class="checkbox" id="card-checkbox">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="action-label">Meus cartões</div>
+    </div>
+    
+    <div class="shopping-promo">
+        <div class="promo-title">Aproveite os descontos e possibilidades do Shopping</div>
+        <div class="promo-subtitle">Encontre ofertas exclusivas nas suas lojas favoritas</div>
+    </div>
+    
+    <div class="card-tabs">
+        <div class="tab">Cartão</div>
+        <div class="tab active">Fatura</div>
+    </div>
+
+    <script>
+        // Script para alternar o checkbox
+        document.getElementById('card-checkbox').addEventListener('click', function() {
+            this.classList.toggle('checked');
+        });
+    </script>
 </body>
-</html>
+    </html>
