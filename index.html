@@ -3,1267 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inteligência Artificial - Revolução Tecnológica</title>
+    <title>Calculadora do Dancas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <style>
-        /* ESTILOS GERAIS */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        :root {
-            --color-primary: #3498db;
-            --color-secondary: #2ecc71;
-            --color-accent: #e74c3c;
-            --color-background: #2c3e50;
-            --color-text: #2c3e50;
-            --color-light: #ecf0f1;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
+        .font-fredoka { font-family: 'Fredoka One', cursive; }
         body {
-            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
-            color: var(--color-light);
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
+            background: linear-gradient(-45deg, #f8cdda, #c1d4f5, #b8f2e6, #fdfd96);
+            background-size: 400% 400%;
+            animation: gradientBG 18s ease infinite;
+            overscroll-behavior: none; /* Impede o "puxar para atualizar" no mobile */
         }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
+        }
+        .calculator-container {
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            opacity: 0; transform: scale(0.9) translateY(20px);
+        }
+        .calculator-container.loaded { opacity: 1; transform: scale(1) translateY(0); }
+        .btn-cute {
+            border-radius: 9999px; background: rgba(255, 255, 255, 0.7); color: #555;
+            font-size: 1.25rem; box-shadow: 0 5px 10px rgba(0,0,0,0.1), inset 0 -4px 0 rgba(0,0,0,0.1);
+            transition: all 0.1s ease-out; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center;
+        }
+        .btn-cute:active, .btn-cute.clicked { transform: translateY(2px) scale(0.95); box-shadow: 0 2px 5px rgba(0,0,0,0.15), inset 0 -2px 0 rgba(0,0,0,0.15); }
+        .btn-op { background-color: #fdfd96; color: #a69a3f; }
+        .btn-func { background-color: #c1d4f5; color: #4b6a9e; }
+        .btn-clear { background-color: #f8cdda; color: #a1586f; }
+        .btn-equal { background-color: #b8f2e6; color: #438f7e; }
+        @keyframes result-pop {
+            0% { transform: scale(0.9); opacity: 0.5; } 70% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); }
+        }
+        .result-animated { animation: result-pop 0.3s ease-out; }
+        .btn-zero { grid-column: span 2; aspect-ratio: auto; }
 
-        /* Efeito de partículas no fundo */
-        .particles {
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(5px);
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+            z-index: 50; display: flex; justify-content: center; align-items: center;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: rgba(255, 255, 255, 0.8); padding: 1.5rem; border-radius: 1.5rem;
+            transform: scale(0.9); transition: all 0.3s ease; width: 90%; max-width: 320px;
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+
+        .cute-input {
+            width: 100%; border: none; background-color: rgba(255,255,255,0.6);
+            padding: 0.75rem 1rem; border-radius: 2rem; text-align: center;
+            font-size: 1.25rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            color: #4b6a9e; cursor: pointer;
+        }
+        .cute-input:focus, .cute-input.active { outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 0 0 3px #c1d4f5; }
+
+        .function-title { font-size: 1.75rem; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        
+        /* NOVO TECLADO NUMÉRICO */
+        #custom-numpad {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: float 15s infinite linear;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0deg);
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-            }
-        }
-
-        /* CONTAINER PRINCIPAL */
-        .slides-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-            perspective: 1000px;
-        }
-
-        /* ESTILOS DOS SLIDES */
-        .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-            transform-style: preserve-3d;
-            overflow: hidden;
-        }
-
-        .slide::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4));
-            z-index: -1;
-        }
-
-        .slide.active {
-            opacity: 1;
-            visibility: visible;
-            z-index: 10;
-        }
-
-        /* CORES AZUIS COM INTENSIDADE CRESCENTE */
-        .slide:nth-child(1) { 
-            background: linear-gradient(135deg, #0066cc, #003366);
-            background: radial-gradient(circle at center, #0077cc 0%, #004480 70%, #00264d 100%);
-        }
-        .slide:nth-child(2) { background: linear-gradient(135deg, #0077cc, #004480); }
-        .slide:nth-child(3) { background: linear-gradient(135deg, #0088ee, #005599); }
-        .slide:nth-child(4) { background: linear-gradient(135deg, #0099ff, #0066aa); }
-        .slide:nth-child(5) { background: linear-gradient(135deg, #00aaff, #0077bb); }
-        .slide:nth-child(6) { background: linear-gradient(135deg, #00bbff, #0088cc); }
-        .slide:nth-child(7) { background: linear-gradient(135deg, #00ccff, #0099dd); }
-        .slide:nth-child(8) { background: linear-gradient(135deg, #00ddff, #00aaff); }
-        .slide:nth-child(9) { background: linear-gradient(135deg, #00eeff, #00bbff); }
-
-        /* CAPA ESPECIAL */
-        .cover {
-            text-align: center;
-            max-width: 100%;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            transform: translateZ(20px);
-            background: rgba(0, 40, 85, 0.7);
-            backdrop-filter: blur(15px);
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
-            padding: 4rem 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .cover::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(0, 119, 255, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(0, 153, 255, 0.3) 0%, transparent 50%);
-            z-index: -1;
-        }
-
-        .cover-content {
-            max-width: 900px;
-            width: 90%;
-            z-index: 2;
-        }
-
-        .cover h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 5.5rem;
-            margin-bottom: 1.5rem;
-            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
-            letter-spacing: 3px;
-            animation: titleGlow 3s infinite alternate;
-            font-weight: 900;
-            color: #ffffff;
-            line-height: 1.1;
-            text-transform: uppercase;
-        }
-
-        @keyframes titleGlow {
-            0% {
-                text-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 40px rgba(0, 136, 255, 0.5);
-            }
-            100% {
-                text-shadow: 0 0 30px rgba(255, 255, 255, 0.9), 0 0 60px rgba(0, 136, 255, 0.7), 0 0 80px rgba(0, 136, 255, 0.5);
-            }
-        }
-
-        .cover p {
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            letter-spacing: 1px;
-        }
-
-        .cover .subtitle {
-            font-style: italic;
-            font-size: 2rem;
-            color: #a8e6ff;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            margin-top: 3rem;
-            text-shadow: 0 0 15px rgba(168, 230, 255, 0.7);
-            animation: subtitlePulse 4s infinite alternate;
-        }
-
-        @keyframes subtitlePulse {
-            0% {
-                opacity: 0.7;
-                transform: scale(0.98);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1.02);
-            }
-        }
-
-        .cover-image {
-            width: 280px;
-            height: 280px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 8px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 40px rgba(0, 136, 255, 0.5);
-            margin: 2.5rem auto;
-            display: block;
-            animation: coverPulse 4s infinite alternate;
-            background: linear-gradient(135deg, #00aaff, #0077cc);
-            padding: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cover-image::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transform: rotate(45deg);
-            animation: shine 5s infinite linear;
-        }
-
-        @keyframes shine {
-            0% {
-                left: -50%;
-            }
-            100% {
-                left: 150%;
-            }
-        }
-
-        @keyframes coverPulse {
-            0% {
-                transform: scale(0.98);
-                box-shadow: 0 0 30px rgba(0, 136, 255, 0.4);
-            }
-            100% {
-                transform: scale(1.02);
-                box-shadow: 0 0 60px rgba(0, 136, 255, 0.8);
-            }
-        }
-
-        /* SLIDES DE CONTEÚDO - ESTILOS DO SEGUNDO SITE */
-        .content-slide {
-            background: rgba(255, 255, 255, 0.1);
+            bottom: 0; left: 0; right: 0;
+            background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(10px);
-            padding: 3.5rem;
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            max-width: 1000px;
-            width: 90%;
-            position: relative;
-            overflow: hidden;
-            transform: translateZ(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .content-slide::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            transform: translate(40%, -40%);
-            z-index: -1;
-        }
-
-        .content-slide::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            transform: translate(-40%, 40%);
-            z-index: -1;
-        }
-
-        .content-slide h2 {
-            color: #fff;
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 4px solid rgba(255, 255, 255, 0.3);
-            text-align: center;
-            position: relative;
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .content-slide h2::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: #a8e6ff;
-            border-radius: 2px;
-        }
-
-        .content-slide h3 {
-            color: #a8e6ff;
-            margin: 2.2rem 0 1.2rem 0;
-            font-size: 2rem;
-            position: relative;
-            display: inline-block;
-            font-weight: 600;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .content-slide h3::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, #a8e6ff, transparent);
-            border-radius: 3px;
-        }
-
-        .content-slide p {
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
-            font-size: 1.4rem;
-            text-align: justify;
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 400;
-        }
-
-        .content-slide ul {
-            margin-left: 2.5rem;
-            margin-bottom: 2.2rem;
-        }
-
-        .content-slide li {
-            margin-bottom: 1rem;
-            font-size: 1.4rem;
-            position: relative;
-            padding-left: 2rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .content-slide li::before {
-            content: '•';
-            color: #a8e6ff;
-            font-size: 2rem;
-            position: absolute;
-            left: 0;
-            top: -0.3rem;
-        }
-
-        .content-slide strong {
-            color: #a8e6ff;
-            font-weight: 700;
-        }
-
-        /* Layout de conteúdo com imagem (estilo do segundo site) */
-        .content-wrap {
-            display: flex;
-            gap: 60px;
-            align-items: flex-start;
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .text {
-            flex: 1;
-            max-width: 700px;
-        }
-
-        .slide-image-container {
-            width: 45%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .image-frame {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .slide-image {
-            width: 100%;
-            height: 350px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .image-caption {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-            font-style: italic;
-            margin-top: 12px;
-            padding: 0 10px;
-        }
-
-        /* Info cards (estilo do segundo site) */
-        .info-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .info-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 24px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .info-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-icon {
-            font-size: 32px;
-            color: #a8e6ff;
-            margin-bottom: 16px;
-        }
-
-        .info-card h3 {
-            font-size: 18px;
-            margin: 0 0 12px;
-            color: #a8e6ff;
-        }
-
-        .info-card p {
-            font-size: 14px;
-            margin: 0;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* Imagem redonda */
-        .round-image {
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 6px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
-            margin: 2rem auto;
-            display: block;
-            animation: pulse 3s infinite alternate;
-            transition: var(--transition);
-            background: rgba(0, 0, 0, 0.2);
-            padding: 5px;
-        }
-
-        .round-image:hover {
-            transform: scale(1.05) rotate(5deg);
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            }
-            100% {
-                box-shadow: 0 0 30px rgba(168, 230, 255, 0.4);
-            }
-        }
-
-        /* NAVEGAÇÃO */
-        .navigation {
-            position: fixed;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 2.5rem;
+            padding: 1rem;
+            padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* Para iPhones com notch */
+            border-top-left-radius: 2rem;
+            border-top-right-radius: 2rem;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             z-index: 100;
-            transform: translateY(-50%);
         }
-
-        .nav-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            font-size: 2rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
-            animation: bounce 2s infinite alternate;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        #custom-numpad.visible { transform: translateY(0); }
+        .numpad-btn {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 1.25rem;
+            color: #555;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.1s ease-out;
         }
-
-        @keyframes bounce {
-            0% {
-                transform: translateY(0);
-            }
-            100% {
-                transform: translateY(-10px);
-            }
-        }
-
-        .nav-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .nav-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* INDICADORES DE SLIDE */
-        .slide-indicators {
-            position: fixed;
-            bottom: 40px;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            z-index: 100;
-            gap: 18px;
-        }
-
-        .indicator {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .indicator::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #a8e6ff;
-            border-radius: 50%;
-            transform: scale(0);
-            transition: var(--transition);
-        }
-
-        .indicator.active::before {
-            transform: scale(1);
-        }
-
-        .indicator:hover {
-            transform: scale(1.3);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* ANIMAÇÕES ESPECÍFICAS */
-        @keyframes slideInFromLeft {
-            0% {
-                opacity: 0;
-                transform: translateX(-100px) rotate(-10deg);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0) rotate(0);
-            }
-        }
-
-        @keyframes slideInFromRight {
-            0% {
-                opacity: 0;
-                transform: translateX(100px) rotate(10deg);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0) rotate(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes zoomIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.5);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        /* Animações para elementos específicos */
-        .animate-left {
-            animation: slideInFromLeft 0.8s ease-out forwards;
-        }
-
-        .animate-right {
-            animation: slideInFromRight 0.8s ease-out forwards;
-        }
-
-        .animate-fade {
-            animation: fadeIn 1s ease-out forwards;
-        }
-
-        .animate-zoom {
-            animation: zoomIn 0.8s ease-out forwards;
-        }
-
-        /* Efeito de flutuação para elementos */
-        .float-element {
-            animation: floatElement 5s infinite ease-in-out;
-        }
-
-        @keyframes floatElement {
-            0% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-15px);
-            }
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-        /* FOOTER */
-        .footer {
-            position: fixed;
-            bottom: 15px;
-            right: 25px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1rem;
-            z-index: 101;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 8px 15px;
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* RESPONSIVIDADE */
-        @media (max-width: 992px) {
-            .cover h1 {
-                font-size: 4rem;
-            }
-            
-            .cover p {
-                font-size: 2rem;
-            }
-            
-            .cover-image {
-                width: 220px;
-                height: 220px;
-            }
-            
-            .content-slide {
-                padding: 2.5rem;
-            }
-            
-            .content-slide h2 {
-                font-size: 2.8rem;
-            }
-            
-            .nav-btn {
-                width: 60px;
-                height: 60px;
-                font-size: 1.8rem;
-            }
-            
-            .round-image {
-                width: 180px;
-                height: 180px;
-            }
-            
-            .content-wrap {
-                gap: 40px;
-            }
-            
-            .slide-image-container {
-                width: 40%;
-            }
-            
-            .slide-image {
-                height: 300px;
-            }
-            
-            .info-cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .cover h1 {
-                font-size: 3rem;
-            }
-            
-            .cover p {
-                font-size: 1.6rem;
-            }
-            
-            .cover .subtitle {
-                font-size: 1.5rem;
-            }
-            
-            .cover-image {
-                width: 180px;
-                height: 180px;
-            }
-            
-            .content-slide {
-                padding: 2rem;
-            }
-            
-            .content-slide h2 {
-                font-size: 2.2rem;
-            }
-            
-            .content-slide h3 {
-                font-size: 1.7rem;
-            }
-            
-            .content-slide p, .content-slide li {
-                font-size: 1.2rem;
-            }
-            
-            .nav-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 1.5rem;
-            }
-            
-            .round-image {
-                width: 150px;
-                height: 150px;
-            }
-            
-            .slide {
-                padding: 32px 24px;
-                flex-direction: column;
-                overflow-y: auto;
-            }
-            
-            .content-wrap {
-                flex-direction: column;
-                gap: 32px;
-            }
-            
-            .text {
-                max-width: 100%;
-            }
-            
-            .slide-image-container {
-                width: 100%;
-                order: -1;
-                margin-bottom: 20px;
-            }
-            
-            .slide-image {
-                height: 250px;
-                max-width: 100%;
-            }
-            
-            .info-cards {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .cover h1 {
-                font-size: 2.5rem;
-            }
-            
-            .cover p {
-                font-size: 1.3rem;
-            }
-            
-            .cover .subtitle {
-                font-size: 1.2rem;
-                letter-spacing: 2px;
-            }
-            
-            .cover-image {
-                width: 150px;
-                height: 150px;
-            }
-            
-            .content-slide {
-                padding: 1.5rem;
-            }
-            
-            .content-slide h2 {
-                font-size: 1.8rem;
-            }
-            
-            .content-slide h3 {
-                font-size: 1.4rem;
-            }
-            
-            .content-slide p, .content-slide li {
-                font-size: 1rem;
-            }
-            
-            .nav-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 1.2rem;
-                padding: 0;
-            }
-            
-            .round-image {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .slide-indicators {
-                bottom: 25px;
-            }
-            
-            .indicator {
-                width: 16px;
-                height: 16px;
-            }
-            
-            .slide {
-                padding: 24px 16px;
-            }
-            
-            .slide-image {
-                height: 200px;
-            }
-        }
+        .numpad-btn:active { transform: scale(0.95); box-shadow: 0 2px 3px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body>
-    <!-- Efeito de partículas de fundo -->
-    <div class="particles" id="particles"></div>
+<body class="min-h-screen flex items-center justify-center p-4 font-fredoka overflow-hidden">
     
-    <div class="slides-container">
-        <!-- Capa -->
-        <div class="slide cover active">
-            <div class="cover-content">
-                <h1>INTELIGÊNCIA ARTIFICIAL</h1>
-                <p>A Revolução Tecnológica do Século XXI</p>
-                <div class="cover-image">
-                    <i class="fas fa-robot" style="font-size: 120px; color: white; line-height: 260px;"></i>
-                </div>
-                <div class="subtitle">Tecnologia e Inovação</div>
-            </div>
+    <div id="functions-modal" class="modal-overlay"> <!-- Modal de Funções --> </div>
+
+    <div id="calculator-container" class="calculator-container w-full max-w-sm mx-auto rounded-3xl p-6 bg-white bg-opacity-50 shadow-2xl">
+        <div class="flex items-center justify-between mb-4">
+            <h1 class="text-3xl text-white text-center flex-grow" style="text-shadow: 0px 3px 5px rgba(0,0,0,0.15);">Calculadora do Dancas</h1>
+            <button id="open-modal-btn" class="p-2 rounded-full hover:bg-white/30 transition">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            </button>
         </div>
-        
-        <!-- Slide 1 -->
-        <div class="slide">
-            <div class="content-slide">
-                <h2>O QUE É INTELIGÊNCIA ARTIFICIAL?</h2>
-                <p>A Inteligência Artificial (IA) é um campo da ciência da computação dedicado à criação de sistemas capazes de realizar tarefas que normalmente exigiriam inteligência humana, como percepção visual, reconhecimento de fala, tomada de decisão e tradução entre idiomas.</p>
-                
-                <div class="content-wrap">
-                    <div class="text">
-                        <h3>CONCEITOS FUNDAMENTAIS:</h3>
-                        <ul>
-                            <li><strong>Aprendizado de Máquina:</strong> Sistemas que aprendem com dados</li>
-                            <li><strong>Redes Neurais:</strong> Modelos inspirados no cérebro humano</li>
-                            <li><strong>Processamento de Linguagem Natural:</strong> Computadores entendendo linguagem humana</li>
-                            <li><strong>Visão Computacional:</strong> Máquinas interpretando imagens</li>
-                        </ul>
-                    </div>
-                    <div class="slide-image-container">
-                        <div class="image-frame">
-                            <div style="background: linear-gradient(135deg, #00aaff, #0077cc); height: 350px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-brain" style="font-size: 100px; color: white;"></i>
-                            </div>
-                        </div>
-                        <div class="image-caption">Representação simbólica da Inteligência Artificial</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 2 -->
-        <div class="slide">
-            <div class="content-slide">
-                <h2>HISTÓRIA DA INTELIGÊNCIA ARTIFICIAL</h2>
-                <p>A IA tem suas raízes na década de 1950, quando o termo foi cunhado por John McCarthy. Desde então, passou por vários "invernos" e "primaveras" de desenvolvimento, com avanços significativos nas últimas décadas.</p>
-                
-                <div class="content-wrap">
-                    <div class="text">
-                        <h3>MARCOS IMPORTANTES:</h3>
-                        <ul>
-                            <li><strong>1950:</strong> Teste de Turing proposto por Alan Turing</li>
-                            <li><strong>1956:</strong> Conferência de Dartmouth marca o nascimento da IA</li>
-                            <li><strong>1997:</strong> Deep Blue da IBM vence o campeão de xadrez Garry Kasparov</li>
-                            <li><strong>2011:</strong> IBM Watson vence o Jeopardy!</li>
-                            <li><strong>2016:</strong> AlphaGo da DeepMind vence campeão de Go</li>
-                        </ul>
-                    </div>
-                    <div class="slide-image-container">
-                        <div class="image-frame">
-                            <div style="background: linear-gradient(135deg, #00bbff, #0088cc); height: 350px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-history" style="font-size: 100px; color: white;"></i>
-                            </div>
-                        </div>
-                        <div class="image-caption">Linha do tempo do desenvolvimento da IA</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 3 -->
-        <div class="slide">
-            <div class="content-slide">
-                <h2>APLICAÇÕES DA INTELIGÊNCIA ARTIFICIAL</h2>
-                <p>A IA está transformando diversos setores da sociedade, desde saúde e educação até transporte e entretenimento, com aplicações práticas que impactam nosso dia a dia.</p>
-                
-                <div class="info-cards">
-                    <div class="info-card">
-                        <div class="card-icon"><i class="fas fa-stethoscope"></i></div>
-                        <h3>Saúde</h3>
-                        <p>Diagnóstico médico, descoberta de medicamentos e cirurgia robótica</p>
-                    </div>
-                    
-                    <div class="info-card">
-                        <div class="card-icon"><i class="fas fa-car"></i></div>
-                        <h3>Transporte</h3>
-                        <p>Carros autônomos, otimização de tráfego e sistemas de navegação</p>
-                    </div>
-                    
-                    <div class="info-card">
-                        <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
-                        <h3>Educação</h3>
-                        <p>Ensino personalizado, tutores inteligentes e avaliação automática</p>
-                    </div>
-                    
-                    <div class="info-card">
-                        <div class="card-icon"><i class="fas fa-shopping-cart"></i></div>
-                        <h3>Varejo</h3>
-                        <p>Recomendações personalizadas, gestão de estoque e atendimento automatizado</p>
-                    </div>
-                    
-                    <div class="info-card">
-                        <div class="card-icon"><i class="fas fa-money-bill-wave"></i></div>
-                        <h3>Finanças</h3>
-                        <p>Detecção de fraudes, investimentos algorítmicos e atendimento ao cliente</p>
-                    </div>
-                    
-                    <div class="info-card">
-                        <div class="card-icon"><i class="fas fa-film"></i></div>
-                        <h3>Entretenimento</h3>
-                        <p>Recomendações de conteúdo, criação artística e efeitos visuais</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 4 -->
-        <div class="slide">
-            <div class="content-slide">
-                <h2>DESAFIOS ÉTICOS DA INTELIGÊNCIA ARTIFICIAL</h2>
-                <p>O rápido avanço da IA levanta importantes questões éticas e sociais que precisam ser abordadas para garantir que a tecnologia seja desenvolvida e implementada de forma responsável.</p>
-                
-                <div class="content-wrap">
-                    <div class="text">
-                        <h3>PRINCIPAIS PREOCUPAÇÕES:</h3>
-                        <ul>
-                            <li><strong>Privacidade:</strong> Coleta e uso de dados pessoais</li>
-                            <li><strong>Vieses algorítmicos:</strong> Discriminação embutida em sistemas de IA</li>
-                            <li><strong>Transparência:</strong> "Caixa preta" em algoritmos complexos</li>
-                            <li><strong>Deslocamento de trabalhadores:</strong> Automação de empregos</li>
-                            <li><strong>Responsabilidade:</strong> Quem é responsável quando sistemas de IA falham?</li>
-                            <li><strong>Superinteligência:</strong> Riscos de sistemas de IA descontrolados</li>
-                        </ul>
-                    </div>
-                    <div class="slide-image-container">
-                        <div class="image-frame">
-                            <div style="background: linear-gradient(135deg, #00ccff, #0099dd); height: 350px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-balance-scale" style="font-size: 100px; color: white;"></i>
-                            </div>
-                        </div>
-                        <div class="image-caption">Equilibrando inovação e responsabilidade ética</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Slide 5 -->
-        <div class="slide">
-            <div class="content-slide">
-                <h2>O FUTURO DA INTELIGÊNCIA ARTIFICIAL</h2>
-                <p>O futuro da IA promete avanços ainda mais transformadores, com potencial para revolucionar praticamente todos os aspectos da vida humana, mas também apresenta desafios significativos que precisam ser enfrentados.</p>
-                
-                <div class="content-wrap">
-                    <div class="text">
-                        <h3>TENDÊNCIAS FUTURAS:</h3>
-                        <ul>
-                            <li><strong>IA explicável:</strong> Sistemas que podem explicar suas decisões</li>
-                            <li><strong>IA geral:</strong> Sistemas com inteligência mais ampla e flexível</li>
-                            <li><strong>IA quântica:</strong> Combinação de IA com computação quântica</li>
-                            <li><strong>Neuro-simbólica:</strong> Integração de aprendizado de máquina e raciocínio simbólico</li>
-                            <li><strong>IA para benefício social:</strong> Aplicações para enfrentar desafios globais</li>
-                        </ul>
-                    </div>
-                    <div class="slide-image-container">
-                        <div class="image-frame">
-                            <div style="background: linear-gradient(135deg, #00ddff, #00aaff); height: 350px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-rocket" style="font-size: 100px; color: white;"></i>
-                            </div>
-                        </div>
-                        <div class="image-caption">O futuro promissor da inteligência artificial</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="navigation">
-        <button class="nav-btn prev-btn">&lt;</button>
-        <button class="nav-btn next-btn">&gt;</button>
-    </div>
-    
-    <div class="slide-indicators">
-        <!-- Os indicadores serão gerados via JavaScript -->
+
+        <div id="page-calculator" class="page active"> <!-- Página: Calculadora Padrão --> </div>
+        <div id="page-eq1" class="page text-center"> <!-- Página: Equação 1º Grau --> </div>
+        <div id="page-eq2" class="page text-center"> <!-- Página: Equação 2º Grau --> </div>
+        <div id="page-pitagoras" class="page text-center"> <!-- Página: Pitágoras --> </div>
+        <div id="page-regra3" class="page text-center"> <!-- Página: Regra de Três --> </div>
     </div>
 
-    <div class="footer">
-        Inteligência Artificial - Revolução Tecnológica
+    <!-- NOVO TECLADO NUMÉRICO -->
+    <div id="custom-numpad">
+        <div class="grid grid-cols-4 gap-3 max-w-sm mx-auto">
+            <button data-value="1" class="numpad-btn h-16">1</button>
+            <button data-value="2" class="numpad-btn h-16">2</button>
+            <button data-value="3" class="numpad-btn h-16">3</button>
+            <button data-value="backspace" class="numpad-btn h-16 bg-pink-300 text-white flex justify-center items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 002.828 0L21 12M3 12l6.414-6.414a2 2 0 012.828 0L21 12" /></svg>
+            </button>
+            <button data-value="4" class="numpad-btn h-16">4</button>
+            <button data-value="5" class="numpad-btn h-16">5</button>
+            <button data-value="6" class="numpad-btn h-16">6</button>
+            <button data-value="-" class="numpad-btn h-16 bg-blue-300 text-white text-3xl font-bold">-</button>
+            <button data-value="7" class="numpad-btn h-16">7</button>
+            <button data-value="8" class="numpad-btn h-16">8</button>
+            <button data-value="9" class="numpad-btn h-16">9</button>
+            <button data-value="done" class="numpad-btn h-16 row-span-2 bg-green-300 text-white">Concluir</button>
+            <button data-value="." class="numpad-btn h-16 col-span-1">.</button>
+            <button data-value="0" class="numpad-btn h-16 col-span-2">0</button>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const slides = document.querySelectorAll('.slide');
-            const prevBtn = document.querySelector('.prev-btn');
-            const nextBtn = document.querySelector('.next-btn');
-            const indicatorsContainer = document.querySelector('.slide-indicators');
-            const particlesContainer = document.getElementById('particles');
-            
-            let currentSlide = 0;
-            
-            // Criar partículas de fundo
-            function createParticles() {
-                const colors = ['#3498db', '#2ecc71', '#e74c3c', '#f1c40f', '#9b59b6', '#1abc9c', '#ffffff'];
-                for (let i = 0; i < 40; i++) {
-                    const particle = document.createElement('div');
-                    particle.classList.add('particle');
-                    
-                    // Tamanho aleatório
-                    const size = Math.random() * 60 + 10;
-                    particle.style.width = `${size}px`;
-                    particle.style.height = `${size}px`;
-                    
-                    // Cor aleatória
-                    const color = colors[Math.floor(Math.random() * colors.length)];
-                    particle.style.backgroundColor = color;
-                    
-                    // Posição aleatória
-                    particle.style.left = `${Math.random() * 100}%`;
-                    particle.style.top = `${Math.random() * 100}%`;
-                    
-                    // Duração da animação aleatória
-                    const duration = Math.random() * 25 + 15;
-                    particle.style.animationDuration = `${duration}s`;
-                    
-                    // Atraso aleatório
-                    particle.style.animationDelay = `-${Math.random() * 20}s`;
-                    
-                    particlesContainer.appendChild(particle);
-                }
-            }
-            
-            // Criar indicadores
-            slides.forEach((_, i) => {
-                const indicator = document.createElement('div');
-                indicator.classList.add('indicator');
-                if (i === 0) indicator.classList.add('active');
-                indicator.addEventListener('click', () => goToSlide(i));
-                indicatorsContainer.appendChild(indicator);
-            });
-            
-            const indicators = document.querySelectorAll('.indicator');
-            
-            // Função para atualizar os slides
-            function updateSlide() {
-                slides.forEach((slide, i) => {
-                    slide.classList.toggle('active', i === currentSlide);
-                    
-                    // Aplicar animações diferentes conforme a direção
-                    if (i === currentSlide) {
-                        const content = slide.querySelector('.content-slide, .cover-content');
-                        if (content) {
-                            content.classList.remove('animate-left', 'animate-right', 'animate-zoom', 'animate-fade');
-                            void content.offsetWidth; // Reinicia a animação
-                            
-                            // Aplicar animação baseada na direção
-                            if (i > currentSlide) {
-                                content.classList.add('animate-left');
-                            } else {
-                                content.classList.add('animate-right');
-                            }
-                        }
-                    }
-                });
-                
-                indicators.forEach((indicator, i) => {
-                    indicator.classList.toggle('active', i === currentSlide);
-                });
-            }
-            
-            // Função para ir para um slide específico
-            function goToSlide(n) {
-                const prevSlide = currentSlide;
-                currentSlide = n;
-                
-                // Aplicar animação de entrada
-                const currentContent = slides[currentSlide].querySelector('.content-slide, .cover-content');
-                if (currentContent) {
-                    currentContent.classList.remove('animate-left', 'animate-right', 'animate-zoom', 'animate-fade');
-                    void currentContent.offsetWidth; // Reinicia a animação
-                    
-                    if (currentSlide > prevSlide) {
-                        currentContent.classList.add('animate-right');
-                    } else {
-                        currentContent.classList.add('animate-left');
-                    }
-                }
-                
-                updateSlide();
-            }
-            
-            // Avançar slide
-            function nextSlide() {
-                if (currentSlide < slides.length - 1) {
-                    goToSlide(currentSlide + 1);
-                } else {
-                    // Voltar para o primeiro slide com animação especial
-                    const currentContent = slides[currentSlide].querySelector('.content-slide, .cover-content');
-                    if (currentContent) {
-                        currentContent.classList.add('animate-zoom');
-                    }
-                    
-                    setTimeout(() => {
-                        currentSlide = 0;
-                        updateSlide();
-                    }, 500);
-                }
-            }
-            
-            // Voltar slide
-            function prevSlide() {
-                if (currentSlide > 0) {
-                    goToSlide(currentSlide - 1);
-                } else {
-                    // Ir para o último slide com animação especial
-                    const currentContent = slides[currentSlide].querySelector('.content-slide, .cover-content');
-                    if (currentContent) {
-                        currentContent.classList.add('animate-zoom');
-                    }
-                    
-                    setTimeout(() => {
-                        currentSlide = slides.length - 1;
-                        updateSlide();
-                    }, 500);
-                }
-            }
-            
-            // Event listeners para os botões
-            nextBtn.addEventListener('click', nextSlide);
-            prevBtn.addEventListener('click', prevSlide);
-            
-            // Navegação por teclado
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowRight') nextSlide();
-                if (e.key === 'ArrowLeft') prevSlide();
-                if (e.key === 'Home') goToSlide(0);
-                if (e.key === 'End') goToSlide(slides.length - 1);
-            });
-            
-            // Navegação por swipe em dispositivos móveis
-            let touchStartX = 0;
-            let touchEndX = 0;
-            
-            document.addEventListener('touchstart', e => {
-                touchStartX = e.changedTouches[0].screenX;
-            });
-            
-            document.addEventListener('touchend', e => {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipe();
-            });
-            
-            function handleSwipe() {
-                const minSwipeDistance = 50;
-                
-                if (touchEndX < touchStartX && touchStartX - touchEndX > minSwipeDistance) {
-                    nextSlide();
-                }
-                
-                if (touchEndX > touchStartX && touchEndX - touchStartX > minSwipeDistance) {
-                    prevSlide();
-                }
-            }
-            
-            // Inicializar
-            createParticles();
-            updateSlide();
-            
-            // Animação automática opcional (descomente se desejar)
-            /*
-            setInterval(() => {
-                nextSlide();
-            }, 8000);
-            */
+    // --- LÓGICA GERAL E DE NAVEGAÇÃO ---
+    const calculatorContainer = document.getElementById('calculator-container');
+    const functionsModal = document.getElementById('functions-modal');
+    const openModalBtn = document.getElementById('open-modal-btn');
+    const pages = document.querySelectorAll('.page');
+    const numpad = document.getElementById('custom-numpad');
+    const functionInputs = document.querySelectorAll('.cute-input');
+    let activeInput = null;
+
+    // Preenche o conteúdo das páginas dinamicamente para não poluir o HTML
+    function setupPages() {
+        functionsModal.innerHTML = `<div class="modal-content text-center space-y-3"><h2 class="text-2xl font-bold text-gray-700 mb-4">Funções Escolares</h2><button data-page="calculator" class="w-full py-3 bg-blue-300 text-white rounded-full shadow-md transition-transform transform hover:scale-105">Calculadora Padrão</button><button data-page="eq1" class="w-full py-3 bg-pink-300 text-white rounded-full shadow-md transition-transform transform hover:scale-105">Equação 1º Grau</button><button data-page="eq2" class="w-full py-3 bg-yellow-300 text-white rounded-full shadow-md transition-transform transform hover:scale-105">Equação 2º Grau</button><button data-page="pitagoras" class="w-full py-3 bg-green-300 text-white rounded-full shadow-md transition-transform transform hover:scale-105">Teorema de Pitágoras</button><button data-page="regra3" class="w-full py-3 bg-purple-300 text-white rounded-full shadow-md transition-transform transform hover:scale-105">Regra de Três</button><button id="close-modal-btn" class="mt-4 text-gray-500">Fechar</button></div>`;
+        document.getElementById('page-calculator').innerHTML = `<div class="bg-gray-800 bg-opacity-50 rounded-xl p-4 mb-6 text-right shadow-inner"><div id="expression" class="text-gray-200 text-xl h-7 overflow-hidden"></div><div id="result" class="text-white text-5xl font-bold h-14">0</div></div><div id="buttons-container" class="grid grid-cols-5 gap-3"><button data-value="sin" class="btn-cute btn-func">sin</button><button data-value="cos" class="btn-cute btn-func">cos</button><button data-value="tan" class="btn-cute btn-func">tan</button><button data-value="log" class="btn-cute btn-func">log</button><button data-value="ln" class="btn-cute btn-func">ln</button><button data-value="^" class="btn-cute btn-func">xʸ</button><button data-value="sqrt" class="btn-cute btn-func">√</button><button data-value="!" class="btn-cute btn-func">x!</button><button data-value="(" class="btn-cute btn-func">(</button><button data-value=")" class="btn-cute btn-func">)</button><button data-value="C" class="btn-cute btn-clear" style="grid-column: span 2; aspect-ratio: auto;">C</button><button data-value="backspace" class="btn-cute btn-clear">⌫</button><button data-value="%" class="btn-cute btn-op">%</button><button data-value="/" class="btn-cute btn-op">÷</button><button data-value="7" class="btn-cute">7</button><button data-value="8" class="btn-cute">8</button><button data-value="9" class="btn-cute">9</button><button data-value="*" class="btn-cute btn-op">×</button><button data-value="pi" class="btn-cute btn-func">π</button><button data-value="4" class="btn-cute">4</button><button data-value="5" class="btn-cute">5</button><button data-value="6" class="btn-cute">6</button><button data-value="-" class="btn-cute btn-op">-</button><button data-value="e" class="btn-cute btn-func">e</button><button data-value="1" class="btn-cute">1</button><button data-value="2" class="btn-cute">2</button><button data-value="3" class="btn-cute">3</button><button data-value="+" class="btn-cute btn-op">+</button><button data-value="=" class="btn-cute btn-equal" style="grid-row: span 2; aspect-ratio: auto;">=</button><button data-value="0" class="btn-cute btn-zero">0</button><button data-value="." class="btn-cute">.</button><button data-value="+/-" class="btn-cute">±</button></div>`;
+        document.getElementById('page-eq1').innerHTML = `<h2 class="function-title mb-6">Equação 1º Grau</h2><div class="flex items-center justify-center gap-2 mb-4 text-gray-700 text-2xl"><input type="text" id="eq1-a" class="cute-input w-20" placeholder="a"> <span>x +</span> <input type="text" id="eq1-b" class="cute-input w-20" placeholder="b"> <span>=</span> <input type="text" id="eq1-c" class="cute-input w-20" placeholder="c"></div><button id="solve-eq1" class="btn-cute btn-equal mx-auto !w-32 !h-16 !aspect-auto !rounded-3xl">Calcular</button><div id="result-eq1" class="mt-6 bg-gray-800 bg-opacity-50 rounded-xl p-4 text-white text-3xl min-h-[80px] flex items-center justify-center"></div>`;
+        document.getElementById('page-eq2').innerHTML = `<h2 class="function-title mb-6">Equação 2º Grau</h2><div class="flex items-center justify-center gap-2 mb-4 text-gray-700 text-2xl"><input type="text" id="eq2-a" class="cute-input w-20" placeholder="a"> <span>x² +</span> <input type="text" id="eq2-b" class="cute-input w-20" placeholder="b"> <span>x +</span> <input type="text" id="eq2-c" class="cute-input w-20" placeholder="c"> <span>= 0</span></div><button id="solve-eq2" class="btn-cute btn-equal mx-auto !w-32 !h-16 !aspect-auto !rounded-3xl">Calcular</button><div id="result-eq2" class="mt-6 bg-gray-800 bg-opacity-50 rounded-xl p-4 text-white text-xl min-h-[80px] flex items-center justify-center"></div>`;
+        document.getElementById('page-pitagoras').innerHTML = `<h2 class="function-title mb-6">Teorema de Pitágoras</h2><div class="space-y-4 mb-4 text-gray-700 text-xl"><div class="flex items-center gap-4"><span>Cateto A:</span><input type="text" id="pit-a" class="cute-input" placeholder="a"></div><div class="flex items-center gap-4"><span>Cateto B:</span><input type="text" id="pit-b" class="cute-input" placeholder="b"></div><div class="flex items-center gap-4"><span>Hipotenusa:</span><input type="text" id="pit-c" class="cute-input" placeholder="c"></div></div><p class="text-xs text-gray-600 mb-4">Deixe em branco o valor que quer descobrir.</p><button id="solve-pit" class="btn-cute btn-equal mx-auto !w-32 !h-16 !aspect-auto !rounded-3xl">Calcular</button><div id="result-pit" class="mt-6 bg-gray-800 bg-opacity-50 rounded-xl p-4 text-white text-3xl min-h-[80px] flex items-center justify-center"></div>`;
+        document.getElementById('page-regra3').innerHTML = `<h2 class="function-title mb-6">Regra de Três</h2><div class="grid grid-cols-3 items-center gap-4 mb-4 text-gray-700 text-xl"><input type="text" id="r3-a" class="cute-input" placeholder="a"> <span>está para</span> <input type="text" id="r3-b" class="cute-input" placeholder="b"><span>Assim como</span><div></div><div></div><input type="text" id="r3-c" class="cute-input" placeholder="c"> <span>está para</span> <span class="cute-input bg-gray-200">x</span></div><button id="solve-r3" class="btn-cute btn-equal mx-auto !w-32 !h-16 !aspect-auto !rounded-3xl">Calcular</button><div id="result-r3" class="mt-6 bg-gray-800 bg-opacity-50 rounded-xl p-4 text-white text-3xl min-h-[80px] flex items-center justify-center"></div>`;
+    }
+    setupPages();
+    
+    // --- LÓGICA DO TECLADO NUMÉRICO ---
+    function showNumpad(inputElement) {
+        if(activeInput) activeInput.classList.remove('active');
+        activeInput = inputElement;
+        activeInput.classList.add('active');
+        numpad.classList.add('visible');
+    }
+
+    function hideNumpad() {
+        if(activeInput) activeInput.classList.remove('active');
+        activeInput = null;
+        numpad.classList.remove('visible');
+    }
+
+    document.querySelectorAll('.cute-input').forEach(input => {
+        input.addEventListener('focus', (e) => {
+            e.preventDefault();
+            input.readOnly = true; // Impede teclado nativo
+            showNumpad(e.target);
         });
+        input.addEventListener('blur', () => {
+             input.readOnly = false;
+        });
+    });
+
+    numpad.addEventListener('click', (e) => {
+        const button = e.target.closest('button');
+        if (!button || !activeInput) return;
+        
+        const value = button.dataset.value;
+
+        if (value === 'done') {
+            hideNumpad();
+        } else if (value === 'backspace') {
+            activeInput.value = activeInput.value.slice(0, -1);
+        } else if (value === '-') {
+            if (!activeInput.value.startsWith('-')) {
+                activeInput.value = '-' + activeInput.value;
+            }
+        } else {
+            if (value === '.' && activeInput.value.includes('.')) return;
+            activeInput.value += value;
+        }
+    });
+
+    // --- RESTO DA LÓGICA ---
+    window.addEventListener('load', () => calculatorContainer.classList.add('loaded'));
+
+    function switchPage(pageId) {
+        pages.forEach(page => page.classList.remove('active'));
+        document.getElementById(`page-${pageId}`).classList.add('active');
+        functionsModal.classList.remove('active');
+        hideNumpad(); // Esconde o teclado ao trocar de página
+    }
+
+    openModalBtn.addEventListener('click', () => functionsModal.classList.add('active'));
+    functionsModal.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target.dataset.page) { switchPage(target.dataset.page); }
+        if (target.id === 'close-modal-btn' || target === functionsModal) { functionsModal.classList.remove('active'); }
+    });
+
+    function formatResult(value) { return parseFloat(value.toPrecision(12)).toString(); }
+    function animateResult(div) {
+        div.classList.add('result-animated');
+        div.addEventListener('animationend', () => div.classList.remove('result-animated'), { once: true });
+    }
+    
+    // O JS da calculadora padrão, eq1, eq2 etc. foi omitido aqui para brevidade, mas está presente e funcional
+    // ... (o código das calculadoras específicas é o mesmo da versão anterior)
+    const expressionDiv = document.getElementById('expression');
+    const resultDiv = document.getElementById('result');
+    const buttonsContainer = document.getElementById('buttons-container');
+    let currentInput = '0', fullExpression = '', evaluated = false;
+    function updateDisplay(animate = false) {
+        if(!expressionDiv) return;
+        expressionDiv.textContent = fullExpression.replace(/\*/g, '×').replace(/\//g, '÷');
+        resultDiv.textContent = currentInput.replace(/\*/g, '×').replace(/\//g, '÷');
+        if (animate) animateResult(resultDiv);
+    }
+    function handleButtonClick(value) {
+        if (!isNaN(value) || value === '.') { handleNumber(value); updateDisplay(); } 
+        else { handleOperator(value); updateDisplay(true); }
+    }
+    function handleNumber(value) {
+        if (evaluated) { currentInput = '0'; fullExpression = ''; evaluated = false; }
+        if (value === '.' && currentInput.includes('.')) return;
+        currentInput = currentInput === '0' && value !== '.' ? value : currentInput + value;
+    }
+    function handleOperator(value) {
+        if (value === 'C') { currentInput = '0'; fullExpression = ''; evaluated = false; return; }
+        if (value === 'backspace') { currentInput = currentInput.slice(0, -1) || '0'; return; }
+        if (evaluated && !['+', '-', '*', '/', '%', '^'].includes(value)) { fullExpression = ''; evaluated = false; } 
+        else if (evaluated) { fullExpression = currentInput; evaluated = false; }
+        switch (value) {
+            case '+/-': currentInput = (parseFloat(currentInput) * -1).toString(); break;
+            case '%': currentInput = (parseFloat(currentInput) / 100).toString(); break;
+            case '=': calculate(); break;
+            case 'pi': currentInput = Math.PI.toString(); break;
+            case 'e': currentInput = Math.E.toString(); break;
+            case 'sqrt': currentInput = Math.sqrt(parseFloat(currentInput)).toString(); break;
+            case '!': currentInput = factorial(parseInt(currentInput)).toString(); break;
+            case 'sin': case 'cos': case 'tan': case 'log': case 'ln':
+                fullExpression += `${value}(${currentInput})`; calculateFunction(value, currentInput); break;
+            default:
+                if (currentInput !== '' || fullExpression !== '') {
+                    const lastChar = fullExpression.slice(-1);
+                    if (['+', '-', '*', '/', '^'].includes(lastChar) && currentInput === '') {
+                        fullExpression = fullExpression.slice(0, -1) + value;
+                    } else { fullExpression += currentInput + value; }
+                    currentInput = '';
+                } break;
+        }
+    }
+    function calculateFunction(func, value) {
+        const num = parseFloat(value); let res;
+        try {
+            switch (func) {
+                case 'sin': res = Math.sin(num * Math.PI / 180); break;
+                case 'cos': res = Math.cos(num * Math.PI / 180); break;
+                case 'tan': res = Math.tan(num * Math.PI / 180); break;
+                case 'log': res = Math.log10(num); break;
+                case 'ln': res = Math.log(num); break;
+            }
+            currentInput = formatResult(res);
+        } catch { currentInput = "Erro"; }
+    }
+    function calculate() {
+        if (evaluated || fullExpression + currentInput === '') return;
+        try {
+            let expr = (fullExpression + currentInput).replace(/×/g, '*').replace(/÷/g, '/').replace(/\^/g, '**').replace(/π/g, 'Math.PI').replace(/e/g, 'Math.E');
+            expr = expr.replace(/(\d+)!/g, (_, n) => factorial(parseInt(n))) .replace(/sin\(([^)]+)\)/g, (_, n) => Math.sin(parseFloat(n) * Math.PI / 180)) .replace(/cos\(([^)]+)\)/g, (_, n) => Math.cos(parseFloat(n) * Math.PI / 180)) .replace(/tan\(([^)]+)\)/g, (_, n) => Math.tan(parseFloat(n) * Math.PI / 180)) .replace(/log\(([^)]+)\)/g, (_, n) => Math.log10(parseFloat(n))) .replace(/ln\(([^)]+)\)/g, (_, n) => Math.log(parseFloat(n))) .replace(/sqrt\(([^)]+)\)/g, (_, n) => Math.sqrt(parseFloat(n)));
+            const result = new Function('return ' + expr)();
+            if (isNaN(result) || !isFinite(result)) throw new Error("Erro");
+            fullExpression += currentInput + "="; currentInput = formatResult(result); evaluated = true;
+        } catch { currentInput = "Erro"; fullExpression = ""; }
+    }
+    function factorial(n) { if (n < 0 || n > 170) return NaN; if (n === 0 || n === 1) return 1; let result = 1; for (let i = 2; i <= n; i++) result *= i; return result; }
+    
+    document.getElementById('page-calculator').addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (btn) { btn.classList.add('clicked'); setTimeout(() => btn.classList.remove('clicked'), 100); handleButtonClick(btn.dataset.value); }
+    });
+    
+    document.getElementById('solve-eq1').addEventListener('click', () => {
+        const a = parseFloat(document.getElementById('eq1-a').value); const b = parseFloat(document.getElementById('eq1-b').value); const c = parseFloat(document.getElementById('eq1-c').value); const resultDiv = document.getElementById('result-eq1');
+        if (isNaN(a) || isNaN(b) || isNaN(c)) { resultDiv.innerHTML = "Preencha tudo!"; } else if (a === 0) { resultDiv.innerHTML = "Valor de 'a' não pode ser 0."; } else { const x = (c - b) / a; resultDiv.innerHTML = `x = ${formatResult(x)}`; }
+        animateResult(resultDiv);
+    });
+    document.getElementById('solve-eq2').addEventListener('click', () => {
+        const a = parseFloat(document.getElementById('eq2-a').value); const b = parseFloat(document.getElementById('eq2-b').value); const c = parseFloat(document.getElementById('eq2-c').value); const resultDiv = document.getElementById('result-eq2');
+        if (isNaN(a) || isNaN(b) || isNaN(c)) { resultDiv.innerHTML = "Preencha tudo!"; } else if (a === 0) { resultDiv.innerHTML = "Isso é uma eq. de 1º grau!"; } else {
+            const delta = (b * b) - 4 * a * c;
+            if (delta < 0) { resultDiv.innerHTML = `Δ = ${formatResult(delta)}<br>Não há raízes reais.`; } else {
+                const x1 = (-b + Math.sqrt(delta)) / (2 * a); const x2 = (-b - Math.sqrt(delta)) / (2 * a);
+                resultDiv.innerHTML = `Δ = ${formatResult(delta)}<br>x' = ${formatResult(x1)}<br>x" = ${formatResult(x2)}`;
+            }
+        }
+        animateResult(resultDiv);
+    });
+    document.getElementById('solve-pit').addEventListener('click', () => {
+        const a = document.getElementById('pit-a').value ? parseFloat(document.getElementById('pit-a').value) : null; const b = document.getElementById('pit-b').value ? parseFloat(document.getElementById('pit-b').value) : null; const c = document.getElementById('pit-c').value ? parseFloat(document.getElementById('pit-c').value) : null; const resultDiv = document.getElementById('result-pit');
+        if ([a, b, c].filter(v => v !== null).length !== 2) { resultDiv.innerHTML = "Preencha 2 valores."; } 
+        else if (c === null) { resultDiv.innerHTML = `Hipotenusa = ${formatResult(Math.sqrt(a*a + b*b))}`; } 
+        else if (a === null) { if (c*c < b*b) { resultDiv.innerHTML = "Hipotenusa é menor que o cateto!"; } else { resultDiv.innerHTML = `Cateto a = ${formatResult(Math.sqrt(c*c - b*b))}`; } } 
+        else if (b === null) { if (c*c < a*a) { resultDiv.innerHTML = "Hipotenusa é menor que o cateto!"; } else { resultDiv.innerHTML = `Cateto b = ${formatResult(Math.sqrt(c*c - a*a))}`; } }
+        animateResult(resultDiv);
+    });
+    document.getElementById('solve-r3').addEventListener('click', () => {
+        const a = parseFloat(document.getElementById('r3-a').value); const b = parseFloat(document.getElementById('r3-b').value); const c = parseFloat(document.getElementById('r3-c').value); const resultDiv = document.getElementById('result-r3');
+        if (isNaN(a) || isNaN(b) || isNaN(c)) { resultDiv.innerHTML = "Preencha tudo!"; } else if (a === 0) { resultDiv.innerHTML = "O primeiro valor não pode ser 0."; } else { const x = (c * b) / a; resultDiv.innerHTML = `x = ${formatResult(x)}`; }
+        animateResult(resultDiv);
+    });
+
     </script>
 </body>
 </html>
