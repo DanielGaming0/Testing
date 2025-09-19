@@ -1,335 +1,196 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora do Dancas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
-    <style>
-        .font-fredoka { font-family: 'Fredoka One', cursive; }
-        body {
-            background: linear-gradient(-45deg, #f8cdda, #c1d4f5, #b8f2e6, #fdfd96);
-            background-size: 400% 400%;
-            animation: gradientBG 18s ease infinite;
-            overscroll-behavior: none; /* Impede o "puxar para atualizar" no mobile */
-        }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
-        }
-        .calculator-container {
-            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            opacity: 0; transform: scale(0.9) translateY(20px);
-        }
-        .calculator-container.loaded { opacity: 1; transform: scale(1) translateY(0); }
-        .btn-cute {
-            border-radius: 9999px; background: rgba(255, 255, 255, 0.7); color: #555;
-            font-size: 1.25rem; box-shadow: 0 5px 10px rgba(0,0,0,0.1), inset 0 -4px 0 rgba(0,0,0,0.1);
-            transition: all 0.1s ease-out; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center;
-        }
-        .btn-cute:active, .btn-cute.clicked { transform: translateY(2px) scale(0.95); box-shadow: 0 2px 5px rgba(0,0,0,0.15), inset 0 -2px 0 rgba(0,0,0,0.15); }
-        .btn-op { background-color: #fdfd96; color: #a69a3f; }
-        .btn-func { background-color: #c1d4f5; color: #4b6a9e; }
-        .btn-clear { background-color: #f8cdda; color: #a1586f; }
-        .btn-equal { background-color: #b8f2e6; color: #438f7e; }
-        @keyframes result-pop {
-            0% { transform: scale(0.9); opacity: 0.5; } 70% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); }
-        }
-        .result-animated { animation: result-pop 0.3s ease-out; }
-        .btn-zero { grid-column: span 2; aspect-ratio: auto; }
-
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(5px);
-            opacity: 0; visibility: hidden; transition: all 0.3s ease;
-            z-index: 50; display: flex; justify-content: center; align-items: center;
-        }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content {
-            background: rgba(255, 255, 255, 0.8); padding: 1.5rem; border-radius: 1.5rem;
-            transform: scale(0.9); transition: all 0.3s ease; width: 90%; max-width: 320px;
-        }
-        .modal-overlay.active .modal-content { transform: scale(1); }
-
-        .cute-input {
-            width: 100%; border: none; background-color: rgba(255,255,255,0.6);
-            padding: 0.75rem 1rem; border-radius: 2rem; text-align: center;
-            font-size: 1.25rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-            color: #4b6a9e; cursor: pointer;
-        }
-        .cute-input:focus, .cute-input.active { outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 0 0 3px #c1d4f5; }
-
-        .function-title { font-size: 1.75rem; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        
-        /* NOVO TECLADO NUMÉRICO */
-        #custom-numpad {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 1rem;
-            padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* Para iPhones com notch */
-            border-top-left-radius: 2rem;
-            border-top-right-radius: 2rem;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            z-index: 100;
-        }
-        #custom-numpad.visible { transform: translateY(0); }
-        .numpad-btn {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 1.25rem;
-            color: #555;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: all 0.1s ease-out;
-        }
-        .numpad-btn:active { transform: scale(0.95); box-shadow: 0 2px 3px rgba(0,0,0,0.1); }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banco Digital</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #14001e;
+      font-family: 'Montserrat', sans-serif;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #5d1889 70%, #220033 100%);
+      padding: 20px 0;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .container {
+      max-width: 400px;
+      background: #1d0128;
+      margin: 40px auto 0;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 0 16px #0008;
+    }
+    .saldo {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #35004d;
+    }
+    .saldo small {
+      color: #b3b3b3;
+      font-size: 0.95rem;
+    }
+    .saldo .valor {
+      font-size: 2.4rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .saldo .outros-bancos {
+      color: #b3b3b3;
+      font-size: 1rem;
+      margin-top: 2px;
+    }
+    .botoes {
+      display: flex;
+      justify-content: space-between;
+      margin: 24px 0 20px;
+      gap: 12px;
+    }
+    .botao-circular {
+      background: #3a045c;
+      border: none;
+      border-radius: 50%;
+      width: 64px;
+      height: 64px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 10px #32004a33;
+      transition: background 0.2s;
+      cursor: pointer;
+      flex-direction: column;
+    }
+    .botao-circular:hover {
+      background: #7b2cff;
+    }
+    .botao-circular i {
+      font-size: 1.8rem;
+      margin-bottom: 4px;
+    }
+    .botao-circular span {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .cartoes, .shopping {
+      background: #29013e;
+      border-radius: 10px;
+      margin: 15px 0;
+      padding: 18px 14px;
+      transition: box-shadow 0.2s;
+      box-shadow: 0 1px 8px #0002;
+    }
+    .cartoes {
+      font-weight: bold;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+    }
+    .shopping {
+      color: #c8c2f2;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .shopping a {
+      color: #b180fa;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .footer-navbar {
+      background: #21002d;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      max-width: 400px;
+      border-top-left-radius: 22px;
+      border-top-right-radius: 22px;
+      height: 62px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 18px #0006;
+      margin-left: auto;
+      margin-right: auto;
+      right: 0;
+    }
+    .footer-navbar .footer-btn {
+      color: #c8a0f3;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+    .footer-navbar .footer-btn.active {
+      color: #b780fc;
+    }
+    @media (max-width:500px) {
+      .container { margin: 12px; }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 font-fredoka overflow-hidden">
-    
-    <div id="functions-modal" class="modal-overlay"> <!-- Modal de Funções --> </div>
+<body>
 
-    <div id="calculator-container" class="calculator-container w-full max-w-sm mx-auto rounded-3xl p-6 bg-white bg-opacity-50 shadow-2xl">
-        <div class="flex items-center justify-between mb-4">
-            <h1 class="text-3xl text-white text-center flex-grow" style="text-shadow: 0px 3px 5px rgba(0,0,0,0.15);">Calculadora do Dancas</h1>
-            <button id="open-modal-btn" class="p-2 rounded-full hover:bg-white/30 transition">
-                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-            </button>
-        </div>
+<!-- Cabeçalho -->
+<header>Banco Digital</header>
 
-        <div id="page-calculator" class="page active"> <!-- Página: Calculadora Padrão --> </div>
-        <div id="page-eq1" class="page text-center"> <!-- Página: Equação 1º Grau --> </div>
-        <div id="page-eq2" class="page text-center"> <!-- Página: Equação 2º Grau --> </div>
-        <div id="page-pitagoras" class="page text-center"> <!-- Página: Pitágoras --> </div>
-        <div id="page-regra3" class="page text-center"> <!-- Página: Regra de Três --> </div>
-    </div>
+<main class="container">
+  <!-- Saldo -->
+  <div class="saldo">
+    <small>Conta</small>
+    <span class="valor">R$ 4.543,96</span>
+    <span class="outros-bancos">R$ 0,00 em outros bancos</span>
+  </div>
 
-    <!-- NOVO TECLADO NUMÉRICO -->
-    <div id="custom-numpad">
-        <div class="grid grid-cols-4 gap-3 max-w-sm mx-auto">
-            <button data-value="1" class="numpad-btn h-16">1</button>
-            <button data-value="2" class="numpad-btn h-16">2</button>
-            <button data-value="3" class="numpad-btn h-16">3</button>
-            <button data-value="backspace" class="numpad-btn h-16 bg-pink-300 text-white flex justify-center items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 002.828 0L21 12M3 12l6.414-6.414a2 2 0 012.828 0L21 12" /></svg>
-            </button>
-            <button data-value="4" class="numpad-btn h-16">4</button>
-            <button data-value="5" class="numpad-btn h-16">5</button>
-            <button data-value="6" class="numpad-btn h-16">6</button>
-            <button data-value="-" class="numpad-btn h-16 bg-blue-300 text-white text-3xl font-bold">-</button>
-            <button data-value="7" class="numpad-btn h-16">7</button>
-            <button data-value="8" class="numpad-btn h-16">8</button>
-            <button data-value="9" class="numpad-btn h-16">9</button>
-            <button data-value="done" class="numpad-btn h-16 row-span-2 bg-green-300 text-white">Concluir</button>
-            <button data-value="." class="numpad-btn h-16 col-span-1">.</button>
-            <button data-value="0" class="numpad-btn h-16 col-span-2">0</button>
-        </div>
-    </div>
+  <!-- Botões redondos -->
+  <section class="botoes">
+    <button class="botao-circular">
+      <i class="fa-solid fa-bolt"></i>
+      <span>Área Pix</span>
+    </button>
+    <button class="botao-circular">
+      <i class="fa-solid fa-barcode"></i>
+      <span>Pagar</span>
+    </button>
+    <button class="botao-circular">
+      <i class="fa-solid fa-arrow-right-arrow-left"></i>
+      <span>Transferir</span>
+    </button>
+    <button class="botao-circular">
+      <i class="fa-solid fa-mobile-screen"></i>
+      <span>Recarga</span>
+    </button>
+  </section>
 
-    <script>
-    // --- LÓGICA GERAL E DE NAVEGAÇÃO ---
-    const calculatorContainer = document.getElementById('calculator-container');
-    const functionsModal = document.getElementById('functions-modal');
-    const openModalBtn = document.getElementById('open-modal-btn');
-    const pages = document.querySelectorAll('.page');
-    const numpad = document.getElementById('custom-numpad');
-    const functionInputs = document.querySelectorAll('.cute-input');
-    let activeInput = null;
+  <!-- Cartões -->
+  <div class="cartoes">
+    Meus cartões
+  </div>
+  <!-- Área Shopping -->
+  <div class="shopping">
+    <span>Aproveite os descontos e possibilidades</span>
+    <a href="#">Shopping</a>
+  </div>
+</main>
 
-    // Preenche o conteúdo das páginas dinamicamente para não poluir o HTML
-    function setupPages() {
-        functionsModal.innerHTML = `<div class="modal-content text-center space-y-3"><h2 class="text-2xl font-bold text-gray-700 mb-4">Funções Escolares</h2><button data-page="calculator" class="w-full py-3 bg-blue-300 text-white rounded-full shadow-md transition-transform transform hover:scale-105">Calculadora Padrão</button><button data-page="eq1" class="w-full py-3 bg-pink-300 text-white rounded-full shadow-md transition-transform transform hover:scale-105">Equação 1º Grau</button><button data-page="eq2" class="w-full py-3 bg-yellow-300 text-white rounded-full shadow-md transition-transform transform hover:scale-105">Equação 2º Grau</button><button data-page="pitagoras" class="w-full py-3 bg-green-300 text-white rounded-full shadow-md transition-transform transform hover:scale-105">Teorema de Pitágoras</button><button data-page="regra3" class="w-full py-3 bg-purple-300 text-white rounded-full shadow-md transition-transform transform hover:scale-105">Regra de Três</button><button id="close-modal-btn" class="mt-4 text-gray-500">Fechar</button></div>`;
-        document.getElementById('page-calculator').innerHTML = `<div class="bg-gray-800 bg-opacity-50 rounded-xl p-4 mb-6 text-right shadow-inner"><div id="expression" class="text-gray-200 text-xl h-7 overflow-hidden"></div><div id="result" class="text-white text-5xl font-bold h-14">0</div></div><div id="buttons-container" class="grid grid-cols-5 gap-3"><button data-value="sin" class="btn-cute btn-func">sin</button><button data-value="cos" class="btn-cute btn-func">cos</button><button data-value="tan" class="btn-cute btn-func">tan</button><button data-value="log" class="btn-cute btn-func">log</button><button data-value="ln" class="btn-cute btn-func">ln</button><button data-value="^" class="btn-cute btn-func">xʸ</button><button data-value="sqrt" class="btn-cute btn-func">√</button><button data-value="!" class="btn-cute btn-func">x!</button><button data-value="(" class="btn-cute btn-func">(</button><button data-value=")" class="btn-cute btn-func">)</button><button data-value="C" class="btn-cute btn-clear" style="grid-column: span 2; aspect-ratio: auto;">C</button><button data-value="backspace" class="btn-cute btn-clear">⌫</button><button data-value="%" class="btn-cute btn-op">%</button><button data-value="/" class="btn-cute btn-op">÷</button><button data-value="7" class="btn-cute">7</button><button data-value="8" class="btn-cute">8</button><button data-value="9" class="btn-cute">9</button><button data-value="*" class="btn-cute btn-op">×</button><button data-value="pi" class="btn-cute btn-func">π</button><button data-value="4" class="btn-cute">4</button><button data-value="5" class="btn-cute">5</button><button data-value="6" class="btn-cute">6</button><button data-value="-" class="btn-cute btn-op">-</button><button data-value="e" class="btn-cute btn-func">e</button><button data-value="1" class="btn-cute">1</button><button data-value="2" class="btn-cute">2</button><button data-value="3" class="btn-cute">3</button><button data-value="+" class="btn-cute btn-op">+</button><button data-value="=" class="btn-cute btn-equal" style="grid-row: span 2; aspect-ratio: auto;">=</button><button data-value="0" class="btn-cute btn-zero">0</button><button data-value="." class="btn-cute">.</button><button data-value="+/-" class="btn-cute">±</button></div>`;
-        document.getElementById('page-eq1').innerHTML = `<h2 class="function-title mb-6">Equação 1º Grau</h2><div class="flex items-center justify-center gap-2 mb-4 text-gray-700 text-2xl"><input type="text" id="eq1-a" class="cute-input w-20" placeholder="a"> <span>x +</span> <input type="text" id="eq1-b" class="cute-input w-20" placeholder="b"> <span>=</span> <input type="text" id="eq1-c" class="cute-input w-20" placeholder="c"></div><button id="solve-eq1" class="btn-cute btn-equal mx-auto !w-32 !h-16 !aspect-auto !rounded-3xl">Calcular</button><div id="result-eq1" class="mt-6 bg-gray-800 bg-opacity-50 rounded-xl p-4 text-white text-3xl min-h-[80px] flex items-center justify-center"></div>`;
-        document.getElementById('page-eq2').innerHTML = `<h2 class="function-title mb-6">Equação 2º Grau</h2><div class="flex items-center justify-center gap-2 mb-4 text-gray-700 text-2xl"><input type="text" id="eq2-a" class="cute-input w-20" placeholder="a"> <span>x² +</span> <input type="text" id="eq2-b" class="cute-input w-20" placeholder="b"> <span>x +</span> <input type="text" id="eq2-c" class="cute-input w-20" placeholder="c"> <span>= 0</span></div><button id="solve-eq2" class="btn-cute btn-equal mx-auto !w-32 !h-16 !aspect-auto !rounded-3xl">Calcular</button><div id="result-eq2" class="mt-6 bg-gray-800 bg-opacity-50 rounded-xl p-4 text-white text-xl min-h-[80px] flex items-center justify-center"></div>`;
-        document.getElementById('page-pitagoras').innerHTML = `<h2 class="function-title mb-6">Teorema de Pitágoras</h2><div class="space-y-4 mb-4 text-gray-700 text-xl"><div class="flex items-center gap-4"><span>Cateto A:</span><input type="text" id="pit-a" class="cute-input" placeholder="a"></div><div class="flex items-center gap-4"><span>Cateto B:</span><input type="text" id="pit-b" class="cute-input" placeholder="b"></div><div class="flex items-center gap-4"><span>Hipotenusa:</span><input type="text" id="pit-c" class="cute-input" placeholder="c"></div></div><p class="text-xs text-gray-600 mb-4">Deixe em branco o valor que quer descobrir.</p><button id="solve-pit" class="btn-cute btn-equal mx-auto !w-32 !h-16 !aspect-auto !rounded-3xl">Calcular</button><div id="result-pit" class="mt-6 bg-gray-800 bg-opacity-50 rounded-xl p-4 text-white text-3xl min-h-[80px] flex items-center justify-center"></div>`;
-        document.getElementById('page-regra3').innerHTML = `<h2 class="function-title mb-6">Regra de Três</h2><div class="grid grid-cols-3 items-center gap-4 mb-4 text-gray-700 text-xl"><input type="text" id="r3-a" class="cute-input" placeholder="a"> <span>está para</span> <input type="text" id="r3-b" class="cute-input" placeholder="b"><span>Assim como</span><div></div><div></div><input type="text" id="r3-c" class="cute-input" placeholder="c"> <span>está para</span> <span class="cute-input bg-gray-200">x</span></div><button id="solve-r3" class="btn-cute btn-equal mx-auto !w-32 !h-16 !aspect-auto !rounded-3xl">Calcular</button><div id="result-r3" class="mt-6 bg-gray-800 bg-opacity-50 rounded-xl p-4 text-white text-3xl min-h-[80px] flex items-center justify-center"></div>`;
-    }
-    setupPages();
-    
-    // --- LÓGICA DO TECLADO NUMÉRICO ---
-    function showNumpad(inputElement) {
-        if(activeInput) activeInput.classList.remove('active');
-        activeInput = inputElement;
-        activeInput.classList.add('active');
-        numpad.classList.add('visible');
-    }
+<!-- Barra de navegação inferior -->
+<div class="footer-navbar">
+  <button class="footer-btn active"><i class="fa-solid fa-arrow-up-arrow-down"></i></button>
+  <button class="footer-btn"><i class="fa-solid fa-dollar-sign"></i></button>
+  <button class="footer-btn"><i class="fa-solid fa-wallet"></i></button>
+</div>
 
-    function hideNumpad() {
-        if(activeInput) activeInput.classList.remove('active');
-        activeInput = null;
-        numpad.classList.remove('visible');
-    }
-
-    document.querySelectorAll('.cute-input').forEach(input => {
-        input.addEventListener('focus', (e) => {
-            e.preventDefault();
-            input.readOnly = true; // Impede teclado nativo
-            showNumpad(e.target);
-        });
-        input.addEventListener('blur', () => {
-             input.readOnly = false;
-        });
-    });
-
-    numpad.addEventListener('click', (e) => {
-        const button = e.target.closest('button');
-        if (!button || !activeInput) return;
-        
-        const value = button.dataset.value;
-
-        if (value === 'done') {
-            hideNumpad();
-        } else if (value === 'backspace') {
-            activeInput.value = activeInput.value.slice(0, -1);
-        } else if (value === '-') {
-            if (!activeInput.value.startsWith('-')) {
-                activeInput.value = '-' + activeInput.value;
-            }
-        } else {
-            if (value === '.' && activeInput.value.includes('.')) return;
-            activeInput.value += value;
-        }
-    });
-
-    // --- RESTO DA LÓGICA ---
-    window.addEventListener('load', () => calculatorContainer.classList.add('loaded'));
-
-    function switchPage(pageId) {
-        pages.forEach(page => page.classList.remove('active'));
-        document.getElementById(`page-${pageId}`).classList.add('active');
-        functionsModal.classList.remove('active');
-        hideNumpad(); // Esconde o teclado ao trocar de página
-    }
-
-    openModalBtn.addEventListener('click', () => functionsModal.classList.add('active'));
-    functionsModal.addEventListener('click', (e) => {
-        const target = e.target;
-        if (target.dataset.page) { switchPage(target.dataset.page); }
-        if (target.id === 'close-modal-btn' || target === functionsModal) { functionsModal.classList.remove('active'); }
-    });
-
-    function formatResult(value) { return parseFloat(value.toPrecision(12)).toString(); }
-    function animateResult(div) {
-        div.classList.add('result-animated');
-        div.addEventListener('animationend', () => div.classList.remove('result-animated'), { once: true });
-    }
-    
-    // O JS da calculadora padrão, eq1, eq2 etc. foi omitido aqui para brevidade, mas está presente e funcional
-    // ... (o código das calculadoras específicas é o mesmo da versão anterior)
-    const expressionDiv = document.getElementById('expression');
-    const resultDiv = document.getElementById('result');
-    const buttonsContainer = document.getElementById('buttons-container');
-    let currentInput = '0', fullExpression = '', evaluated = false;
-    function updateDisplay(animate = false) {
-        if(!expressionDiv) return;
-        expressionDiv.textContent = fullExpression.replace(/\*/g, '×').replace(/\//g, '÷');
-        resultDiv.textContent = currentInput.replace(/\*/g, '×').replace(/\//g, '÷');
-        if (animate) animateResult(resultDiv);
-    }
-    function handleButtonClick(value) {
-        if (!isNaN(value) || value === '.') { handleNumber(value); updateDisplay(); } 
-        else { handleOperator(value); updateDisplay(true); }
-    }
-    function handleNumber(value) {
-        if (evaluated) { currentInput = '0'; fullExpression = ''; evaluated = false; }
-        if (value === '.' && currentInput.includes('.')) return;
-        currentInput = currentInput === '0' && value !== '.' ? value : currentInput + value;
-    }
-    function handleOperator(value) {
-        if (value === 'C') { currentInput = '0'; fullExpression = ''; evaluated = false; return; }
-        if (value === 'backspace') { currentInput = currentInput.slice(0, -1) || '0'; return; }
-        if (evaluated && !['+', '-', '*', '/', '%', '^'].includes(value)) { fullExpression = ''; evaluated = false; } 
-        else if (evaluated) { fullExpression = currentInput; evaluated = false; }
-        switch (value) {
-            case '+/-': currentInput = (parseFloat(currentInput) * -1).toString(); break;
-            case '%': currentInput = (parseFloat(currentInput) / 100).toString(); break;
-            case '=': calculate(); break;
-            case 'pi': currentInput = Math.PI.toString(); break;
-            case 'e': currentInput = Math.E.toString(); break;
-            case 'sqrt': currentInput = Math.sqrt(parseFloat(currentInput)).toString(); break;
-            case '!': currentInput = factorial(parseInt(currentInput)).toString(); break;
-            case 'sin': case 'cos': case 'tan': case 'log': case 'ln':
-                fullExpression += `${value}(${currentInput})`; calculateFunction(value, currentInput); break;
-            default:
-                if (currentInput !== '' || fullExpression !== '') {
-                    const lastChar = fullExpression.slice(-1);
-                    if (['+', '-', '*', '/', '^'].includes(lastChar) && currentInput === '') {
-                        fullExpression = fullExpression.slice(0, -1) + value;
-                    } else { fullExpression += currentInput + value; }
-                    currentInput = '';
-                } break;
-        }
-    }
-    function calculateFunction(func, value) {
-        const num = parseFloat(value); let res;
-        try {
-            switch (func) {
-                case 'sin': res = Math.sin(num * Math.PI / 180); break;
-                case 'cos': res = Math.cos(num * Math.PI / 180); break;
-                case 'tan': res = Math.tan(num * Math.PI / 180); break;
-                case 'log': res = Math.log10(num); break;
-                case 'ln': res = Math.log(num); break;
-            }
-            currentInput = formatResult(res);
-        } catch { currentInput = "Erro"; }
-    }
-    function calculate() {
-        if (evaluated || fullExpression + currentInput === '') return;
-        try {
-            let expr = (fullExpression + currentInput).replace(/×/g, '*').replace(/÷/g, '/').replace(/\^/g, '**').replace(/π/g, 'Math.PI').replace(/e/g, 'Math.E');
-            expr = expr.replace(/(\d+)!/g, (_, n) => factorial(parseInt(n))) .replace(/sin\(([^)]+)\)/g, (_, n) => Math.sin(parseFloat(n) * Math.PI / 180)) .replace(/cos\(([^)]+)\)/g, (_, n) => Math.cos(parseFloat(n) * Math.PI / 180)) .replace(/tan\(([^)]+)\)/g, (_, n) => Math.tan(parseFloat(n) * Math.PI / 180)) .replace(/log\(([^)]+)\)/g, (_, n) => Math.log10(parseFloat(n))) .replace(/ln\(([^)]+)\)/g, (_, n) => Math.log(parseFloat(n))) .replace(/sqrt\(([^)]+)\)/g, (_, n) => Math.sqrt(parseFloat(n)));
-            const result = new Function('return ' + expr)();
-            if (isNaN(result) || !isFinite(result)) throw new Error("Erro");
-            fullExpression += currentInput + "="; currentInput = formatResult(result); evaluated = true;
-        } catch { currentInput = "Erro"; fullExpression = ""; }
-    }
-    function factorial(n) { if (n < 0 || n > 170) return NaN; if (n === 0 || n === 1) return 1; let result = 1; for (let i = 2; i <= n; i++) result *= i; return result; }
-    
-    document.getElementById('page-calculator').addEventListener('click', (e) => {
-        const btn = e.target.closest('button');
-        if (btn) { btn.classList.add('clicked'); setTimeout(() => btn.classList.remove('clicked'), 100); handleButtonClick(btn.dataset.value); }
-    });
-    
-    document.getElementById('solve-eq1').addEventListener('click', () => {
-        const a = parseFloat(document.getElementById('eq1-a').value); const b = parseFloat(document.getElementById('eq1-b').value); const c = parseFloat(document.getElementById('eq1-c').value); const resultDiv = document.getElementById('result-eq1');
-        if (isNaN(a) || isNaN(b) || isNaN(c)) { resultDiv.innerHTML = "Preencha tudo!"; } else if (a === 0) { resultDiv.innerHTML = "Valor de 'a' não pode ser 0."; } else { const x = (c - b) / a; resultDiv.innerHTML = `x = ${formatResult(x)}`; }
-        animateResult(resultDiv);
-    });
-    document.getElementById('solve-eq2').addEventListener('click', () => {
-        const a = parseFloat(document.getElementById('eq2-a').value); const b = parseFloat(document.getElementById('eq2-b').value); const c = parseFloat(document.getElementById('eq2-c').value); const resultDiv = document.getElementById('result-eq2');
-        if (isNaN(a) || isNaN(b) || isNaN(c)) { resultDiv.innerHTML = "Preencha tudo!"; } else if (a === 0) { resultDiv.innerHTML = "Isso é uma eq. de 1º grau!"; } else {
-            const delta = (b * b) - 4 * a * c;
-            if (delta < 0) { resultDiv.innerHTML = `Δ = ${formatResult(delta)}<br>Não há raízes reais.`; } else {
-                const x1 = (-b + Math.sqrt(delta)) / (2 * a); const x2 = (-b - Math.sqrt(delta)) / (2 * a);
-                resultDiv.innerHTML = `Δ = ${formatResult(delta)}<br>x' = ${formatResult(x1)}<br>x" = ${formatResult(x2)}`;
-            }
-        }
-        animateResult(resultDiv);
-    });
-    document.getElementById('solve-pit').addEventListener('click', () => {
-        const a = document.getElementById('pit-a').value ? parseFloat(document.getElementById('pit-a').value) : null; const b = document.getElementById('pit-b').value ? parseFloat(document.getElementById('pit-b').value) : null; const c = document.getElementById('pit-c').value ? parseFloat(document.getElementById('pit-c').value) : null; const resultDiv = document.getElementById('result-pit');
-        if ([a, b, c].filter(v => v !== null).length !== 2) { resultDiv.innerHTML = "Preencha 2 valores."; } 
-        else if (c === null) { resultDiv.innerHTML = `Hipotenusa = ${formatResult(Math.sqrt(a*a + b*b))}`; } 
-        else if (a === null) { if (c*c < b*b) { resultDiv.innerHTML = "Hipotenusa é menor que o cateto!"; } else { resultDiv.innerHTML = `Cateto a = ${formatResult(Math.sqrt(c*c - b*b))}`; } } 
-        else if (b === null) { if (c*c < a*a) { resultDiv.innerHTML = "Hipotenusa é menor que o cateto!"; } else { resultDiv.innerHTML = `Cateto b = ${formatResult(Math.sqrt(c*c - a*a))}`; } }
-        animateResult(resultDiv);
-    });
-    document.getElementById('solve-r3').addEventListener('click', () => {
-        const a = parseFloat(document.getElementById('r3-a').value); const b = parseFloat(document.getElementById('r3-b').value); const c = parseFloat(document.getElementById('r3-c').value); const resultDiv = document.getElementById('result-r3');
-        if (isNaN(a) || isNaN(b) || isNaN(c)) { resultDiv.innerHTML = "Preencha tudo!"; } else if (a === 0) { resultDiv.innerHTML = "O primeiro valor não pode ser 0."; } else { const x = (c * b) / a; resultDiv.innerHTML = `x = ${formatResult(x)}`; }
-        animateResult(resultDiv);
-    });
-
-    </script>
 </body>
 </html>
