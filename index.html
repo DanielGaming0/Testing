@@ -1,196 +1,1100 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Banco Digital</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      background: #14001e;
-      font-family: 'Montserrat', sans-serif;
-      color: #fff;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: linear-gradient(90deg, #5d1889 70%, #220033 100%);
-      padding: 20px 0;
-      text-align: center;
-      font-size: 1.3rem;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-    .container {
-      max-width: 400px;
-      background: #1d0128;
-      margin: 40px auto 0;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 0 16px #0008;
-    }
-    .saldo {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #35004d;
-    }
-    .saldo small {
-      color: #b3b3b3;
-      font-size: 0.95rem;
-    }
-    .saldo .valor {
-      font-size: 2.4rem;
-      font-weight: 700;
-      margin-top: 4px;
-    }
-    .saldo .outros-bancos {
-      color: #b3b3b3;
-      font-size: 1rem;
-      margin-top: 2px;
-    }
-    .botoes {
-      display: flex;
-      justify-content: space-between;
-      margin: 24px 0 20px;
-      gap: 12px;
-    }
-    .botao-circular {
-      background: #3a045c;
-      border: none;
-      border-radius: 50%;
-      width: 64px;
-      height: 64px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 2px 10px #32004a33;
-      transition: background 0.2s;
-      cursor: pointer;
-      flex-direction: column;
-    }
-    .botao-circular:hover {
-      background: #7b2cff;
-    }
-    .botao-circular i {
-      font-size: 1.8rem;
-      margin-bottom: 4px;
-    }
-    .botao-circular span {
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-    .cartoes, .shopping {
-      background: #29013e;
-      border-radius: 10px;
-      margin: 15px 0;
-      padding: 18px 14px;
-      transition: box-shadow 0.2s;
-      box-shadow: 0 1px 8px #0002;
-    }
-    .cartoes {
-      font-weight: bold;
-      letter-spacing: 0.01em;
-      cursor: pointer;
-    }
-    .shopping {
-      color: #c8c2f2;
-      font-size: 1.05rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .shopping a {
-      color: #b180fa;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .footer-navbar {
-      background: #21002d;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100vw;
-      max-width: 400px;
-      border-top-left-radius: 22px;
-      border-top-right-radius: 22px;
-      height: 62px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      box-shadow: 0 -2px 18px #0006;
-      margin-left: auto;
-      margin-right: auto;
-      right: 0;
-    }
-    .footer-navbar .footer-btn {
-      color: #c8a0f3;
-      background: none;
-      border: none;
-      font-size: 2rem;
-      transition: color 0.2s;
-      cursor: pointer;
-    }
-    .footer-navbar .footer-btn.active {
-      color: #b780fc;
-    }
-    @media (max-width:500px) {
-      .container { margin: 12px; }
-    }
-  </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>DancasMal IA</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/google/material-design-icons/master/png/navigation/assistant_black_24dp.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            /* Cores base Dark Bebê Moderno com inspiração Gemini */
+            --background-deep-dark: #1F1F1F; /* Fundo mais escuro */
+            --card-surface: #2D2D2D; /* Superfície de cards/painéis */
+            --header-surface: #2D2D2D; /* Superfície do cabeçalho */
+            --text-primary: #E0E0E0; /* Texto principal claro */
+            --text-secondary: #B0B0B0; /* Texto secundário */
+            --border-subtle: #444444; /* Borda sutil */
+            --input-bg-dark: #3A3A3A; /* Fundo do input */
+
+            /* Cores Bebê Moderno para gradientes e interatividade */
+            --primary-color-soft: #9c66e4; /* Roxo suave e vibrante */
+            --secondary-color-color: #63a4da; /* Azul suave */
+            --highlight-blue: #8AB4F8; /* Azul para destaque, como o "Olá" */
+            --record-red: #ff5252; /* Vermelho para gravação */
+
+            /* Scrollbar */
+            --scroll-thumb: #616161;
+            --scroll-track: #3A3A3A;
+
+            /* Code block */
+            --code-bg: #232323; /* Mais escuro que o card surface */
+            --code-border: #4D4D4D;
+            --copy-icon-color: var(--text-secondary);
+            --copy-icon-hover: var(--text-primary);
+
+            /* RGB para efeitos de sombra/hover */
+            --primary-color-soft-rgb: 156, 102, 228;
+            --secondary-color-soft-rgb: 99, 164, 218;
+            --highlight-blue-rgb: 138, 180, 248;
+            --card-surface-rgb: 45, 45, 45; /* Adicionado para rgba no toast */
+        }
+
+        /* Correção para o bug mobile: garantir que html e body ocupem a altura total */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            /* Usar safe-area-inset diretamente no body para padding global */
+            padding-bottom: env(safe-area-inset-bottom, 0);
+            padding-top: env(safe-area-inset-top, 0);
+            padding-left: env(safe-area-inset-left, 0);
+            padding-right: env(safe-area-inset-right, 0);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-deep-dark);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100%; /* min-height 100% para o body */
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Container principal */
+        .container {
+            background-color: var(--background-deep-dark);
+            border-radius: 12px;
+            width: 90vw;
+            max-width: 900px;
+            /* Altura ajustada para não ser afetada pelo safe-area-inset no body */
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Animação de reset de chat */
+        .container.chat-reset-animation {
+            animation: chatReset 0.6s ease-in-out;
+        }
+
+        @keyframes chatReset {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--header-surface);
+            padding: 15px 20px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .header-left, .header-right, .header-center {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-left i { /* Apenas o menu hambúrguer */
+            font-size: 1.5em;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .header-left i:hover {
+            color: var(--highlight-blue);
+        }
+
+        .header-title {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+            margin: 0;
+            font-size: 1.2em;
+            letter-spacing: 0.5px;
+            color: var(--text-primary);
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background-color: var(--card-surface);
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+            transition: left 0.3s ease-in-out;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            border-right: 1px solid var(--border-subtle);
+            /* Ajusta a altura da sidebar para safe-area-inset */
+            height: calc(100% - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
+            top: env(safe-area-inset-top, 0);
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 20px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header i {
+            font-size: 1.8em;
+            color: var(--primary-color-soft);
+        }
+
+        .sidebar-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.5em;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1.05em;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu a i {
+            font-size: 1.2em;
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background-color: rgba(var(--primary-color-soft-rgb), 0.1);
+            color: var(--primary-color-soft);
+            border-left-color: var(--primary-color-soft);
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            display: none;
+            cursor: pointer;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            gap: 30px;
+        }
+
+        .welcome-screen.hidden {
+            display: none;
+        }
+
+        .welcome-greeting {
+            font-size: 2.8em;
+            font-weight: 500;
+            color: var(--highlight-blue);
+        }
+
+        .prompt-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 600px;
+        }
+
+        .prompt-suggestion-button {
+            background-color: var(--input-bg-dark);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 12px 20px;
+            color: var(--text-primary);
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            flex-grow: 1;
+            min-width: 150px;
+            max-width: 200px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .prompt-suggestion-button:hover {
+            background-color: #4A4A4A;
+            border-color: var(--primary-color-soft);
+        }
+
+        /* Chat Window */
+        .chat-window {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            scroll-behavior: smooth;
+            background-color: var(--background-deep-dark);
+        }
+
+        .chat-window.hidden {
+            display: none;
+        }
+
+        /* Custom Scrollbar */
+        .chat-window::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-window::-webkit-scrollbar-track {
+            background: var(--scroll-track);
+        }
+        .chat-window::-webkit-scrollbar-thumb {
+            background: var(--scroll-thumb);
+            border-radius: 4px;
+        }
+        .chat-window::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color-soft);
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            font-size: 0.95em;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary-color-soft), var(--secondary-color-color));
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            background-color: var(--input-bg-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+            border-bottom-left-radius: 5px;
+            padding-right: 40px;
+        }
+
+        .message-sender {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+            opacity: 0.9;
+            display: block;
+        }
+
+        .message-sender.ai-sender {
+            color: var(--primary-color-soft);
+        }
+
+        .message-sender.user-sender {
+            color: #d1e7ff;
+        }
+
+        /* Estilos para código e pre-formatado */
+        .message.ai pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--code-border);
+            border-radius: 8px;
+            padding: 10px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-top: 10px;
+            color: #ccc;
+        }
+
+        .message.ai code {
+            background-color: #3A3A3A;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            border: 1px solid var(--code-border);
+            color: #e0e0e0;
+        }
+
+        /* Botão de Copiar */
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--copy-icon-color);
+            transition: all 0.2s ease;
+            font-size: 0.9em;
+        }
+
+        .copy-button:hover {
+            background: rgba(var(--primary-color-soft-rgb), 0.1);
+            color: var(--primary-color-soft);
+            transform: scale(1.1);
+        }
+
+        .copy-button:active {
+            transform: scale(0.9);
+        }
+
+        /* Mensagem de sucesso ao copiar */
+        .copy-success {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            opacity: 0;
+            animation: fadeAndSlideUp 2s forwards;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes fadeAndSlideUp {
+            0% { opacity: 0; transform: translate(-50%, 0); }
+            20% { opacity: 1; transform: translate(-50%, -50%); }
+            80% { opacity: 1; transform: translate(-50%, -60%); }
+            100% { opacity: 0; transform: translate(-50%, -70%); }
+        }
+
+        /* Input Area */
+        .input-area {
+            display: flex;
+            padding: 15px 20px;
+            background-color: var(--background-deep-dark);
+            border-top: 1px solid var(--border-subtle);
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-wrapper {
+            flex-grow: 1;
+            max-width: 600px;
+            position: relative;
+            background-color: var(--input-bg-dark);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            border: 1px solid transparent;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--primary-color-soft);
+            box-shadow: 0 0 0 2px rgba(var(--primary-color-soft-rgb), 0.3);
+        }
+
+        .input-area .icon-button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.4em;
+            cursor: pointer;
+            padding: 0 8px;
+            transition: color 0.2s ease, transform 0.2s ease;
+            outline: none;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-area .icon-button:hover:not(.recording) {
+            color: var(--highlight-blue);
+        }
+
+        /* Estilo para botão de microfone gravando */
+        .input-area .icon-button.recording {
+            color: var(--record-red);
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(1.1); opacity: 0.7; }
+        }
+
+        .input-area textarea {
+            flex-grow: 1;
+            padding: 12px 0;
+            border: none;
+            background-color: transparent;
+            color: var(--text-primary);
+            font-size: 1em;
+            resize: none;
+            max-height: 80px;
+            min-height: 25px;
+            overflow-y: auto;
+            transition: all 0.2s ease;
+        }
+
+        .input-area textarea::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        .input-area textarea:focus {
+            outline: none;
+        }
+
+        .input-area .send-button {
+            background: linear-gradient(45deg, var(--primary-color-soft), var(--secondary-color-color));
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            outline: none;
+            margin-left: 8px;
+        }
+
+        .input-area .send-button:hover:not(:disabled) {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        .input-area .send-button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+        }
+
+        .loading-indicator {
+            align-self: flex-start;
+            background-color: var(--input-bg-dark);
+            padding: 10px 15px;
+            border-radius: 18px;
+            color: var(--text-secondary);
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeIn 0.3s forwards;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animação dos três pontinhos */
+        .loading-dots span {
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
+            opacity: 0;
+            color: var(--highlight-blue);
+        }
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); opacity: 0; }
+            40% { transform: scale(1.0); opacity: 1; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Toast/Snackbar for temporary messages */
+        .custom-toast {
+            position: fixed;
+            bottom: 100px; /* Ajuste para não ficar em cima do input */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(var(--card-surface-rgb), 0.9); /* Fundo escuro semitransparente */
+            color: var(--text-primary);
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            z-index: 101; /* Acima de tudo */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .custom-toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-10px); /* Leve movimento para cima */
+        }
+
+        .custom-toast i {
+            color: var(--primary-color-soft); /* Ícone com cor bebê moderno */
+        }
+
+
+        /* Media Queries for Mobile Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                width: 100vw;
+                height: 100%; /* Fixa a altura do container para 100% da altura disponível no body */
+                border-radius: 0;
+            }
+            .header {
+                border-radius: 0;
+                padding: 12px 15px;
+            }
+            .header-left i {
+                font-size: 1.3em;
+            }
+            .header-title {
+                font-size: 1em;
+            }
+            .welcome-greeting {
+                font-size: 2em;
+            }
+            .prompt-suggestion-button {
+                min-width: unset;
+                max-width: 100%;
+                padding: 10px 15px;
+            }
+            .input-area {
+                padding: 10px 15px;
+                /* Removido padding-bottom aqui, ele é tratado no body global agora */
+            }
+            .input-wrapper {
+                max-width: 90%;
+            }
+            .input-area textarea {
+                max-height: 60px;
+                min-height: 25px;
+                font-size: 0.95em;
+                padding: 10px 0;
+            }
+            .input-area .send-button {
+                width: 35px;
+                height: 35px;
+                font-size: 1.3em;
+            }
+            .message {
+                max-width: 90%;
+                padding: 10px 15px;
+            }
+            .sidebar {
+                width: 250px;
+            }
+            .custom-toast {
+                bottom: 80px; /* Ajuste para mobile */
+                width: calc(100% - 40px); /* Quase largura total */
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Hidden file input for attachment -->
+    <input type="file" id="fileInput" style="display: none;" multiple>
 
-<!-- Cabeçalho -->
-<header>Banco Digital</header>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-robot"></i>
+            <h2>DancasMal IA</h2>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="#" id="newChatBtn"><i class="fas fa-plus-circle"></i> Novo Chat</a></li>
+            <li><a href="#" id="historyBtn"><i class="fas fa-history"></i> Histórico</a></li>
+            <li><a href="#" id="settingsBtn"><i class="fas fa-cog"></i> Configurações</a></li>
+        </ul>
+    </nav>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<main class="container">
-  <!-- Saldo -->
-  <div class="saldo">
-    <small>Conta</small>
-    <span class="valor">R$ 4.543,96</span>
-    <span class="outros-bancos">R$ 0,00 em outros bancos</span>
-  </div>
+    <div class="container" id="mainContainer">
+        <div class="header">
+            <div class="header-left">
+                <i class="fas fa-bars" id="menuToggle"></i>
+            </div>
+            <div class="header-center">
+                <span class="header-title">DancasMal IA</span>
+            </div>
+            <div class="header-right">
+                <!-- Ícones de informações ou outros podem ir aqui -->
+            </div>
+        </div>
 
-  <!-- Botões redondos -->
-  <section class="botoes">
-    <button class="botao-circular">
-      <i class="fa-solid fa-bolt"></i>
-      <span>Área Pix</span>
-    </button>
-    <button class="botao-circular">
-      <i class="fa-solid fa-barcode"></i>
-      <span>Pagar</span>
-    </button>
-    <button class="botao-circular">
-      <i class="fa-solid fa-arrow-right-arrow-left"></i>
-      <span>Transferir</span>
-    </button>
-    <button class="botao-circular">
-      <i class="fa-solid fa-mobile-screen"></i>
-      <span>Recarga</span>
-    </button>
-  </section>
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <h2 class="welcome-greeting">Olá 👋 em que posso ajudar?</h2>
+            <div class="prompt-suggestions">
+                <button class="prompt-suggestion-button" data-prompt="Me dê conselhos sobre vida e carreira.">Me dê conselhos</button>
+                <button class="prompt-suggestion-button" data-prompt="Explique como funciona a IA em termos simples.">Explique algo</button>
+                <button class="prompt-suggestion-button" data-prompt="Me dê inspiração para um projeto criativo.">Me dê inspiração</button>
+            </div>
+        </div>
 
-  <!-- Cartões -->
-  <div class="cartoes">
-    Meus cartões
-  </div>
-  <!-- Área Shopping -->
-  <div class="shopping">
-    <span>Aproveite os descontos e possibilidades</span>
-    <a href="#">Shopping</a>
-  </div>
-</main>
+        <!-- Chat Window (hidden by default) -->
+        <div class="chat-window hidden" id="chatWindow">
+            <!-- Messages will be appended here -->
+        </div>
 
-<!-- Barra de navegação inferior -->
-<div class="footer-navbar">
-  <button class="footer-btn active"><i class="fa-solid fa-arrow-up-arrow-down"></i></button>
-  <button class="footer-btn"><i class="fa-solid fa-dollar-sign"></i></button>
-  <button class="footer-btn"><i class="fa-solid fa-wallet"></i></button>
-</div>
+        <div class="input-area">
+            <div class="input-wrapper">
+                <button class="icon-button" id="attachmentBtn"><i class="fas fa-plus"></i></button>
+                <textarea id="userInput" placeholder="Peça ao DancasMal IA" rows="1"></textarea>
+                <button class="icon-button" id="creativeBtn"><i class="fas fa-wand-magic-sparkles"></i></button>
+                <button class="icon-button" id="micBtn"><i class="fas fa-microphone"></i></button> <!-- Botão de Microfone -->
+                <button id="sendButton" class="send-button"><i class="fas fa-arrow-up"></i></button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Custom Toast Message -->
+    <div class="custom-toast" id="customToast">
+        <i class="fas fa-info-circle"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        const API_KEY = "AIzaSyDZEbPed8MJYi2WRxVab4DGd2D6aNe5xgo"; // Sua chave de API
+        const mainContainer = document.getElementById('mainContainer');
+        const chatWindow = document.getElementById('chatWindow');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const userInput = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const fileInput = document.getElementById('fileInput');
+
+        const newChatBtn = document.getElementById('newChatBtn');
+        const historyBtn = document.getElementById('historyBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const attachmentBtn = document.getElementById('attachmentBtn');
+        const creativeBtn = document.getElementById('creativeBtn');
+        const micBtn = document.getElementById('micBtn'); // Referência ao novo botão de microfone
+        const promptSuggestionButtons = document.querySelectorAll('.prompt-suggestion-button');
+
+        const customToast = document.getElementById('customToast');
+        const toastMessageSpan = document.getElementById('toastMessage');
+
+
+        let chatHistory = [];
+        let currentChatMessages = [];
+        let isChatActive = false;
+        let isRecording = false; // Estado do microfone
+
+        // --- Web Speech API ---
+        let recognition;
+        // Verifica se a API de reconhecimento de fala está disponível no navegador
+        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false; // Parar após uma única fala
+            recognition.lang = 'pt-BR'; // Definir idioma para Português (Brasil)
+            recognition.interimResults = false; // Não mostrar resultados provisórios
+
+            recognition.onstart = () => {
+                isRecording = true;
+                micBtn.classList.add('recording');
+                userInput.placeholder = "Fale agora...";
+                showToast("Gravando áudio...", 2000);
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                userInput.value = transcript;
+                userInput.focus();
+                adjustTextareaHeight();
+                showToast("Áudio transcrito!", 1500);
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error', event.error);
+                let errorMessage = "Erro na gravação de áudio.";
+                if (event.error === 'not-allowed' || event.error === 'permission-denied') {
+                    errorMessage = "Permissão de microfone negada. Por favor, permita o uso do microfone nas configurações do navegador.";
+                } else if (event.error === 'no-speech') {
+                    errorMessage = "Não foi detectada fala.";
+                } else if (event.error === 'network') {
+                    errorMessage = "Erro de rede para o reconhecimento de voz.";
+                }
+                showToast(errorMessage, 3500);
+                isRecording = false;
+                micBtn.classList.remove('recording');
+                userInput.placeholder = "Peça ao DancasMal IA";
+            };
+
+            recognition.onend = () => {
+                isRecording = false;
+                micBtn.classList.remove('recording');
+                userInput.placeholder = "Peça ao DancasMal IA";
+                // showToast("Gravação finalizada."); // Pode ser redundante com onresult
+            };
+
+        } else {
+            console.warn("Speech Recognition API não é suportada neste navegador.");
+            micBtn.style.display = 'none'; // Esconder o botão se a API não for suportada
+            showToast("Seu navegador não suporta reconhecimento de voz.", 4000);
+        }
+        // --- Fim Web Speech API ---
+
+
+        // marked.js configuration
+        marked.setOptions({
+            gfm: true,
+            breaks: true,
+            sanitize: true,
+        });
+
+        function showToast(message, duration = 3000) {
+            toastMessageSpan.textContent = message;
+            customToast.classList.add('show');
+            setTimeout(() => {
+                customToast.classList.remove('show');
+            }, duration);
+        }
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('active');
+        }
+
+        function activateChatScreen() {
+            welcomeScreen.classList.add('hidden');
+            chatWindow.classList.remove('hidden');
+            isChatActive = true;
+            scrollToBottom();
+            userInput.focus();
+        }
+
+        function deactivateChatScreen() {
+            chatWindow.classList.add('hidden');
+            welcomeScreen.classList.remove('hidden');
+            isChatActive = false;
+        }
+
+        function newChat() {
+            mainContainer.classList.add('chat-reset-animation');
+            setTimeout(() => {
+                chatWindow.innerHTML = '';
+                chatHistory = [];
+                currentChatMessages = [];
+                deactivateChatScreen();
+                mainContainer.classList.remove('chat-reset-animation');
+            }, 300);
+            toggleSidebar();
+        }
+
+        function showHistory() {
+            showToast("Em breve, o histórico de chats estará disponível aqui!", 2500);
+            toggleSidebar();
+        }
+
+        function showSettings() {
+            showToast("Em breve, as configurações estarão disponíveis aqui!", 2500);
+            toggleSidebar();
+        }
+
+        // Anexo (Attachment)
+        attachmentBtn.addEventListener('click', () => {
+            showToast("Em breve, a funcionalidade de anexo estará disponível!", 2500);
+        });
+
+        // Criativo (Creative)
+        creativeBtn.addEventListener('click', () => {
+            const creativePrompts = [
+                "Me dê três ideias para uma história de ficção científica.",
+                "Escreva um haicai sobre um pôr do sol.",
+                "Qual seria o nome de uma banda de rock inspirada em mitologia grega?",
+                "Crie um slogan para um novo café com tema espacial.",
+                "Sugira um desafio de desenho de 30 dias."
+            ];
+            const randomPrompt = creativePrompts[Math.floor(Math.random() * creativePrompts.length)];
+            userInput.value = randomPrompt;
+            userInput.focus();
+        });
+
+        // Microfone - Agora usa a Web Speech API
+        micBtn.addEventListener('click', () => {
+            if (recognition) { // Verifica se a API foi inicializada
+                if (!isRecording) {
+                    recognition.start();
+                } else {
+                    recognition.stop(); // Para a gravação se já estiver ativo
+                }
+            } else {
+                showToast("Seu navegador não suporta reconhecimento de voz.", 4000);
+            }
+        });
+
+
+        // Event Listeners
+        menuToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        newChatBtn.addEventListener('click', newChat);
+        historyBtn.addEventListener('click', showHistory);
+        settingsBtn.addEventListener('click', showSettings);
+
+        promptSuggestionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                userInput.value = button.dataset.prompt;
+                sendMessage(); // Envia a mensagem automaticamente
+            });
+        });
+
+        async function sendMessage() {
+            const messageText = userInput.value.trim();
+            if (messageText === "") return;
+
+            if (!isChatActive) {
+                activateChatScreen();
+            }
+
+            appendMessage(messageText, 'user');
+            userInput.value = '';
+            adjustTextareaHeight();
+
+            chatHistory.push({
+                role: "user",
+                parts: [{ text: messageText }]
+            });
+            currentChatMessages.push({ role: "user", text: messageText });
+
+            const loadingIndicator = showLoadingIndicator();
+            sendButton.disabled = true;
+            userInput.disabled = true;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: chatHistory,
+                        safetySettings: [
+                            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
+                        ],
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts.length > 0) {
+                    const aiResponse = data.candidates[0].content.parts[0].text;
+                    appendMessage(aiResponse, 'ai');
+                    chatHistory.push({
+                        role: "model",
+                        parts: [{ text: aiResponse }]
+                    });
+                    currentChatMessages.push({ role: "model", text: aiResponse });
+                } else if (data.promptFeedback && data.promptFeedback.safetyRatings) {
+                    const safetyReasons = data.promptFeedback.safetyRatings
+                        .filter(rating => rating.blocked)
+                        .map(rating => rating.category.replace('HARM_CATEGORY_', '').replace('_', ' ').toLowerCase());
+                    const blockedMessage = `Minha resposta foi bloqueada devido a políticas de segurança em relação a: ${safetyReasons.join(', ')}. Por favor, tente uma pergunta diferente.`;
+                    appendMessage(blockedMessage, 'ai');
+                } else {
+                    appendMessage("Desculpe, não consegui obter uma resposta. Tente novamente.", 'ai');
+                    console.error("Erro na API Gemini:", data);
+                }
+            } catch (error) {
+                console.error("Erro ao chamar a API Gemini:", error);
+                appendMessage("Ocorreu um erro ao comunicar com a IA. Por favor, verifique sua chave de API e conexão.", 'ai');
+            } finally {
+                hideLoadingIndicator(loadingIndicator);
+                sendButton.disabled = false;
+                userInput.disabled = false;
+                userInput.focus();
+                scrollToBottom();
+            }
+        }
+
+        function appendMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+
+            const senderSpan = document.createElement('span');
+            senderSpan.classList.add('message-sender', `${sender}-sender`);
+            senderSpan.textContent = sender === 'user' ? 'Você' : 'DancasMal IA';
+            messageDiv.appendChild(senderSpan);
+
+            if (sender === 'ai') {
+                messageDiv.innerHTML += marked.parse(text);
+
+                const copyBtn = document.createElement('button');
+                copyBtn.classList.add('copy-button');
+                copyBtn.innerHTML = '<i class="far fa-copy"></i>';
+                copyBtn.onclick = () => copyMessage(copyBtn);
+                messageDiv.appendChild(copyBtn);
+            } else {
+                messageDiv.appendChild(document.createTextNode(text));
+            }
+
+            chatWindow.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function copyMessage(button) {
+            const messageDiv = button.closest('.message');
+            const tempDiv = messageDiv.cloneNode(true);
+            const copyBtnInTemp = tempDiv.querySelector('.copy-button');
+            if (copyBtnInTemp) {
+                copyBtnInTemp.remove();
+            }
+            const senderSpanInTemp = tempDiv.querySelector('.message-sender');
+            if (senderSpanInTemp) {
+                senderSpanInTemp.remove();
+            }
+
+            const textToCopy = tempDiv.textContent.trim();
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showCopySuccess(button);
+            }).catch(err => {
+                console.error('Falha ao copiar:', err);
+                alert('Erro ao copiar a mensagem. Por favor, copie manualmente.');
+            });
+        }
+
+        function showCopySuccess(button) {
+            const successSpan = document.createElement('span');
+            successSpan.classList.add('copy-success');
+            successSpan.textContent = 'Copiado!';
+            button.closest('.message').appendChild(successSpan);
+
+            setTimeout(() => {
+                successSpan.remove();
+            }, 2000);
+        }
+
+        function scrollToBottom() {
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function showLoadingIndicator() {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('loading-indicator');
+            loadingDiv.innerHTML = `
+                <span>O DancasMal IA está pensando</span><span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+            `;
+            chatWindow.appendChild(loadingDiv);
+            setTimeout(() => loadingDiv.classList.add('show'), 10);
+            scrollToBottom();
+            return loadingDiv;
+        }
+
+        function hideLoadingIndicator(indicator) {
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        function adjustTextareaHeight() {
+            userInput.style.height = 'auto';
+            userInput.style.height = userInput.scrollHeight + 'px';
+        }
+
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+        userInput.addEventListener('input', adjustTextareaHeight);
+
+        // Initial setup
+        adjustTextareaHeight();
+    </script>
 </body>
 </html>
