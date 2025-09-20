@@ -208,7 +208,7 @@
             transition: color 0.2s ease;
         }
 
-        .sidebar-menu a:hover {
+        .sidebar-menu a:hover, .sidebar-menu a.active-sidebar-link {
             background-color: rgba(var(--primary-color-soft-rgb), 0.1);
             color: var(--primary-color-soft);
             border-left-color: var(--primary-color-soft);
@@ -228,6 +228,52 @@
 
         .sidebar-overlay.active {
             display: block;
+        }
+
+        /* History Panel */
+        #historyPanel {
+            max-height: 0; /* Começa escondido */
+            overflow: hidden;
+            transition: max-height 0.4s ease-out; /* Animação suave */
+            background-color: rgba(var(--card-surface-rgb), 0.8); /* Fundo um pouco mais claro/transparente */
+            margin-top: -5px; /* Para se juntar ao item "Histórico" */
+            border-radius: 0 0 8px 8px;
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.1);
+            padding-bottom: 5px;
+        }
+
+        #historyPanel.active {
+            max-height: 300px; /* Altura máxima para mostrar o conteúdo */
+            overflow-y: auto;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .history-item {
+            display: block;
+            width: calc(100% - 20px); /* Ajusta para padding */
+            padding: 10px 20px;
+            margin: 5px auto; /* Centraliza */
+            background-color: var(--input-bg-dark);
+            border: 1px solid var(--border-subtle);
+            border-radius: 15px; /* Bordas arredondadas */
+            color: var(--text-primary);
+            text-align: left;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis; /* Corta texto longo com reticências */
+        }
+
+        .history-item:hover {
+            background-color: #4A4A4A;
+            border-color: var(--highlight-blue);
+        }
+        .history-item.active-chat {
+            border-color: var(--primary-color-soft);
+            box-shadow: 0 0 0 2px rgba(var(--primary-color-soft-rgb), 0.3);
         }
 
         /* Welcome Screen */
@@ -412,14 +458,13 @@
         /* Mensagem de sucesso ao copiar */
         .copy-success {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            bottom: 5px; /* Ajustado para ficar mais dentro da bolha da mensagem */
+            right: 5px;
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-size: 0.9em;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75em;
             opacity: 0;
             animation: fadeAndSlideUp 2s forwards;
             pointer-events: none;
@@ -427,10 +472,10 @@
         }
 
         @keyframes fadeAndSlideUp {
-            0% { opacity: 0; transform: translate(-50%, 0); }
-            20% { opacity: 1; transform: translate(-50%, -50%); }
-            80% { opacity: 1; transform: translate(-50%, -60%); }
-            100% { opacity: 0; transform: translate(-50%, -70%); }
+            0% { opacity: 0; transform: translateY(10px); }
+            20% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(-5px); }
+            100% { opacity: 0; transform: translateY(-10px); }
         }
 
         /* Input Area */
@@ -688,7 +733,12 @@
         </div>
         <ul class="sidebar-menu">
             <li><a href="#" id="newChatBtn"><i class="fas fa-plus-circle"></i> Novo Chat</a></li>
-            <li><a href="#" id="historyBtn"><i class="fas fa-history"></i> Histórico</a></li>
+            <li>
+                <a href="#" id="historyToggleBtn"><i class="fas fa-history"></i> Histórico</a>
+                <div id="historyPanel">
+                    <!-- Chats will be loaded here -->
+                </div>
+            </li>
             <li><a href="#" id="settingsBtn"><i class="fas fa-cog"></i> Configurações</a></li>
         </ul>
     </nav>
@@ -752,31 +802,32 @@
         const fileInput = document.getElementById('fileInput');
 
         const newChatBtn = document.getElementById('newChatBtn');
-        const historyBtn = document.getElementById('historyBtn');
+        const historyToggleBtn = document.getElementById('historyToggleBtn'); // Botão para alternar o histórico
+        const historyPanel = document.getElementById('historyPanel'); // O painel de histórico
         const settingsBtn = document.getElementById('settingsBtn');
         const attachmentBtn = document.getElementById('attachmentBtn');
         const creativeBtn = document.getElementById('creativeBtn');
-        const micBtn = document.getElementById('micBtn'); // Referência ao novo botão de microfone
+        const micBtn = document.getElementById('micBtn');
         const promptSuggestionButtons = document.querySelectorAll('.prompt-suggestion-button');
 
         const customToast = document.getElementById('customToast');
         const toastMessageSpan = document.getElementById('toastMessage');
 
 
-        let chatHistory = [];
-        let currentChatMessages = [];
+        let allChats = []; // Array para armazenar todos os chats
+        let currentChatId = null; // ID do chat atual
+        let currentChatApiHistory = []; // Histórico para a API do Gemini
         let isChatActive = false;
         let isRecording = false; // Estado do microfone
 
         // --- Web Speech API ---
         let recognition;
-        // Verifica se a API de reconhecimento de fala está disponível no navegador
         if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
-            recognition.continuous = false; // Parar após uma única fala
-            recognition.lang = 'pt-BR'; // Definir idioma para Português (Brasil)
-            recognition.interimResults = false; // Não mostrar resultados provisórios
+            recognition.continuous = false;
+            recognition.lang = 'pt-BR';
+            recognition.interimResults = false;
 
             recognition.onstart = () => {
                 isRecording = true;
@@ -787,8 +838,7 @@
 
             recognition.onresult = (event) => {
                 const transcript = event.results[0][0].transcript;
-                // Modificado para APPEND em vez de REPLACE
-                userInput.value += (userInput.value ? ' ' : '') + transcript; 
+                userInput.value += (userInput.value ? ' ' : '') + transcript;
                 userInput.focus();
                 adjustTextareaHeight();
                 showToast("Áudio transcrito!", 1500);
@@ -818,7 +868,7 @@
 
         } else {
             console.warn("Speech Recognition API não é suportada neste navegador.");
-            micBtn.style.display = 'none'; // Esconder o botão se a API não for suportada
+            micBtn.style.display = 'none';
             showToast("Seu navegador não suporta reconhecimento de voz.", 4000);
         }
         // --- Fim Web Speech API ---
@@ -842,6 +892,12 @@
         function toggleSidebar() {
             sidebar.classList.toggle('active');
             sidebarOverlay.classList.toggle('active');
+            // Ao fechar a sidebar, garante que o painel de histórico também feche
+            if (!sidebar.classList.contains('active')) {
+                historyPanel.classList.remove('active');
+                // Remove a classe 'active-sidebar-link' do botão de histórico
+                historyToggleBtn.classList.remove('active-sidebar-link');
+            }
         }
 
         function activateChatScreen() {
@@ -858,27 +914,131 @@
             isChatActive = false;
         }
 
-        function newChat() {
+        function generateUniqueId() {
+            return 'chat_' + Date.now() + Math.random().toString(16).slice(2);
+        }
+
+        function saveCurrentChat() {
+            if (currentChatApiHistory.length === 0) return; // Não salva chats vazios
+
+            const chatTitle = currentChatApiHistory[0].parts[0].text.substring(0, 50) + (currentChatApiHistory[0].parts[0].text.length > 50 ? '...' : ''); // Primeiro user message como título
+            const newChat = {
+                id: currentChatId || generateUniqueId(),
+                title: chatTitle,
+                messages: JSON.parse(JSON.stringify(currentChatApiHistory)) // Copia o histórico para evitar referência
+            };
+
+            const existingIndex = allChats.findIndex(chat => chat.id === newChat.id);
+            if (existingIndex !== -1) {
+                allChats[existingIndex] = newChat; // Atualiza chat existente
+            } else {
+                allChats.unshift(newChat); // Adiciona o novo chat no início
+            }
+            localStorage.setItem('dancasmalChats', JSON.stringify(allChats));
+            renderHistoryPanel(); // Atualiza a exibição do histórico
+        }
+
+        function loadChat(chatId) {
+            saveCurrentChat(); // Salva o chat atual antes de carregar outro
+            const chatToLoad = allChats.find(chat => chat.id === chatId);
+            if (chatToLoad) {
+                currentChatId = chatToLoad.id;
+                currentChatApiHistory = JSON.parse(JSON.stringify(chatToLoad.messages));
+                chatWindow.innerHTML = ''; // Limpa a janela do chat
+                chatToLoad.messages.forEach(msg => {
+                    if (msg.role === 'user') {
+                        appendMessage(msg.parts[0].text, 'user', false); // false para não salvar novamente
+                    } else if (msg.role === 'model') {
+                        appendMessage(msg.parts[0].text, 'ai', false); // false para não salvar novamente
+                    }
+                });
+                activateChatScreen();
+            }
+            toggleSidebar(); // Fecha a sidebar após carregar o chat
+            renderHistoryPanel(); // Atualiza a exibição (para marcar o ativo)
+        }
+
+
+        function renderHistoryPanel() {
+            historyPanel.innerHTML = ''; // Limpa o painel antes de renderizar
+            if (allChats.length === 0) {
+                const noHistory = document.createElement('p');
+                noHistory.textContent = "Nenhum chat salvo.";
+                noHistory.style.textAlign = 'center';
+                noHistory.style.color = 'var(--text-secondary)';
+                noHistory.style.padding = '10px';
+                historyPanel.appendChild(noHistory);
+            } else {
+                allChats.forEach(chat => {
+                    const chatButton = document.createElement('button');
+                    chatButton.classList.add('history-item');
+                    if (chat.id === currentChatId) {
+                        chatButton.classList.add('active-chat');
+                    }
+                    chatButton.textContent = chat.title;
+                    chatButton.onclick = () => loadChat(chat.id);
+                    historyPanel.appendChild(chatButton);
+                });
+            }
+        }
+
+        function initializeApp() {
+            const savedChats = localStorage.getItem('dancasmalChats');
+            if (savedChats) {
+                allChats = JSON.parse(savedChats);
+                if (allChats.length > 0) {
+                    // Carrega o chat mais recente por padrão ao iniciar
+                    loadChat(allChats[0].id);
+                }
+            }
+            renderHistoryPanel(); // Renderiza o histórico inicial
+            // Se nenhum chat for carregado, a welcome screen continua visível.
+        }
+
+        function newChatFunction() { // Renomeado para evitar conflito com newChatBtn
+            saveCurrentChat(); // Salva o chat atual antes de criar um novo
             mainContainer.classList.add('chat-reset-animation');
             setTimeout(() => {
                 chatWindow.innerHTML = '';
-                chatHistory = [];
-                currentChatMessages = [];
-                deactivateChatScreen();
+                currentChatApiHistory = []; // Zera o histórico da API
+                currentChatId = generateUniqueId(); // Gera um novo ID para o chat vazio
+                deactivateChatScreen(); // Volta para a tela de boas-vindas
                 mainContainer.classList.remove('chat-reset-animation');
             }, 300);
-            toggleSidebar();
+            toggleSidebar(); // Fecha a sidebar
+            renderHistoryPanel(); // Atualiza a exibição do histórico (para desmarcar o ativo)
         }
 
-        function showHistory() {
-            showToast("Em breve, o histórico de chats estará disponível aqui!", 2500);
-            toggleSidebar();
-        }
+        // Event Listeners
+        menuToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
 
-        function showSettings() {
+        newChatBtn.addEventListener('click', newChatFunction);
+
+        historyToggleBtn.addEventListener('click', (event) => {
+            event.preventDefault(); // Impede o link de navegar
+            historyPanel.classList.toggle('active');
+            historyToggleBtn.classList.toggle('active-sidebar-link'); // Marca o link "Histórico"
+            // Garante que outros links da sidebar não tenham a classe ativa se o histórico abrir
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                if (link !== historyToggleBtn) {
+                    link.classList.remove('active-sidebar-link');
+                }
+            });
+        });
+
+        settingsBtn.addEventListener('click', (event) => {
+            event.preventDefault();
             showToast("Em breve, as configurações estarão disponíveis aqui!", 2500);
-            toggleSidebar();
-        }
+            // Ao clicar em configurações, fecha o painel de histórico se estiver aberto
+            historyPanel.classList.remove('active');
+            historyToggleBtn.classList.remove('active-sidebar-link');
+
+            document.querySelectorAll('.sidebar-menu a').forEach(link => link.classList.remove('active-sidebar-link'));
+            settingsBtn.classList.add('active-sidebar-link');
+            toggleSidebar(); // Fecha a sidebar
+        });
+
 
         // Anexo (Attachment)
         attachmentBtn.addEventListener('click', () => {
@@ -899,32 +1059,23 @@
             userInput.focus();
         });
 
-        // Microfone - Agora usa a Web Speech API
+        // Microfone - Usa a Web Speech API
         micBtn.addEventListener('click', () => {
-            if (recognition) { // Verifica se a API foi inicializada
+            if (recognition) {
                 if (!isRecording) {
                     recognition.start();
                 } else {
-                    recognition.stop(); // Para a gravação se já estiver ativo
+                    recognition.stop();
                 }
             } else {
                 showToast("Seu navegador não suporta reconhecimento de voz.", 4000);
             }
         });
 
-
-        // Event Listeners
-        menuToggle.addEventListener('click', toggleSidebar);
-        sidebarOverlay.addEventListener('click', toggleSidebar);
-
-        newChatBtn.addEventListener('click', newChat);
-        historyBtn.addEventListener('click', showHistory);
-        settingsBtn.addEventListener('click', showSettings);
-
         promptSuggestionButtons.forEach(button => {
             button.addEventListener('click', () => {
                 userInput.value = button.dataset.prompt;
-                sendMessage(); // Envia a mensagem automaticamente
+                sendMessage();
             });
         });
 
@@ -934,17 +1085,21 @@
 
             if (!isChatActive) {
                 activateChatScreen();
+                // Se é a primeira mensagem de um novo chat, define o currentChatId
+                if (currentChatId === null) {
+                    currentChatId = generateUniqueId();
+                }
             }
 
             appendMessage(messageText, 'user');
             userInput.value = '';
             adjustTextareaHeight();
 
-            chatHistory.push({
+            currentChatApiHistory.push({
                 role: "user",
                 parts: [{ text: messageText }]
             });
-            currentChatMessages.push({ role: "user", text: messageText });
+            saveCurrentChat(); // Salva o chat após cada nova mensagem do usuário
 
             const loadingIndicator = showLoadingIndicator();
             sendButton.disabled = true;
@@ -957,7 +1112,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        contents: chatHistory,
+                        contents: currentChatApiHistory,
                         safetySettings: [
                             { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
                             { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
@@ -972,17 +1127,18 @@
                 if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts.length > 0) {
                     const aiResponse = data.candidates[0].content.parts[0].text;
                     appendMessage(aiResponse, 'ai');
-                    chatHistory.push({
+                    currentChatApiHistory.push({
                         role: "model",
                         parts: [{ text: aiResponse }]
                     });
-                    currentChatMessages.push({ role: "model", text: aiResponse });
+                    saveCurrentChat(); // Salva o chat após a resposta da IA
                 } else if (data.promptFeedback && data.promptFeedback.safetyRatings) {
                     const safetyReasons = data.promptFeedback.safetyRatings
                         .filter(rating => rating.blocked)
                         .map(rating => rating.category.replace('HARM_CATEGORY_', '').replace('_', ' ').toLowerCase());
                     const blockedMessage = `Minha resposta foi bloqueada devido a políticas de segurança em relação a: ${safetyReasons.join(', ')}. Por favor, tente uma pergunta diferente.`;
                     appendMessage(blockedMessage, 'ai');
+                    // Não salva mensagens bloqueadas no histórico da API, mas a mensagem do usuário já foi salva
                 } else {
                     appendMessage("Desculpe, não consegui obter uma resposta. Tente novamente.", 'ai');
                     console.error("Erro na API Gemini:", data);
@@ -999,7 +1155,7 @@
             }
         }
 
-        function appendMessage(text, sender) {
+        function appendMessage(text, sender, save = true) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', sender);
 
@@ -1094,6 +1250,7 @@
         userInput.addEventListener('input', adjustTextareaHeight);
 
         // Initial setup
+        initializeApp();
         adjustTextareaHeight();
     </script>
 </body>
