@@ -1894,7 +1894,8 @@
 
         // Event Listeners for Settings
         headerSettingsBtn.addEventListener('click', openSettingsModal);
-        closeSettingsBtn.addEventListener('click', closeSettingsBtn);
+        // CORREÇÃO AQUI: Chamar a função closeSettingsModal
+        closeSettingsBtn.addEventListener('click', closeSettingsModal); 
         settingsModalOverlay.addEventListener('click', (e) => {
             if (e.target === settingsModalOverlay) {
                 closeSettingsModal();
