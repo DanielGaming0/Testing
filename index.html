@@ -24,6 +24,7 @@
             --secondary-color-color: #63a4da; /* Azul suave */
             --highlight-blue: #8AB4F8; /* Azul para destaque, como o "Olá" */
             --record-red: #ff5252; /* Vermelho para gravação */
+            --danger-red: #e74c3c; /* Vermelho para ações perigosas */
 
             /* Scrollbar */
             --scroll-thumb: #616161;
@@ -111,14 +112,14 @@
             gap: 15px;
         }
 
-        .header-left i { /* Apenas o menu hambúrguer */
+        .header-left i, .header-right i { /* Ícone de configurações no header */
             font-size: 1.5em;
             color: var(--text-secondary);
             cursor: pointer;
             transition: color 0.2s ease;
         }
 
-        .header-left i:hover {
+        .header-left i:hover, .header-right i:hover {
             color: var(--highlight-blue);
         }
 
@@ -213,6 +214,20 @@
             color: var(--primary-color-soft);
             border-left-color: var(--primary-color-soft);
         }
+
+        /* Estilo específico para o botão de limpar histórico (lixeira) */
+        #clearHistoryBtn {
+            color: var(--danger-red); /* Cor vermelha para indicar ação de exclusão */
+        }
+        #clearHistoryBtn:hover {
+            background-color: rgba(var(--danger-red-rgb, 231, 76, 60), 0.1); /* Vermelho suave no hover */
+            border-left-color: var(--danger-red);
+            color: var(--danger-red);
+        }
+        #clearHistoryBtn i {
+            color: var(--danger-red);
+        }
+
 
         .sidebar-overlay {
             position: fixed;
@@ -663,6 +678,86 @@
             color: var(--primary-color-soft); /* Ícone com cor bebê moderno */
         }
 
+        /* Custom Confirmation Dialog (mini-modal) */
+        .confirmation-dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 102; /* Acima do toast e sidebar */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .confirmation-dialog-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .confirmation-dialog {
+            background-color: var(--card-surface);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            max-width: 350px;
+            text-align: center;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .confirmation-dialog-overlay.show .confirmation-dialog {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .confirmation-dialog p {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .confirmation-dialog .dialog-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .confirmation-dialog .dialog-buttons button {
+            background: var(--input-bg-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            min-width: 80px;
+        }
+
+        .confirmation-dialog .dialog-buttons button:hover {
+            background-color: #4A4A4A;
+            border-color: var(--highlight-blue);
+        }
+
+        .confirmation-dialog .dialog-buttons button.confirm-btn {
+            background: linear-gradient(45deg, var(--danger-red), #ff7043); /* Gradiente para "Sim" */
+            border-color: var(--danger-red);
+            color: white;
+        }
+        .confirmation-dialog .dialog-buttons button.confirm-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
 
         /* Media Queries for Mobile Adjustments */
         @media (max-width: 768px) {
@@ -675,7 +770,7 @@
                 border-radius: 0;
                 padding: 12px 15px;
             }
-            .header-left i {
+            .header-left i, .header-right i { /* Ajuste para o ícone de configurações */
                 font-size: 1.3em;
             }
             .header-title {
@@ -733,13 +828,13 @@
         </div>
         <ul class="sidebar-menu">
             <li><a href="#" id="newChatBtn"><i class="fas fa-plus-circle"></i> Novo Chat</a></li>
+            <li><a href="#" id="clearHistoryBtn"><i class="fas fa-trash-alt"></i> Limpar Histórico</a></li> <!-- Opção "Preciosa" -->
             <li>
                 <a href="#" id="historyToggleBtn"><i class="fas fa-history"></i> Histórico</a>
                 <div id="historyPanel">
                     <!-- Chats will be loaded here -->
                 </div>
             </li>
-            <li><a href="#" id="settingsBtn"><i class="fas fa-cog"></i> Configurações</a></li>
         </ul>
     </nav>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -753,7 +848,7 @@
                 <span class="header-title">DancasMal IA</span>
             </div>
             <div class="header-right">
-                <!-- Ícones de informações ou outros podem ir aqui -->
+                <i class="fas fa-cog" id="headerSettingsBtn"></i> <!-- Botão de configurações fora da sidebar -->
             </div>
         </div>
 
@@ -789,6 +884,17 @@
         <span id="toastMessage"></span>
     </div>
 
+    <!-- Custom Confirmation Dialog -->
+    <div class="confirmation-dialog-overlay" id="confirmationDialogOverlay">
+        <div class="confirmation-dialog">
+            <p id="confirmationMessage">Tem certeza que deseja apagar todos os chats?</p>
+            <div class="dialog-buttons">
+                <button id="confirmYesBtn" class="confirm-btn">Sim</button>
+                <button id="confirmNoBtn">Não</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_KEY = "AIzaSyDZEbPed8MJYi2WRxVab4DGd2D6aNe5xgo"; // Sua chave de API
         const mainContainer = document.getElementById('mainContainer');
@@ -802,9 +908,10 @@
         const fileInput = document.getElementById('fileInput');
 
         const newChatBtn = document.getElementById('newChatBtn');
-        const historyToggleBtn = document.getElementById('historyToggleBtn'); // Botão para alternar o histórico
-        const historyPanel = document.getElementById('historyPanel'); // O painel de histórico
-        const settingsBtn = document.getElementById('settingsBtn');
+        const clearHistoryBtn = document.getElementById('clearHistoryBtn'); // Novo botão Limpar Histórico
+        const historyToggleBtn = document.getElementById('historyToggleBtn');
+        const historyPanel = document.getElementById('historyPanel');
+        const headerSettingsBtn = document.getElementById('headerSettingsBtn'); // Botão de configurações no header
         const attachmentBtn = document.getElementById('attachmentBtn');
         const creativeBtn = document.getElementById('creativeBtn');
         const micBtn = document.getElementById('micBtn');
@@ -813,12 +920,17 @@
         const customToast = document.getElementById('customToast');
         const toastMessageSpan = document.getElementById('toastMessage');
 
+        const confirmationDialogOverlay = document.getElementById('confirmationDialogOverlay');
+        const confirmationMessage = document.getElementById('confirmationMessage');
+        const confirmYesBtn = document.getElementById('confirmYesBtn');
+        const confirmNoBtn = document.getElementById('confirmNoBtn');
 
-        let allChats = []; // Array para armazenar todos os chats
-        let currentChatId = null; // ID do chat atual
-        let currentChatApiHistory = []; // Histórico para a API do Gemini
+
+        let allChats = [];
+        let currentChatId = null;
+        let currentChatApiHistory = [];
         let isChatActive = false;
-        let isRecording = false; // Estado do microfone
+        let isRecording = false;
 
         // --- Web Speech API ---
         let recognition;
@@ -889,14 +1001,39 @@
             }, duration);
         }
 
+        function showConfirmationDialog(message, onConfirm) {
+            confirmationMessage.textContent = message;
+            confirmationDialogOverlay.classList.add('show');
+
+            const handleYes = () => {
+                onConfirm(true);
+                hideConfirmationDialog();
+            };
+            const handleNo = () => {
+                onConfirm(false);
+                hideConfirmationDialog();
+            };
+
+            confirmYesBtn.onclick = handleYes;
+            confirmNoBtn.onclick = handleNo;
+
+            // Remove listeners after a single use to prevent multiple triggers
+            confirmYesBtn.removeEventListener('click', handleYes);
+            confirmNoBtn.removeEventListener('click', handleNo);
+        }
+
+        function hideConfirmationDialog() {
+            confirmationDialogOverlay.classList.remove('show');
+        }
+
+
         function toggleSidebar() {
             sidebar.classList.toggle('active');
             sidebarOverlay.classList.toggle('active');
             // Ao fechar a sidebar, garante que o painel de histórico também feche
             if (!sidebar.classList.contains('active')) {
                 historyPanel.classList.remove('active');
-                // Remove a classe 'active-sidebar-link' do botão de histórico
-                historyToggleBtn.classList.remove('active-sidebar-link');
+                historyToggleBtn.classList.remove('active-sidebar-link'); // Desmarca o link "Histórico"
             }
         }
 
@@ -945,6 +1082,7 @@
                 currentChatId = chatToLoad.id;
                 currentChatApiHistory = JSON.parse(JSON.stringify(chatToLoad.messages));
                 chatWindow.innerHTML = ''; // Limpa a janela do chat
+                // Renderiza as mensagens salvas
                 chatToLoad.messages.forEach(msg => {
                     if (msg.role === 'user') {
                         appendMessage(msg.parts[0].text, 'user', false); // false para não salvar novamente
@@ -989,10 +1127,15 @@
                 if (allChats.length > 0) {
                     // Carrega o chat mais recente por padrão ao iniciar
                     loadChat(allChats[0].id);
+                } else {
+                    // Se não há chats, inicializa um novo chat para a welcome screen
+                    currentChatId = generateUniqueId();
                 }
+            } else {
+                // Se não há chats salvos, inicializa um novo chat para a welcome screen
+                currentChatId = generateUniqueId();
             }
             renderHistoryPanel(); // Renderiza o histórico inicial
-            // Se nenhum chat for carregado, a welcome screen continua visível.
         }
 
         function newChatFunction() { // Renomeado para evitar conflito com newChatBtn
@@ -1009,11 +1152,30 @@
             renderHistoryPanel(); // Atualiza a exibição do histórico (para desmarcar o ativo)
         }
 
+        function clearAllHistory() {
+            showConfirmationDialog("Tem certeza que deseja apagar todos os chats?", (confirmed) => {
+                if (confirmed) {
+                    localStorage.removeItem('dancasmalChats');
+                    allChats = [];
+                    currentChatApiHistory = [];
+                    currentChatId = generateUniqueId(); // Novo ID para o chat limpo
+                    deactivateChatScreen(); // Volta para a tela de boas-vindas
+                    renderHistoryPanel(); // Atualiza para mostrar que está vazio
+                    showToast("Histórico de chats apagado com sucesso!", 2500);
+                } else {
+                    showToast("Operação cancelada.", 1500);
+                }
+                toggleSidebar(); // Fecha a sidebar após a ação
+            });
+        }
+
+
         // Event Listeners
         menuToggle.addEventListener('click', toggleSidebar);
         sidebarOverlay.addEventListener('click', toggleSidebar);
 
         newChatBtn.addEventListener('click', newChatFunction);
+        clearHistoryBtn.addEventListener('click', clearAllHistory); // Novo listener para Limpar Histórico
 
         historyToggleBtn.addEventListener('click', (event) => {
             event.preventDefault(); // Impede o link de navegar
@@ -1025,18 +1187,15 @@
                     link.classList.remove('active-sidebar-link');
                 }
             });
+            // Se o painel for aberto, garante que ele scrolle para o topo
+            if (historyPanel.classList.contains('active')) {
+                historyPanel.scrollTop = 0;
+            }
         });
 
-        settingsBtn.addEventListener('click', (event) => {
-            event.preventDefault();
+        // Listener para o botão de configurações no header
+        headerSettingsBtn.addEventListener('click', () => {
             showToast("Em breve, as configurações estarão disponíveis aqui!", 2500);
-            // Ao clicar em configurações, fecha o painel de histórico se estiver aberto
-            historyPanel.classList.remove('active');
-            historyToggleBtn.classList.remove('active-sidebar-link');
-
-            document.querySelectorAll('.sidebar-menu a').forEach(link => link.classList.remove('active-sidebar-link'));
-            settingsBtn.classList.add('active-sidebar-link');
-            toggleSidebar(); // Fecha a sidebar
         });
 
 
@@ -1085,7 +1244,7 @@
 
             if (!isChatActive) {
                 activateChatScreen();
-                // Se é a primeira mensagem de um novo chat, define o currentChatId
+                // Se é a primeira mensagem de um novo chat, e não tem ID, gera um novo
                 if (currentChatId === null) {
                     currentChatId = generateUniqueId();
                 }
@@ -1155,7 +1314,7 @@
             }
         }
 
-        function appendMessage(text, sender, save = true) {
+        function appendMessage(text, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', sender);
 
