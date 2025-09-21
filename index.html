@@ -26,21 +26,22 @@
             --record-red: #ff5252; /* Vermelho para gravação */
             --danger-red: #e74c3c; /* Vermelho para ações perigosas */
 
+            /* RGB para efeitos de sombra/hover (necessário para rgba) */
+            --primary-color-soft-rgb: 156, 102, 228;
+            --secondary-color-soft-rgb: 99, 164, 218;
+            --highlight-blue-rgb: 138, 180, 248;
+            --card-surface-rgb: 45, 45, 45;
+            --danger-red-rgb: 231, 76, 60;
+
             /* Scrollbar */
             --scroll-thumb: #616161;
             --scroll-track: #3A3A3A;
 
             /* Code block */
-            --code-bg: #232323; /* Mais escuro que o card surface */
+            --code-bg: #232323;
             --code-border: #4D4D4D;
             --copy-icon-color: var(--text-secondary);
             --copy-icon-hover: var(--text-primary);
-
-            /* RGB para efeitos de sombra/hover */
-            --primary-color-soft-rgb: 156, 102, 228;
-            --secondary-color-soft-rgb: 99, 164, 218;
-            --highlight-blue-rgb: 138, 180, 248;
-            --card-surface-rgb: 45, 45, 45; /* Adicionado para rgba no toast */
         }
 
         /* Correção para o bug mobile: garantir que html e body ocupem a altura total */
@@ -48,7 +49,6 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            /* Usar safe-area-inset diretamente no body para padding global */
             padding-bottom: env(safe-area-inset-bottom, 0);
             padding-top: env(safe-area-inset-top, 0);
             padding-left: env(safe-area-inset-left, 0);
@@ -62,7 +62,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100%; /* min-height 100% para o body */
+            min-height: 100%;
             overflow: hidden;
             position: relative;
         }
@@ -73,7 +73,6 @@
             border-radius: 12px;
             width: 90vw;
             max-width: 900px;
-            /* Altura ajustada para não ser afetada pelo safe-area-inset no body */
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -112,7 +111,7 @@
             gap: 15px;
         }
 
-        .header-left i, .header-right i { /* Ícone de configurações no header */
+        .header-left i, .header-right i {
             font-size: 1.5em;
             color: var(--text-secondary);
             cursor: pointer;
@@ -149,7 +148,6 @@
             flex-direction: column;
             padding: 20px 0;
             border-right: 1px solid var(--border-subtle);
-            /* Ajusta a altura da sidebar para safe-area-inset */
             height: calc(100% - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
             top: env(safe-area-inset-top, 0);
         }
@@ -176,7 +174,6 @@
             font-family: 'Montserrat', sans-serif;
             font-weight: 600;
             font-size: 1.5em;
-            color: var(--text-primary);
             margin: 0;
         }
 
@@ -201,6 +198,7 @@
             font-size: 1.05em;
             transition: background-color 0.2s ease, color 0.2s ease;
             border-left: 3px solid transparent;
+            position: relative; /* Para posicionar o ícone de lixeira do histórico */
         }
 
         .sidebar-menu a i {
@@ -215,16 +213,16 @@
             border-left-color: var(--primary-color-soft);
         }
 
-        /* Estilo específico para o botão de limpar histórico (lixeira) */
-        #clearHistoryBtn {
-            color: var(--danger-red); /* Cor vermelha para indicar ação de exclusão */
-        }
-        #clearHistoryBtn:hover {
-            background-color: rgba(var(--danger-red-rgb, 231, 76, 60), 0.1); /* Vermelho suave no hover */
-            border-left-color: var(--danger-red);
+        /* Ícone de lixeira ao lado do Histórico para Limpar Tudo */
+        #historyToggleBtn .clear-all-history-icon {
+            position: absolute;
+            right: 15px;
+            font-size: 1.1em;
             color: var(--danger-red);
+            transition: transform 0.2s ease;
         }
-        #clearHistoryBtn i {
+        #historyToggleBtn .clear-all-history-icon:hover {
+            transform: scale(1.1);
             color: var(--danger-red);
         }
 
@@ -247,40 +245,48 @@
 
         /* History Panel */
         #historyPanel {
-            max-height: 0; /* Começa escondido */
+            max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease-out; /* Animação suave */
-            background-color: rgba(var(--card-surface-rgb), 0.8); /* Fundo um pouco mais claro/transparente */
-            margin-top: -5px; /* Para se juntar ao item "Histórico" */
+            transition: max-height 0.4s ease-out;
+            background-color: rgba(var(--card-surface-rgb), 0.8);
+            margin-top: -5px;
             border-radius: 0 0 8px 8px;
             box-shadow: inset 0 3px 5px rgba(0,0,0,0.1);
             padding-bottom: 5px;
         }
 
         #historyPanel.active {
-            max-height: 300px; /* Altura máxima para mostrar o conteúdo */
+            max-height: 300px;
             overflow-y: auto;
             border-top: 1px solid var(--border-subtle);
         }
 
         .history-item {
-            display: block;
-            width: calc(100% - 20px); /* Ajusta para padding */
+            display: flex; /* Usar flex para alinhar o texto e o botão de delete */
+            justify-content: space-between; /* Espaço entre título e delete button */
+            align-items: center;
+            width: calc(100% - 40px); /* Ajusta para padding e delete icon */
             padding: 10px 20px;
-            margin: 5px auto; /* Centraliza */
+            margin: 5px auto;
             background-color: var(--input-bg-dark);
             border: 1px solid var(--border-subtle);
-            border-radius: 15px; /* Bordas arredondadas */
+            border-radius: 15px;
             color: var(--text-primary);
             text-align: left;
             font-size: 0.9em;
             cursor: pointer;
             transition: background-color 0.2s ease, border-color 0.2s ease;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .history-item-title { /* Novo span para o título do chat */
+            flex-grow: 1; /* Permite que o título ocupe o espaço */
             overflow: hidden;
             white-space: nowrap;
-            text-overflow: ellipsis; /* Corta texto longo com reticências */
+            text-overflow: ellipsis;
+            padding-right: 10px; /* Espaçamento antes do botão de delete */
         }
+
 
         .history-item:hover {
             background-color: #4A4A4A;
@@ -289,6 +295,23 @@
         .history-item.active-chat {
             border-color: var(--primary-color-soft);
             box-shadow: 0 0 0 2px rgba(var(--primary-color-soft-rgb), 0.3);
+        }
+
+        /* Botão de delete individual do histórico */
+        .history-item .delete-chat-icon {
+            background: none;
+            border: none;
+            color: var(--text-secondary); /* Cor neutra, mas pode ser vermelho suave */
+            font-size: 0.9em;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: color 0.2s ease, background-color 0.2s ease;
+            flex-shrink: 0; /* Impede que o ícone encolha */
+        }
+        .history-item .delete-chat-icon:hover {
+            color: var(--danger-red);
+            background-color: rgba(var(--danger-red-rgb), 0.1);
         }
 
         /* Welcome Screen */
@@ -653,12 +676,12 @@
             bottom: 100px; /* Ajuste para não ficar em cima do input */
             left: 50%;
             transform: translateX(-50%);
-            background-color: rgba(var(--card-surface-rgb), 0.9); /* Fundo escuro semitransparente */
+            background-color: rgba(var(--card-surface-rgb), 0.9);
             color: var(--text-primary);
             padding: 12px 20px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-            z-index: 101; /* Acima de tudo */
+            z-index: 101;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
@@ -671,11 +694,11 @@
         .custom-toast.show {
             opacity: 1;
             visibility: visible;
-            transform: translateX(-50%) translateY(-10px); /* Leve movimento para cima */
+            transform: translateX(-50%) translateY(-10px);
         }
 
         .custom-toast i {
-            color: var(--primary-color-soft); /* Ícone com cor bebê moderno */
+            color: var(--primary-color-soft);
         }
 
         /* Custom Confirmation Dialog (mini-modal) */
@@ -686,7 +709,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
-            z-index: 102; /* Acima do toast e sidebar */
+            z-index: 102;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -748,7 +771,7 @@
         }
 
         .confirmation-dialog .dialog-buttons button.confirm-btn {
-            background: linear-gradient(45deg, var(--danger-red), #ff7043); /* Gradiente para "Sim" */
+            background: linear-gradient(45deg, var(--danger-red), #ff7043);
             border-color: var(--danger-red);
             color: white;
         }
@@ -761,16 +784,19 @@
 
         /* Media Queries for Mobile Adjustments */
         @media (max-width: 768px) {
+            html, body {
+                padding-bottom: env(safe-area-inset-bottom, 0); /* Garante que o padding mobile safe area funcione */
+            }
             .container {
                 width: 100vw;
-                height: 100%; /* Fixa a altura do container para 100% da altura disponível no body */
+                height: 100%;
                 border-radius: 0;
             }
             .header {
                 border-radius: 0;
                 padding: 12px 15px;
             }
-            .header-left i, .header-right i { /* Ajuste para o ícone de configurações */
+            .header-left i, .header-right i {
                 font-size: 1.3em;
             }
             .header-title {
@@ -786,7 +812,6 @@
             }
             .input-area {
                 padding: 10px 15px;
-                /* Removido padding-bottom aqui, ele é tratado no body global agora */
             }
             .input-wrapper {
                 max-width: 90%;
@@ -810,8 +835,12 @@
                 width: 250px;
             }
             .custom-toast {
-                bottom: 80px; /* Ajuste para mobile */
-                width: calc(100% - 40px); /* Quase largura total */
+                bottom: calc(80px + env(safe-area-inset-bottom)); /* Ajuste para mobile e safe area */
+                width: calc(100% - 40px);
+            }
+            .confirmation-dialog {
+                max-width: calc(100% - 40px);
+                padding: 20px;
             }
         }
     </style>
@@ -828,9 +857,8 @@
         </div>
         <ul class="sidebar-menu">
             <li><a href="#" id="newChatBtn"><i class="fas fa-plus-circle"></i> Novo Chat</a></li>
-            <li><a href="#" id="clearHistoryBtn"><i class="fas fa-trash-alt"></i> Limpar Histórico</a></li> <!-- Opção "Preciosa" -->
             <li>
-                <a href="#" id="historyToggleBtn"><i class="fas fa-history"></i> Histórico</a>
+                <a href="#" id="historyToggleBtn"><i class="fas fa-history"></i> Histórico <i class="fas fa-trash-alt clear-all-history-icon"></i></a>
                 <div id="historyPanel">
                     <!-- Chats will be loaded here -->
                 </div>
@@ -908,10 +936,10 @@
         const fileInput = document.getElementById('fileInput');
 
         const newChatBtn = document.getElementById('newChatBtn');
-        const clearHistoryBtn = document.getElementById('clearHistoryBtn'); // Novo botão Limpar Histórico
         const historyToggleBtn = document.getElementById('historyToggleBtn');
+        const clearAllHistoryIcon = historyToggleBtn.querySelector('.clear-all-history-icon'); // Seleciona o ícone de lixeira
         const historyPanel = document.getElementById('historyPanel');
-        const headerSettingsBtn = document.getElementById('headerSettingsBtn'); // Botão de configurações no header
+        const headerSettingsBtn = document.getElementById('headerSettingsBtn');
         const attachmentBtn = document.getElementById('attachmentBtn');
         const creativeBtn = document.getElementById('creativeBtn');
         const micBtn = document.getElementById('micBtn');
@@ -1001,25 +1029,23 @@
             }, duration);
         }
 
-        function showConfirmationDialog(message, onConfirm) {
+        // Função para mostrar a caixa de diálogo de confirmação
+        function showConfirmationDialog(message, onConfirmCallback) {
             confirmationMessage.textContent = message;
             confirmationDialogOverlay.classList.add('show');
 
-            const handleYes = () => {
-                onConfirm(true);
+            // Limpa listeners anteriores para evitar múltiplos disparos
+            confirmYesBtn.onclick = null;
+            confirmNoBtn.onclick = null;
+
+            confirmYesBtn.onclick = () => {
+                onConfirmCallback(true);
                 hideConfirmationDialog();
             };
-            const handleNo = () => {
-                onConfirm(false);
+            confirmNoBtn.onclick = () => {
+                onConfirmCallback(false);
                 hideConfirmationDialog();
             };
-
-            confirmYesBtn.onclick = handleYes;
-            confirmNoBtn.onclick = handleNo;
-
-            // Remove listeners after a single use to prevent multiple triggers
-            confirmYesBtn.removeEventListener('click', handleYes);
-            confirmNoBtn.removeEventListener('click', handleNo);
         }
 
         function hideConfirmationDialog() {
@@ -1033,7 +1059,7 @@
             // Ao fechar a sidebar, garante que o painel de histórico também feche
             if (!sidebar.classList.contains('active')) {
                 historyPanel.classList.remove('active');
-                historyToggleBtn.classList.remove('active-sidebar-link'); // Desmarca o link "Histórico"
+                historyToggleBtn.classList.remove('active-sidebar-link');
             }
         }
 
@@ -1108,14 +1134,31 @@
                 historyPanel.appendChild(noHistory);
             } else {
                 allChats.forEach(chat => {
-                    const chatButton = document.createElement('button');
-                    chatButton.classList.add('history-item');
+                    const chatItemDiv = document.createElement('div');
+                    chatItemDiv.classList.add('history-item');
                     if (chat.id === currentChatId) {
-                        chatButton.classList.add('active-chat');
+                        chatItemDiv.classList.add('active-chat');
                     }
-                    chatButton.textContent = chat.title;
-                    chatButton.onclick = () => loadChat(chat.id);
-                    historyPanel.appendChild(chatButton);
+
+                    const chatTitleSpan = document.createElement('span');
+                    chatTitleSpan.classList.add('history-item-title');
+                    chatTitleSpan.textContent = chat.title;
+                    chatItemDiv.appendChild(chatTitleSpan);
+
+                    const deleteIconBtn = document.createElement('button');
+                    deleteIconBtn.classList.add('delete-chat-icon');
+                    deleteIconBtn.innerHTML = '<i class="fas fa-times"></i>'; // Ícone 'x' para deletar individualmente
+                    deleteIconBtn.title = `Apagar "${chat.title}"`;
+                    deleteIconBtn.onclick = (e) => {
+                        e.stopPropagation(); // Impede que o clique no ícone ative o clique do item pai
+                        confirmDeleteIndividualChat(chat.id, chat.title);
+                    };
+                    chatItemDiv.appendChild(deleteIconBtn);
+
+                    // Adiciona o listener para carregar o chat quando o item for clicado (mas não no ícone de delete)
+                    chatItemDiv.onclick = () => loadChat(chat.id);
+
+                    historyPanel.appendChild(chatItemDiv);
                 });
             }
         }
@@ -1125,47 +1168,64 @@
             if (savedChats) {
                 allChats = JSON.parse(savedChats);
                 if (allChats.length > 0) {
-                    // Carrega o chat mais recente por padrão ao iniciar
-                    loadChat(allChats[0].id);
+                    loadChat(allChats[0].id); // Carrega o chat mais recente por padrão
                 } else {
-                    // Se não há chats, inicializa um novo chat para a welcome screen
-                    currentChatId = generateUniqueId();
+                    currentChatId = generateUniqueId(); // Novo ID para um chat vazio
                 }
             } else {
-                // Se não há chats salvos, inicializa um novo chat para a welcome screen
-                currentChatId = generateUniqueId();
+                currentChatId = generateUniqueId(); // Novo ID se não há chats salvos
             }
-            renderHistoryPanel(); // Renderiza o histórico inicial
+            renderHistoryPanel();
         }
 
-        function newChatFunction() { // Renomeado para evitar conflito com newChatBtn
-            saveCurrentChat(); // Salva o chat atual antes de criar um novo
+        function newChatFunction() {
+            saveCurrentChat();
             mainContainer.classList.add('chat-reset-animation');
             setTimeout(() => {
                 chatWindow.innerHTML = '';
-                currentChatApiHistory = []; // Zera o histórico da API
-                currentChatId = generateUniqueId(); // Gera um novo ID para o chat vazio
-                deactivateChatScreen(); // Volta para a tela de boas-vindas
+                currentChatApiHistory = [];
+                currentChatId = generateUniqueId();
+                deactivateChatScreen();
                 mainContainer.classList.remove('chat-reset-animation');
+                renderHistoryPanel(); // Atualiza para desmarcar o chat ativo
             }, 300);
-            toggleSidebar(); // Fecha a sidebar
-            renderHistoryPanel(); // Atualiza a exibição do histórico (para desmarcar o ativo)
+            toggleSidebar();
         }
 
         function clearAllHistory() {
-            showConfirmationDialog("Tem certeza que deseja apagar todos os chats?", (confirmed) => {
+            showConfirmationDialog("Tem certeza que deseja apagar TODOS os chats?", (confirmed) => {
                 if (confirmed) {
                     localStorage.removeItem('dancasmalChats');
                     allChats = [];
                     currentChatApiHistory = [];
-                    currentChatId = generateUniqueId(); // Novo ID para o chat limpo
-                    deactivateChatScreen(); // Volta para a tela de boas-vindas
-                    renderHistoryPanel(); // Atualiza para mostrar que está vazio
+                    currentChatId = generateUniqueId();
+                    deactivateChatScreen();
+                    renderHistoryPanel();
                     showToast("Histórico de chats apagado com sucesso!", 2500);
                 } else {
-                    showToast("Operação cancelada.", 1500);
+                    showToast("Limpeza de histórico cancelada.", 1500);
                 }
-                toggleSidebar(); // Fecha a sidebar após a ação
+                toggleSidebar();
+            });
+        }
+
+        function confirmDeleteIndividualChat(chatIdToDelete, chatTitle) {
+            showConfirmationDialog(`Deseja apagar o chat "${chatTitle}"?`, (confirmed) => {
+                if (confirmed) {
+                    allChats = allChats.filter(chat => chat.id !== chatIdToDelete);
+                    localStorage.setItem('dancasmalChats', JSON.stringify(allChats));
+
+                    if (chatIdToDelete === currentChatId) {
+                        newChatFunction(); // Se o chat ativo foi apagado, inicia um novo
+                        showToast(`Chat "${chatTitle}" apagado. Novo chat iniciado.`, 3000);
+                    } else {
+                        renderHistoryPanel(); // Apenas atualiza a lista
+                        showToast(`Chat "${chatTitle}" apagado.`, 2500);
+                    }
+                } else {
+                    showToast("Exclusão de chat cancelada.", 1500);
+                }
+                // Não precisa fechar a sidebar aqui, pois newChatFunction ou renderHistoryPanel já o fazem
             });
         }
 
@@ -1175,25 +1235,33 @@
         sidebarOverlay.addEventListener('click', toggleSidebar);
 
         newChatBtn.addEventListener('click', newChatFunction);
-        clearHistoryBtn.addEventListener('click', clearAllHistory); // Novo listener para Limpar Histórico
 
+        // O ícone de lixeira dentro do botão de histórico agora lida com a função de apagar tudo
         historyToggleBtn.addEventListener('click', (event) => {
-            event.preventDefault(); // Impede o link de navegar
-            historyPanel.classList.toggle('active');
-            historyToggleBtn.classList.toggle('active-sidebar-link'); // Marca o link "Histórico"
-            // Garante que outros links da sidebar não tenham a classe ativa se o histórico abrir
-            document.querySelectorAll('.sidebar-menu a').forEach(link => {
-                if (link !== historyToggleBtn) {
-                    link.classList.remove('active-sidebar-link');
+            // Se o clique foi no ícone de lixeira, ele será tratado por clearAllHistoryIcon.onclick
+            // Caso contrário, abre/fecha o painel de histórico
+            if (!event.target.classList.contains('clear-all-history-icon') && !event.target.closest('.clear-all-history-icon')) {
+                event.preventDefault();
+                historyPanel.classList.toggle('active');
+                historyToggleBtn.classList.toggle('active-sidebar-link');
+                document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                    if (link !== historyToggleBtn) {
+                        link.classList.remove('active-sidebar-link');
+                    }
+                });
+                if (historyPanel.classList.contains('active')) {
+                    historyPanel.scrollTop = 0;
                 }
-            });
-            // Se o painel for aberto, garante que ele scrolle para o topo
-            if (historyPanel.classList.contains('active')) {
-                historyPanel.scrollTop = 0;
             }
         });
 
-        // Listener para o botão de configurações no header
+        clearAllHistoryIcon.addEventListener('click', (event) => {
+            event.stopPropagation(); // Impede que o clique no ícone também feche/abra o painel de histórico
+            clearAllHistory();
+        });
+
+
+        // Listener para o botão de configurações no header (agora está fora da sidebar)
         headerSettingsBtn.addEventListener('click', () => {
             showToast("Em breve, as configurações estarão disponíveis aqui!", 2500);
         });
@@ -1244,7 +1312,6 @@
 
             if (!isChatActive) {
                 activateChatScreen();
-                // Se é a primeira mensagem de um novo chat, e não tem ID, gera um novo
                 if (currentChatId === null) {
                     currentChatId = generateUniqueId();
                 }
@@ -1258,7 +1325,7 @@
                 role: "user",
                 parts: [{ text: messageText }]
             });
-            saveCurrentChat(); // Salva o chat após cada nova mensagem do usuário
+            saveCurrentChat();
 
             const loadingIndicator = showLoadingIndicator();
             sendButton.disabled = true;
@@ -1290,14 +1357,13 @@
                         role: "model",
                         parts: [{ text: aiResponse }]
                     });
-                    saveCurrentChat(); // Salva o chat após a resposta da IA
+                    saveCurrentChat();
                 } else if (data.promptFeedback && data.promptFeedback.safetyRatings) {
                     const safetyReasons = data.promptFeedback.safetyRatings
                         .filter(rating => rating.blocked)
                         .map(rating => rating.category.replace('HARM_CATEGORY_', '').replace('_', ' ').toLowerCase());
                     const blockedMessage = `Minha resposta foi bloqueada devido a políticas de segurança em relação a: ${safetyReasons.join(', ')}. Por favor, tente uma pergunta diferente.`;
                     appendMessage(blockedMessage, 'ai');
-                    // Não salva mensagens bloqueadas no histórico da API, mas a mensagem do usuário já foi salva
                 } else {
                     appendMessage("Desculpe, não consegui obter uma resposta. Tente novamente.", 'ai');
                     console.error("Erro na API Gemini:", data);
