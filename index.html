@@ -1535,7 +1535,8 @@
         let currentChatApiHistory = [];
         let isChatActive = false;
         let isRecording = false;
-        let attachedFiles = []; // AGORA É UM ARRAY para múltiplas imagens
+        // attachedFiles agora armazena objetos { id: string, file: File }
+        let attachedFiles = []; 
 
         // --- Web Speech API ---
         let recognition;
@@ -1893,7 +1894,7 @@
 
         // Event Listeners for Settings
         headerSettingsBtn.addEventListener('click', openSettingsModal);
-        closeSettingsBtn.addEventListener('click', closeSettingsModal);
+        closeSettingsBtn.addEventListener('click', closeSettingsBtn);
         settingsModalOverlay.addEventListener('click', (e) => {
             if (e.target === settingsModalOverlay) {
                 closeSettingsModal();
@@ -2042,32 +2043,45 @@
 
         // Funcionalidade de Anexo (File Input Listener)
         fileInput.addEventListener('change', async (event) => {
-            const files = Array.from(event.target.files);
-
-            if (files.length === 0) {
-                // Se nenhum arquivo foi selecionado (ex: cancelou o seletor)
-                return;
+            const selectedFiles = Array.from(event.target.files);
+            
+            if (selectedFiles.length === 0) {
+                return; // Nenhum arquivo selecionado
             }
 
-            // Filtra apenas imagens e aplica o limite
-            const imageFiles = files.filter(file => file.type.startsWith('image/')).slice(0, MAX_ATTACHMENTS);
+            let filesAddedThisRound = 0;
+            let skippedNonImages = 0;
+            let skippedDueToLimit = 0;
 
-            if (imageFiles.length === 0) {
-                showToast("Nenhum arquivo de imagem válido foi selecionado.", 3000);
-                return;
-            }
+            for (const file of selectedFiles) {
+                if (attachedFiles.length >= MAX_ATTACHMENTS) {
+                    skippedDueToLimit++;
+                    continue; // Pular arquivos se o limite já foi atingido
+                }
 
-            if (attachedFiles.length + imageFiles.length > MAX_ATTACHMENTS) {
-                showToast(`Você pode anexar no máximo ${MAX_ATTACHMENTS} imagens.`, 3000);
-                // Limita as novas imagens para não exceder o total
-                const remainingSlots = MAX_ATTACHMENTS - attachedFiles.length;
-                attachedFiles = attachedFiles.concat(imageFiles.slice(0, remainingSlots));
-            } else {
-                attachedFiles = attachedFiles.concat(imageFiles);
+                if (file.type.startsWith('image/')) {
+                    // Armazena um objeto com ID único e o objeto File
+                    attachedFiles.push({
+                        id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+                        file: file
+                    });
+                    filesAddedThisRound++;
+                } else {
+                    skippedNonImages++;
+                }
             }
             
-            await renderAttachedThumbnails();
-            showToast(`${imageFiles.length} imagem(ns) pronta(s) para enviar.`, 2500);
+            await renderAttachedThumbnails(); // Redesenha com todos os arquivos
+            
+            if (filesAddedThisRound > 0) {
+                showToast(`${filesAddedThisRound} imagem(ns) adicionada(s). Total: ${attachedFiles.length}.`, 2500);
+            } else if (skippedNonImages > 0 && attachedFiles.length < MAX_ATTACHMENTS) {
+                // Mensagem apenas se havia espaço e apenas não-imagens foram puladas
+                showToast("Nenhum arquivo de imagem válido foi adicionado.", 3000);
+            } else if (skippedDueToLimit > 0) {
+                showToast(`Limite de ${MAX_ATTACHMENTS} imagens atingido.`, 3000);
+            }
+            
             fileInput.value = ''; // Limpa o input para permitir selecionar os mesmos arquivos novamente
         });
 
@@ -2080,9 +2094,10 @@
                 return;
             }
 
-            // Processa as imagens sequencialmente
-            for (let i = 0; i < attachedFiles.length; i++) {
-                const file = attachedFiles[i];
+            for (const item of attachedFiles) { // Iterar sobre os objetos {id, file}
+                const file = item.file; // Pega o objeto File real
+                const id = item.id;    // Pega o ID único
+                
                 const reader = new FileReader();
                 const readerPromise = new Promise((resolve, reject) => {
                     reader.onload = (e) => resolve(e.target.result);
@@ -2096,9 +2111,10 @@
                     thumbnailItem.classList.add('thumbnail-item');
                     thumbnailItem.innerHTML = `
                         <img src="${dataUrl}" alt="Anexo">
-                        <button class="remove-thumbnail-btn" data-index="${i}" title="Remover"><i class="fas fa-times"></i></button>
+                        <button class="remove-thumbnail-btn" data-id="${id}" title="Remover"><i class="fas fa-times"></i></button>
                     `;
                     attachedThumbnailsContainer.appendChild(thumbnailItem);
+                    // O listener usa o ID único para remoção
                     thumbnailItem.querySelector('.remove-thumbnail-btn').addEventListener('click', removeThumbnail);
                 } catch (error) {
                     console.error("Erro ao ler arquivo para miniatura:", error);
@@ -2110,13 +2126,15 @@
             adjustTextareaHeight(); // Ajusta a altura se o anexo afetar o layout
         }
 
+        // Modificado para remover por ID único
         function removeThumbnail(event) {
-            const indexToRemove = parseInt(event.currentTarget.dataset.index);
-            attachedFiles.splice(indexToRemove, 1); // Remove do array
-            renderAttachedThumbnails(); // Redesenha as miniaturas
+            const idToRemove = event.currentTarget.dataset.id;
+            attachedFiles = attachedFiles.filter(item => item.id !== idToRemove); // Filtra pelo ID único
+            renderAttachedThumbnails(); // Redesenha as miniaturas após a remoção
             showToast("Anexo removido.", 1500);
         }
 
+        // Modificado para aceitar showToastMessage para controlar a exibição do toast
         function clearAttachedFiles(showToastMessage = false) {
             attachedFiles = [];
             attachedThumbnailsContainer.innerHTML = '';
@@ -2127,6 +2145,7 @@
             }
             adjustTextareaHeight(); // Ajusta a altura do textarea
         }
+
 
         // Criativo (Creative)
         creativeBtn.addEventListener('click', () => {
@@ -2188,7 +2207,8 @@
             }
 
             // Processa todas as imagens anexadas
-            for (const file of attachedFiles) {
+            for (const item of attachedFiles) { // Iterar sobre os objetos {id, file}
+                const file = item.file; // Pega o objeto File real
                 try {
                     const reader = new FileReader();
                     const readerPromise = new Promise((resolve, reject) => {
@@ -2197,7 +2217,7 @@
                         reader.readAsDataURL(file);
                     });
                     const base64Data = await readerPromise;
-                    const base64EncodedImage = base64Data.split(',')[1]; // Remove o prefixo "data:image/jpeg;base64,"
+                    const base64EncodedImage = base64Data.split(',')[1]; 
                     
                     userDisplayParts.push({
                         inlineData: {
@@ -2234,8 +2254,6 @@
             if (localStorage.getItem('saveHistory') !== 'false' && currentChatApiHistory.length > 0) {
                 saveCurrentChat();
             }
-            // Limpa os anexos após o envio, sem mostrar o toast
-            clearAttachedFiles(false); 
 
             const loadingIndicator = showLoadingIndicator();
             sendButton.disabled = true;
@@ -2266,10 +2284,10 @@
 
                 if (data.candidates && data.candidates.length > 0 && data.candidates[0].content && data.candidates[0].content.parts.length > 0) {
                     const aiResponseParts = data.candidates[0].content.parts;
-                    appendMessage(aiResponseParts, 'ai'); // Envia as partes para a função de exibição
+                    appendMessage(aiResponseParts, 'ai'); 
                     currentChatApiHistory.push({
                         role: "model",
-                        parts: aiResponseParts // Armazena as partes completas no histórico
+                        parts: aiResponseParts 
                     });
                     if (localStorage.getItem('saveHistory') !== 'false' && currentChatApiHistory.length > 0) {
                         saveCurrentChat();
@@ -2279,7 +2297,7 @@
                         .filter(rating => rating.blocked)
                         .map(rating => rating.category.replace('HARM_CATEGORY_', '').replace('_', ' ').toLowerCase());
                     const blockedMessage = `Minha resposta foi bloqueada devido a políticas de segurança em relação a: ${safetyReasons.join(', ')}. Por favor, tente uma pergunta diferente.`;
-                    appendMessage([{ text: blockedMessage }], 'ai'); // Passa como array de parts
+                    appendMessage([{ text: blockedMessage }], 'ai'); 
                 } else {
                     appendMessage([{ text: "Desculpe, não consegui obter uma resposta. Tente novamente." }], 'ai');
                     console.error("Erro na API Gemini:", data);
@@ -2287,11 +2305,12 @@
             } catch (error) {
                 console.error("Erro ao chamar a API Gemini:", error);
                 appendMessage([{ text: "Ocorreu um erro ao comunicar com a IA. Por favor, verifique sua chave de API e conexão." }], 'ai');
-                // Remove a última mensagem do histórico se o envio falhou para manter a consistência
                 if (currentChatApiHistory[currentChatApiHistory.length - 1].role === "user") {
                     currentChatApiHistory.pop();
                 }
             } finally {
+                // AGORA AQUI É O PONTO FINAL PARA LIMPAR OS ANEXOS
+                clearAttachedFiles(false); 
                 hideLoadingIndicator(loadingIndicator);
                 sendButton.disabled = false;
                 userInput.disabled = false;
@@ -2381,7 +2400,7 @@
             const loadingDiv = document.createElement('div');
             loadingDiv.classList.add('loading-indicator');
             loadingDiv.innerHTML = `
-                <span>O DancasMal IA está pensando</span><span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+                <span>O DancasMal IA está pensando</span><span class="loading-dots"><span>.</span><span>.</span><span>...</span></span>
             `;
             chatWindow.appendChild(loadingDiv);
             setTimeout(() => loadingDiv.classList.add('show'), 10);
@@ -2396,12 +2415,15 @@
         }
 
         function adjustTextareaHeight() {
-            userInput.style.height = 'auto';
-            userInput.style.height = userInput.scrollHeight + 'px';
-            // Garante que o container de miniaturas também seja considerado na altura total da área de input
-            if (attachedThumbnailsContainer.classList.contains('active')) {
-                userInput.style.height = (userInput.scrollHeight + attachedThumbnailsContainer.offsetHeight + 10) + 'px'; // +10 para margem/padding
+            userInput.style.height = 'auto'; // Reseta a altura para calcular o scrollHeight
+            let newHeight = userInput.scrollHeight;
+
+            // Se houver miniaturas ativas, adicione a altura delas
+            if (attachedThumbnailsContainer.classList.contains('active') && attachedThumbnailsContainer.offsetHeight > 0) {
+                newHeight += attachedThumbnailsContainer.offsetHeight + 10; // +10 para padding/gap
             }
+            
+            userInput.style.height = newHeight + 'px';
         }
 
         sendButton.addEventListener('click', sendMessage);
