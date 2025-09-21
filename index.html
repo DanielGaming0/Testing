@@ -820,7 +820,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
-            z-index: 103; /* Acima de tudo */
+            z-index: 103;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -944,6 +944,32 @@
             border-color: var(--highlight-blue);
         }
 
+        /* Theme Buttons specific styling */
+        .theme-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .theme-buttons button {
+            flex-grow: 1;
+            background-color: var(--input-bg-dark);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .theme-buttons button.active {
+            background-color: var(--primary-color-soft);
+            border-color: var(--primary-color-soft);
+            color: white;
+        }
+        .theme-buttons button.active:hover {
+            background-color: var(--primary-color-soft); /* Sem mudança no hover quando ativo */
+            opacity: 0.9;
+        }
+
         /* Toggle Switch Styling */
         .switch {
             position: relative;
@@ -999,6 +1025,14 @@
             font-size: 0.9em;
             color: var(--text-secondary);
             margin-bottom: 5px;
+        }
+        .settings-section.about a {
+            color: var(--highlight-blue);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .settings-section.about a:hover {
+            color: var(--primary-color-soft);
         }
 
         /* Media Queries for Mobile Adjustments */
@@ -1082,6 +1116,9 @@
             .setting-item select, .setting-item button {
                 width: 100%;
             }
+            .theme-buttons {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -1152,7 +1189,7 @@
         <span id="toastMessage"></span>
     </div>
 
-    <!-- Custom Confirmation Dialog -->
+    <!-- Custom Confirmation Dialog (Reutilizado para apagar todos e individual) -->
     <div class="confirmation-dialog-overlay" id="confirmationDialogOverlay">
         <div class="confirmation-dialog">
             <p id="confirmationMessage">Tem certeza que deseja apagar todos os chats?</p>
@@ -1254,7 +1291,7 @@
             <div class="settings-section about">
                 <h4><i class="fas fa-info-circle"></i> Sobre</h4>
                 <p>Versão: DancasMal IA 1.0.0</p>
-                <p>Desenvolvido por: [Carlos Daniel/DancasMal]</p>
+                <p>Desenvolvido por: [Seu Nome/Organização]</p>
                 <p><a href="#" onclick="showToast('Em breve, um formulário de feedback estará disponível!', 2500); return false;" style="color: var(--highlight-blue); text-decoration: none;">Dar Feedback</a></p>
             </div>
         </div>
@@ -1277,7 +1314,7 @@
         const historyToggleBtn = document.getElementById('historyToggleBtn');
         const clearAllHistoryIcon = historyToggleBtn.querySelector('.clear-all-history-icon');
         const historyPanel = document.getElementById('historyPanel');
-        const headerSettingsBtn = document.getElementById('headerSettingsBtn'); // Botão de configurações no header
+        const headerSettingsBtn = document.getElementById('headerSettingsBtn');
         const attachmentBtn = document.getElementById('attachmentBtn');
         const creativeBtn = document.getElementById('creativeBtn');
         const micBtn = document.getElementById('micBtn');
@@ -1432,11 +1469,16 @@
         }
 
         function saveCurrentChat() {
-            if (currentChatApiHistory.length === 0 && !currentChatId) return; // Não salva chats totalmente vazios ou sem ID
+            // AQUI ESTÁ A CORREÇÃO PRINCIPAL: Verifica se o salvamento está ativado
+            if (localStorage.getItem('saveHistory') === 'false') {
+                return; // Não salva se a opção estiver desativada
+            }
+
+            if (currentChatApiHistory.length === 0 && !currentChatId) return;
             
             const chatTitle = currentChatApiHistory.length > 0 
                 ? (currentChatApiHistory[0].parts[0].text.substring(0, 50) + (currentChatApiHistory[0].parts[0].text.length > 50 ? '...' : ''))
-                : "Novo Chat Vazio"; // Título padrão para chat vazio
+                : "Novo Chat Vazio";
             
             const newChat = {
                 id: currentChatId || generateUniqueId(),
@@ -1455,7 +1497,7 @@
         }
 
         function loadChat(chatId) {
-            saveCurrentChat();
+            saveCurrentChat(); // Salva o chat atual antes de carregar outro (se o salvamento estiver ativado)
             const chatToLoad = allChats.find(chat => chat.id === chatId);
             if (chatToLoad) {
                 currentChatId = chatToLoad.id;
@@ -1515,19 +1557,22 @@
         }
 
         function initializeApp() {
+            // Carrega tema
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.classList.toggle('light-mode', savedTheme === 'light');
+            updateThemeButtons(savedTheme);
 
+            // Carrega chats
             const savedChats = localStorage.getItem('dancasmalChats');
             if (savedChats) {
                 allChats = JSON.parse(savedChats);
                 if (allChats.length > 0) {
-                    loadChat(allChats[0].id);
+                    loadChat(allChats[0].id); // Carrega o chat mais recente por padrão
                 } else {
-                    currentChatId = generateUniqueId();
+                    currentChatId = generateUniqueId(); // Novo ID para um chat vazio
                 }
             } else {
-                currentChatId = generateUniqueId();
+                currentChatId = generateUniqueId(); // Novo ID se não há chats salvos
             }
             renderHistoryPanel();
             
@@ -1539,14 +1584,22 @@
             safetyLevelSelect.value = localStorage.getItem('safetyLevel') || 'default';
             micLangSelect.value = localStorage.getItem('micLanguage') || 'pt-BR';
             interimResultsToggle.checked = localStorage.getItem('interimResults') === 'true';
-            saveHistoryToggle.checked = localStorage.getItem('saveHistory') !== 'false'; // Default é true
             
-            // Atualiza os botões de tema
-            updateThemeButtons(savedTheme);
+            // Salvar Histórico: Por padrão, se não há valor, assume 'true'. Se for 'false', desmarca.
+            const savedHistorySetting = localStorage.getItem('saveHistory');
+            saveHistoryToggle.checked = (savedHistorySetting === null || savedHistorySetting === 'true'); 
+            // Garante que o estado seja salvo no local storage ao iniciar, se for o padrão.
+            if (savedHistorySetting === null) {
+                localStorage.setItem('saveHistory', 'true');
+            }
         }
 
         function newChatFunction() {
-            saveCurrentChat();
+            // Salva o chat atual se o salvamento estiver ativado
+            if (localStorage.getItem('saveHistory') !== 'false') {
+                saveCurrentChat(); 
+            }
+            
             mainContainer.classList.add('chat-reset-animation');
             setTimeout(() => {
                 chatWindow.innerHTML = '';
@@ -1572,7 +1625,7 @@
                 } else {
                     showToast("Limpeza de histórico cancelada.", 1500);
                 }
-                hideConfirmationDialog(); // Garante que a dialog feche
+                hideConfirmationDialog();
             });
         }
 
@@ -1592,7 +1645,7 @@
                 } else {
                     showToast("Exclusão de chat cancelada.", 1500);
                 }
-                hideConfirmationDialog(); // Garante que a dialog feche
+                hideConfirmationDialog();
             });
         }
 
@@ -1604,6 +1657,15 @@
             if (sidebar.classList.contains('active')) {
                 toggleSidebar();
             }
+            // Atualiza os estados dos inputs de configuração
+            fontSizeSelect.value = localStorage.getItem('fontSize') || 'medium';
+            aiStyleSelect.value = localStorage.getItem('aiStyle') || 'standard';
+            safetyLevelSelect.value = localStorage.getItem('safetyLevel') || 'default';
+            micLangSelect.value = localStorage.getItem('micLanguage') || 'pt-BR';
+            interimResultsToggle.checked = localStorage.getItem('interimResults') === 'true';
+            saveHistoryToggle.checked = localStorage.getItem('saveHistory') !== 'false'; // Lógica para o estado 'false'
+            
+            updateThemeButtons(localStorage.getItem('theme') || 'dark');
         }
 
         function closeSettingsModal() {
@@ -1627,7 +1689,6 @@
         // Event Listeners for Settings
         headerSettingsBtn.addEventListener('click', openSettingsModal);
         closeSettingsBtn.addEventListener('click', closeSettingsModal);
-        // Fechar modal ao clicar fora dele
         settingsModalOverlay.addEventListener('click', (e) => {
             if (e.target === settingsModalOverlay) {
                 closeSettingsModal();
@@ -1665,25 +1726,34 @@
         });
 
         micLangSelect.addEventListener('change', (e) => {
-            recognition.lang = e.target.value;
+            if (recognition) { // Garante que recognition existe
+                recognition.lang = e.target.value;
+            }
             localStorage.setItem('micLanguage', e.target.value);
             showToast(`Idioma do microfone alterado para ${e.target.value}.`, 1500);
         });
 
         interimResultsToggle.addEventListener('change', (e) => {
-            recognition.interimResults = e.target.checked;
+            if (recognition) { // Garante que recognition existe
+                recognition.interimResults = e.target.checked;
+            }
             localStorage.setItem('interimResults', e.target.checked);
             showToast(`Resultados provisórios do microfone ${e.target.checked ? 'ativados' : 'desativados'}.`, 1500);
         });
 
         saveHistoryToggle.addEventListener('change', (e) => {
-            localStorage.setItem('saveHistory', e.target.checked);
-            showToast(`Salvamento automático do histórico ${e.target.checked ? 'ativado' : 'desativado'}.`, 1500);
+            const isChecked = e.target.checked;
+            localStorage.setItem('saveHistory', isChecked);
+            if (!isChecked) {
+                showToast("Salvamento automático do histórico desativado. Novos chats não serão salvos.", 3000);
+            } else {
+                showToast("Salvamento automático do histórico ativado.", 1500);
+            }
         });
 
         exportHistoryBtn.addEventListener('click', () => {
             const chatsToExport = localStorage.getItem('dancasmalChats');
-            if (chatsToExport) {
+            if (chatsToExport && JSON.parse(chatsToExport).length > 0) {
                 const blob = new Blob([chatsToExport], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -1701,7 +1771,7 @@
 
         clearAllHistorySettingsBtn.addEventListener('click', () => {
             clearAllHistory(); // Reutiliza a função já existente para limpar tudo
-            closeSettingsModal(); // Fecha o modal após iniciar a confirmação
+            closeSettingsModal();
         });
 
         // --- Fim Settings Functionality ---
@@ -1713,10 +1783,7 @@
 
         newChatBtn.addEventListener('click', newChatFunction);
 
-        // O ícone de lixeira dentro do botão de histórico agora lida com a função de apagar tudo
         historyToggleBtn.addEventListener('click', (event) => {
-            // Se o clique foi no ícone de lixeira, ele será tratado por clearAllHistoryIcon.onclick
-            // Caso contrário, abre/fecha o painel de histórico
             if (!event.target.classList.contains('clear-all-history-icon') && !event.target.closest('.clear-all-history-icon')) {
                 event.preventDefault();
                 historyPanel.classList.toggle('active');
@@ -1796,11 +1863,10 @@
                 role: "user",
                 parts: [{ text: messageText }]
             });
-            // Salva o chat apenas se o 'saveHistory' estiver ativado nas configurações
+            // AQUI ESTÁ A CORREÇÃO: Salva o chat apenas se a opção estiver ativada
             if (localStorage.getItem('saveHistory') !== 'false') {
                 saveCurrentChat();
             }
-
 
             const loadingIndicator = showLoadingIndicator();
             sendButton.disabled = true;
@@ -1832,7 +1898,7 @@
                         role: "model",
                         parts: [{ text: aiResponse }]
                     });
-                    // Salva o chat apenas se o 'saveHistory' estiver ativado nas configurações
+                    // AQUI ESTÁ A CORREÇÃO: Salva o chat apenas se a opção estiver ativada
                     if (localStorage.getItem('saveHistory') !== 'false') {
                         saveCurrentChat();
                     }
