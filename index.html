@@ -33,15 +33,46 @@
             --card-surface-rgb: 45, 45, 45;
             --danger-red-rgb: 231, 76, 60;
 
-            /* Scrollbar */
-            --scroll-thumb: #616161;
-            --scroll-track: #3A3A3A;
+            /* Cores para Light Mode (definido globalmente para sobrescrever) */
+            --light-mode-background: #F0F2F5;
+            --light-mode-card-surface: #FFFFFF;
+            --light-mode-header-surface: #FFFFFF;
+            --light-mode-text-primary: #333333;
+            --light-mode-text-secondary: #666666;
+            --light-mode-border-subtle: #CCCCCC;
+            --light-mode-input-bg: #E0E0E0;
+            --light-mode-code-bg: #F5F5F5;
+            --light-mode-code-border: #E0E0E0;
+            --light-mode-scroll-thumb: #BBBBBB;
+            --light-mode-scroll-track: #EEEEEE;
+        }
 
-            /* Code block */
-            --code-bg: #232323;
-            --code-border: #4D4D4D;
-            --copy-icon-color: var(--text-secondary);
-            --copy-icon-hover: var(--text-primary);
+        /* Light Mode Overrides */
+        html.light-mode {
+            --background-deep-dark: var(--light-mode-background);
+            --card-surface: var(--light-mode-card-surface);
+            --header-surface: var(--light-mode-header-surface);
+            --text-primary: var(--light-mode-text-primary);
+            --text-secondary: var(--light-mode-text-secondary);
+            --border-subtle: var(--light-mode-border-subtle);
+            --input-bg-dark: var(--light-mode-input-bg);
+            --code-bg: var(--light-mode-code-bg);
+            --code-border: var(--light-mode-code-border);
+            --scroll-thumb: var(--light-mode-scroll-thumb);
+            --scroll-track: var(--light-mode-scroll-track);
+            --copy-icon-color: var(--light-mode-text-secondary);
+            --copy-icon-hover: var(--light-mode-text-primary);
+
+            /* Ajustar cores de gradiente para combinar no light mode, se necessário */
+            --primary-color-soft: #6A1B9A; /* Roxo mais escuro para contraste */
+            --secondary-color-color: #1976D2; /* Azul mais escuro */
+            --highlight-blue: #1E88E5; /* Azul vibrante */
+            --primary-color-soft-rgb: 106, 27, 154;
+            --secondary-color-soft-rgb: 25, 118, 210;
+            --highlight-blue-rgb: 30, 136, 229;
+            --record-red: #D32F2F; /* Vermelho mais escuro */
+            --danger-red: #D32F2F;
+            --danger-red-rgb: 211, 47, 47;
         }
 
         /* Correção para o bug mobile: garantir que html e body ocupem a altura total */
@@ -62,7 +93,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100%;
+            min-height: 100%; /* min-height 100% para o body */
             overflow: hidden;
             position: relative;
         }
@@ -198,7 +229,7 @@
             font-size: 1.05em;
             transition: background-color 0.2s ease, color 0.2s ease;
             border-left: 3px solid transparent;
-            position: relative; /* Para posicionar o ícone de lixeira do histórico */
+            position: relative;
         }
 
         .sidebar-menu a i {
@@ -262,10 +293,10 @@
         }
 
         .history-item {
-            display: flex; /* Usar flex para alinhar o texto e o botão de delete */
-            justify-content: space-between; /* Espaço entre título e delete button */
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            width: calc(100% - 40px); /* Ajusta para padding e delete icon */
+            width: calc(100% - 40px);
             padding: 10px 20px;
             margin: 5px auto;
             background-color: var(--input-bg-dark);
@@ -279,12 +310,12 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        .history-item-title { /* Novo span para o título do chat */
-            flex-grow: 1; /* Permite que o título ocupe o espaço */
+        .history-item-title {
+            flex-grow: 1;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            padding-right: 10px; /* Espaçamento antes do botão de delete */
+            padding-right: 10px;
         }
 
 
@@ -301,13 +332,13 @@
         .history-item .delete-chat-icon {
             background: none;
             border: none;
-            color: var(--text-secondary); /* Cor neutra, mas pode ser vermelho suave */
+            color: var(--text-secondary);
             font-size: 0.9em;
             cursor: pointer;
             padding: 5px;
             border-radius: 50%;
             transition: color 0.2s ease, background-color 0.2s ease;
-            flex-shrink: 0; /* Impede que o ícone encolha */
+            flex-shrink: 0;
         }
         .history-item .delete-chat-icon:hover {
             color: var(--danger-red);
@@ -496,7 +527,7 @@
         /* Mensagem de sucesso ao copiar */
         .copy-success {
             position: absolute;
-            bottom: 5px; /* Ajustado para ficar mais dentro da bolha da mensagem */
+            bottom: 5px;
             right: 5px;
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
@@ -673,7 +704,7 @@
         /* Custom Toast/Snackbar for temporary messages */
         .custom-toast {
             position: fixed;
-            bottom: 100px; /* Ajuste para não ficar em cima do input */
+            bottom: 100px;
             left: 50%;
             transform: translateX(-50%);
             background-color: rgba(var(--card-surface-rgb), 0.9);
@@ -781,11 +812,199 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
+        /* Settings Modal Specific Styles */
+        #settingsModalOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 103; /* Acima de tudo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        #settingsModalOverlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #settingsModalContent {
+            background-color: var(--card-surface);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            width: 90%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.95);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            border: 1px solid var(--border-subtle);
+        }
+
+        #settingsModalOverlay.show #settingsModalContent {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        #settingsModalContent .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            border-bottom: 1px solid var(--border-subtle);
+            background-color: var(--header-surface);
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        #settingsModalContent .settings-header h3 {
+            margin: 0;
+            font-size: 1.3em;
+            color: var(--text-primary);
+        }
+
+        #settingsModalContent .settings-header .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        #settingsModalContent .settings-header .close-btn:hover {
+            color: var(--danger-red);
+        }
+
+        .settings-section {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+            padding-bottom: 25px;
+        }
+
+        .settings-section h4 {
+            font-size: 1.1em;
+            color: var(--primary-color-soft);
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed rgba(var(--primary-color-soft-rgb), 0.3);
+            padding-bottom: 5px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        .setting-item label {
+            flex-grow: 1;
+            color: var(--text-primary);
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .setting-item label i {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+        }
+
+
+        .setting-item select,
+        .setting-item button {
+            background-color: var(--input-bg-dark);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .setting-item select:hover,
+        .setting-item button:hover {
+            background-color: #4A4A4A;
+            border-color: var(--highlight-blue);
+        }
+
+        /* Toggle Switch Styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 45px;
+            height: 25px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--text-secondary);
+            transition: .4s;
+            border-radius: 25px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 19px;
+            width: 19px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color-soft);
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--primary-color-soft);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(19px);
+        }
+
+        /* About Section */
+        .settings-section.about p {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
 
         /* Media Queries for Mobile Adjustments */
         @media (max-width: 768px) {
             html, body {
-                padding-bottom: env(safe-area-inset-bottom, 0); /* Garante que o padding mobile safe area funcione */
+                padding-bottom: env(safe-area-inset-bottom, 0);
             }
             .container {
                 width: 100vw;
@@ -835,12 +1054,33 @@
                 width: 250px;
             }
             .custom-toast {
-                bottom: calc(80px + env(safe-area-inset-bottom)); /* Ajuste para mobile e safe area */
+                bottom: calc(80px + env(safe-area-inset-bottom));
                 width: calc(100% - 40px);
             }
             .confirmation-dialog {
                 max-width: calc(100% - 40px);
                 padding: 20px;
+            }
+            #settingsModalContent {
+                width: 95%;
+                max-height: 90vh;
+            }
+            #settingsModalContent .settings-header {
+                padding: 12px 20px;
+            }
+            .settings-section {
+                padding: 15px 20px;
+            }
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 20px;
+            }
+            .setting-item label {
+                margin-bottom: 8px;
+            }
+            .setting-item select, .setting-item button {
+                width: 100%;
             }
         }
     </style>
@@ -923,6 +1163,104 @@
         </div>
     </div>
 
+    <!-- Settings Modal -->
+    <div class="confirmation-dialog-overlay" id="settingsModalOverlay">
+        <div id="settingsModalContent">
+            <div class="settings-header">
+                <h3><i class="fas fa-cog"></i> Configurações</h3>
+                <button class="close-btn" id="closeSettingsBtn"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="settings-section">
+                <h4><i class="fas fa-palette"></i> Aparência</h4>
+                <div class="setting-item">
+                    <label for="themeToggle"><i class="fas fa-lightbulb"></i> Tema</label>
+                    <div class="theme-buttons">
+                        <button id="darkModeBtn" class="active">Dark</button>
+                        <button id="lightModeBtn">Claro</button>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <label for="fontSizeSelect"><i class="fas fa-font"></i> Tamanho da Fonte do Chat</label>
+                    <select id="fontSizeSelect">
+                        <option value="small">Pequeno</option>
+                        <option value="medium" selected>Médio</option>
+                        <option value="large">Grande</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h4><i class="fas fa-robot"></i> Interação com a IA</h4>
+                <div class="setting-item">
+                    <label for="aiStyleSelect"><i class="fas fa-comment-dots"></i> Estilo de Resposta da IA</label>
+                    <select id="aiStyleSelect">
+                        <option value="standard" selected>Padrão</option>
+                        <option value="concise">Concisa</option>
+                        <option value="detailed">Detalhada</option>
+                        <option value="creative">Criativa</option>
+                        <option value="formal">Formal</option>
+                        <option value="casual">Casual</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label for="safetyLevelSelect"><i class="fas fa-shield-alt"></i> Nível de Segurança de Conteúdo</label>
+                    <select id="safetyLevelSelect">
+                        <option value="default" selected>Padrão</option>
+                        <option value="strict">Rigoroso</option>
+                        <option value="permissive">Permissivo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h4><i class="fas fa-microphone-alt"></i> Microfone</h4>
+                <div class="setting-item">
+                    <label for="micLangSelect"><i class="fas fa-language"></i> Idioma de Reconhecimento</label>
+                    <select id="micLangSelect">
+                        <option value="pt-BR" selected>Português (Brasil)</option>
+                        <option value="en-US">Inglês (EUA)</option>
+                        <option value="es-ES">Espanhol (Espanha)</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label for="interimResultsToggle"><i class="fas fa-pencil-alt"></i> Resultados Provisórios</label>
+                    <label class="switch">
+                        <input type="checkbox" id="interimResultsToggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h4><i class="fas fa-database"></i> Dados e Privacidade</h4>
+                <div class="setting-item">
+                    <label for="saveHistoryToggle"><i class="fas fa-save"></i> Salvar Histórico Automaticamente</label>
+                    <label class="switch">
+                        <input type="checkbox" id="saveHistoryToggle" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label><i class="fas fa-file-export"></i> Exportar Histórico de Chats</label>
+                    <button id="exportHistoryBtn"><i class="fas fa-download"></i> Exportar</button>
+                </div>
+                <div class="setting-item">
+                    <label><i class="fas fa-trash-alt"></i> Limpar Todo o Histórico</label>
+                    <button id="clearAllHistorySettingsBtn" style="background: linear-gradient(45deg, var(--danger-red), #ff7043);"><i class="fas fa-eraser"></i> Limpar Tudo</button>
+                </div>
+            </div>
+
+            <div class="settings-section about">
+                <h4><i class="fas fa-info-circle"></i> Sobre</h4>
+                <p>Versão: DancasMal IA 1.0.0</p>
+                <p>Desenvolvido por: [Carlos Daniel/DancasMal]</p>
+                <p><a href="#" onclick="showToast('Em breve, um formulário de feedback estará disponível!', 2500); return false;" style="color: var(--highlight-blue); text-decoration: none;">Dar Feedback</a></p>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         const API_KEY = "AIzaSyDZEbPed8MJYi2WRxVab4DGd2D6aNe5xgo"; // Sua chave de API
         const mainContainer = document.getElementById('mainContainer');
@@ -937,9 +1275,9 @@
 
         const newChatBtn = document.getElementById('newChatBtn');
         const historyToggleBtn = document.getElementById('historyToggleBtn');
-        const clearAllHistoryIcon = historyToggleBtn.querySelector('.clear-all-history-icon'); // Seleciona o ícone de lixeira
+        const clearAllHistoryIcon = historyToggleBtn.querySelector('.clear-all-history-icon');
         const historyPanel = document.getElementById('historyPanel');
-        const headerSettingsBtn = document.getElementById('headerSettingsBtn');
+        const headerSettingsBtn = document.getElementById('headerSettingsBtn'); // Botão de configurações no header
         const attachmentBtn = document.getElementById('attachmentBtn');
         const creativeBtn = document.getElementById('creativeBtn');
         const micBtn = document.getElementById('micBtn');
@@ -952,6 +1290,20 @@
         const confirmationMessage = document.getElementById('confirmationMessage');
         const confirmYesBtn = document.getElementById('confirmYesBtn');
         const confirmNoBtn = document.getElementById('confirmNoBtn');
+
+        // Configurações Modal Elements
+        const settingsModalOverlay = document.getElementById('settingsModalOverlay');
+        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        const darkModeBtn = document.getElementById('darkModeBtn');
+        const lightModeBtn = document.getElementById('lightModeBtn');
+        const fontSizeSelect = document.getElementById('fontSizeSelect');
+        const aiStyleSelect = document.getElementById('aiStyleSelect');
+        const safetyLevelSelect = document.getElementById('safetyLevelSelect');
+        const micLangSelect = document.getElementById('micLangSelect');
+        const interimResultsToggle = document.getElementById('interimResultsToggle');
+        const saveHistoryToggle = document.getElementById('saveHistoryToggle');
+        const exportHistoryBtn = document.getElementById('exportHistoryBtn');
+        const clearAllHistorySettingsBtn = document.getElementById('clearAllHistorySettingsBtn');
 
 
         let allChats = [];
@@ -966,9 +1318,9 @@
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
             recognition.continuous = false;
-            recognition.lang = 'pt-BR';
-            recognition.interimResults = false;
-
+            recognition.lang = localStorage.getItem('micLanguage') || 'pt-BR'; // Carrega idioma do local storage
+            recognition.interimResults = localStorage.getItem('interimResults') === 'true'; // Carrega interimResults
+            
             recognition.onstart = () => {
                 isRecording = true;
                 micBtn.classList.add('recording');
@@ -1029,12 +1381,11 @@
             }, duration);
         }
 
-        // Função para mostrar a caixa de diálogo de confirmação
+        // Função para mostrar a caixa de diálogo de confirmação (reutilizada para settings)
         function showConfirmationDialog(message, onConfirmCallback) {
             confirmationMessage.textContent = message;
             confirmationDialogOverlay.classList.add('show');
 
-            // Limpa listeners anteriores para evitar múltiplos disparos
             confirmYesBtn.onclick = null;
             confirmNoBtn.onclick = null;
 
@@ -1056,7 +1407,6 @@
         function toggleSidebar() {
             sidebar.classList.toggle('active');
             sidebarOverlay.classList.toggle('active');
-            // Ao fechar a sidebar, garante que o painel de histórico também feche
             if (!sidebar.classList.contains('active')) {
                 historyPanel.classList.remove('active');
                 historyToggleBtn.classList.remove('active-sidebar-link');
@@ -1082,49 +1432,51 @@
         }
 
         function saveCurrentChat() {
-            if (currentChatApiHistory.length === 0) return; // Não salva chats vazios
-
-            const chatTitle = currentChatApiHistory[0].parts[0].text.substring(0, 50) + (currentChatApiHistory[0].parts[0].text.length > 50 ? '...' : ''); // Primeiro user message como título
+            if (currentChatApiHistory.length === 0 && !currentChatId) return; // Não salva chats totalmente vazios ou sem ID
+            
+            const chatTitle = currentChatApiHistory.length > 0 
+                ? (currentChatApiHistory[0].parts[0].text.substring(0, 50) + (currentChatApiHistory[0].parts[0].text.length > 50 ? '...' : ''))
+                : "Novo Chat Vazio"; // Título padrão para chat vazio
+            
             const newChat = {
                 id: currentChatId || generateUniqueId(),
                 title: chatTitle,
-                messages: JSON.parse(JSON.stringify(currentChatApiHistory)) // Copia o histórico para evitar referência
+                messages: JSON.parse(JSON.stringify(currentChatApiHistory))
             };
 
             const existingIndex = allChats.findIndex(chat => chat.id === newChat.id);
             if (existingIndex !== -1) {
-                allChats[existingIndex] = newChat; // Atualiza chat existente
+                allChats[existingIndex] = newChat;
             } else {
-                allChats.unshift(newChat); // Adiciona o novo chat no início
+                allChats.unshift(newChat);
             }
             localStorage.setItem('dancasmalChats', JSON.stringify(allChats));
-            renderHistoryPanel(); // Atualiza a exibição do histórico
+            renderHistoryPanel();
         }
 
         function loadChat(chatId) {
-            saveCurrentChat(); // Salva o chat atual antes de carregar outro
+            saveCurrentChat();
             const chatToLoad = allChats.find(chat => chat.id === chatId);
             if (chatToLoad) {
                 currentChatId = chatToLoad.id;
                 currentChatApiHistory = JSON.parse(JSON.stringify(chatToLoad.messages));
-                chatWindow.innerHTML = ''; // Limpa a janela do chat
-                // Renderiza as mensagens salvas
+                chatWindow.innerHTML = '';
                 chatToLoad.messages.forEach(msg => {
                     if (msg.role === 'user') {
-                        appendMessage(msg.parts[0].text, 'user', false); // false para não salvar novamente
+                        appendMessage(msg.parts[0].text, 'user', false);
                     } else if (msg.role === 'model') {
-                        appendMessage(msg.parts[0].text, 'ai', false); // false para não salvar novamente
+                        appendMessage(msg.parts[0].text, 'ai', false);
                     }
                 });
                 activateChatScreen();
             }
-            toggleSidebar(); // Fecha a sidebar após carregar o chat
-            renderHistoryPanel(); // Atualiza a exibição (para marcar o ativo)
+            toggleSidebar();
+            renderHistoryPanel();
         }
 
 
         function renderHistoryPanel() {
-            historyPanel.innerHTML = ''; // Limpa o painel antes de renderizar
+            historyPanel.innerHTML = '';
             if (allChats.length === 0) {
                 const noHistory = document.createElement('p');
                 noHistory.textContent = "Nenhum chat salvo.";
@@ -1147,15 +1499,14 @@
 
                     const deleteIconBtn = document.createElement('button');
                     deleteIconBtn.classList.add('delete-chat-icon');
-                    deleteIconBtn.innerHTML = '<i class="fas fa-times"></i>'; // Ícone 'x' para deletar individualmente
+                    deleteIconBtn.innerHTML = '<i class="fas fa-times"></i>';
                     deleteIconBtn.title = `Apagar "${chat.title}"`;
                     deleteIconBtn.onclick = (e) => {
-                        e.stopPropagation(); // Impede que o clique no ícone ative o clique do item pai
+                        e.stopPropagation();
                         confirmDeleteIndividualChat(chat.id, chat.title);
                     };
                     chatItemDiv.appendChild(deleteIconBtn);
 
-                    // Adiciona o listener para carregar o chat quando o item for clicado (mas não no ícone de delete)
                     chatItemDiv.onclick = () => loadChat(chat.id);
 
                     historyPanel.appendChild(chatItemDiv);
@@ -1164,18 +1515,34 @@
         }
 
         function initializeApp() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.classList.toggle('light-mode', savedTheme === 'light');
+
             const savedChats = localStorage.getItem('dancasmalChats');
             if (savedChats) {
                 allChats = JSON.parse(savedChats);
                 if (allChats.length > 0) {
-                    loadChat(allChats[0].id); // Carrega o chat mais recente por padrão
+                    loadChat(allChats[0].id);
                 } else {
-                    currentChatId = generateUniqueId(); // Novo ID para um chat vazio
+                    currentChatId = generateUniqueId();
                 }
             } else {
-                currentChatId = generateUniqueId(); // Novo ID se não há chats salvos
+                currentChatId = generateUniqueId();
             }
             renderHistoryPanel();
+            
+            // Carrega outras configurações salvas
+            fontSizeSelect.value = localStorage.getItem('fontSize') || 'medium';
+            applyFontSize(fontSizeSelect.value);
+
+            aiStyleSelect.value = localStorage.getItem('aiStyle') || 'standard';
+            safetyLevelSelect.value = localStorage.getItem('safetyLevel') || 'default';
+            micLangSelect.value = localStorage.getItem('micLanguage') || 'pt-BR';
+            interimResultsToggle.checked = localStorage.getItem('interimResults') === 'true';
+            saveHistoryToggle.checked = localStorage.getItem('saveHistory') !== 'false'; // Default é true
+            
+            // Atualiza os botões de tema
+            updateThemeButtons(savedTheme);
         }
 
         function newChatFunction() {
@@ -1187,7 +1554,7 @@
                 currentChatId = generateUniqueId();
                 deactivateChatScreen();
                 mainContainer.classList.remove('chat-reset-animation');
-                renderHistoryPanel(); // Atualiza para desmarcar o chat ativo
+                renderHistoryPanel();
             }, 300);
             toggleSidebar();
         }
@@ -1205,7 +1572,7 @@
                 } else {
                     showToast("Limpeza de histórico cancelada.", 1500);
                 }
-                toggleSidebar();
+                hideConfirmationDialog(); // Garante que a dialog feche
             });
         }
 
@@ -1216,21 +1583,131 @@
                     localStorage.setItem('dancasmalChats', JSON.stringify(allChats));
 
                     if (chatIdToDelete === currentChatId) {
-                        newChatFunction(); // Se o chat ativo foi apagado, inicia um novo
+                        newChatFunction();
                         showToast(`Chat "${chatTitle}" apagado. Novo chat iniciado.`, 3000);
                     } else {
-                        renderHistoryPanel(); // Apenas atualiza a lista
+                        renderHistoryPanel();
                         showToast(`Chat "${chatTitle}" apagado.`, 2500);
                     }
                 } else {
                     showToast("Exclusão de chat cancelada.", 1500);
                 }
-                // Não precisa fechar a sidebar aqui, pois newChatFunction ou renderHistoryPanel já o fazem
+                hideConfirmationDialog(); // Garante que a dialog feche
             });
         }
 
+        // --- Settings Functionality ---
 
-        // Event Listeners
+        function openSettingsModal() {
+            settingsModalOverlay.classList.add('show');
+            // Fechar sidebar se estiver aberta
+            if (sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        }
+
+        function closeSettingsModal() {
+            settingsModalOverlay.classList.remove('show');
+        }
+
+        function applyFontSize(size) {
+            document.documentElement.style.fontSize = (size === 'small' ? '0.9em' : size === 'large' ? '1.1em' : '1em');
+        }
+
+        function updateThemeButtons(activeTheme) {
+            darkModeBtn.classList.remove('active');
+            lightModeBtn.classList.remove('active');
+            if (activeTheme === 'dark') {
+                darkModeBtn.classList.add('active');
+            } else {
+                lightModeBtn.classList.add('active');
+            }
+        }
+
+        // Event Listeners for Settings
+        headerSettingsBtn.addEventListener('click', openSettingsModal);
+        closeSettingsBtn.addEventListener('click', closeSettingsModal);
+        // Fechar modal ao clicar fora dele
+        settingsModalOverlay.addEventListener('click', (e) => {
+            if (e.target === settingsModalOverlay) {
+                closeSettingsModal();
+            }
+        });
+
+        darkModeBtn.addEventListener('click', () => {
+            document.documentElement.classList.remove('light-mode');
+            localStorage.setItem('theme', 'dark');
+            updateThemeButtons('dark');
+            showToast("Tema alterado para Dark.", 1500);
+        });
+        lightModeBtn.addEventListener('click', () => {
+            document.documentElement.classList.add('light-mode');
+            localStorage.setItem('theme', 'light');
+            updateThemeButtons('light');
+            showToast("Tema alterado para Claro.", 1500);
+        });
+
+        fontSizeSelect.addEventListener('change', (e) => {
+            const size = e.target.value;
+            applyFontSize(size);
+            localStorage.setItem('fontSize', size);
+            showToast(`Tamanho da fonte alterado para ${size}.`, 1500);
+        });
+
+        aiStyleSelect.addEventListener('change', (e) => {
+            localStorage.setItem('aiStyle', e.target.value);
+            showToast("Estilo de resposta da IA salvo.", 1500);
+        });
+
+        safetyLevelSelect.addEventListener('change', (e) => {
+            localStorage.setItem('safetyLevel', e.target.value);
+            showToast("Nível de segurança de conteúdo salvo.", 1500);
+        });
+
+        micLangSelect.addEventListener('change', (e) => {
+            recognition.lang = e.target.value;
+            localStorage.setItem('micLanguage', e.target.value);
+            showToast(`Idioma do microfone alterado para ${e.target.value}.`, 1500);
+        });
+
+        interimResultsToggle.addEventListener('change', (e) => {
+            recognition.interimResults = e.target.checked;
+            localStorage.setItem('interimResults', e.target.checked);
+            showToast(`Resultados provisórios do microfone ${e.target.checked ? 'ativados' : 'desativados'}.`, 1500);
+        });
+
+        saveHistoryToggle.addEventListener('change', (e) => {
+            localStorage.setItem('saveHistory', e.target.checked);
+            showToast(`Salvamento automático do histórico ${e.target.checked ? 'ativado' : 'desativado'}.`, 1500);
+        });
+
+        exportHistoryBtn.addEventListener('click', () => {
+            const chatsToExport = localStorage.getItem('dancasmalChats');
+            if (chatsToExport) {
+                const blob = new Blob([chatsToExport], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `dancasmal_ia_historico_${Date.now()}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast("Histórico exportado com sucesso!", 2500);
+            } else {
+                showToast("Nenhum histórico para exportar.", 2500);
+            }
+        });
+
+        clearAllHistorySettingsBtn.addEventListener('click', () => {
+            clearAllHistory(); // Reutiliza a função já existente para limpar tudo
+            closeSettingsModal(); // Fecha o modal após iniciar a confirmação
+        });
+
+        // --- Fim Settings Functionality ---
+
+
+        // Event Listeners Principais
         menuToggle.addEventListener('click', toggleSidebar);
         sidebarOverlay.addEventListener('click', toggleSidebar);
 
@@ -1256,14 +1733,8 @@
         });
 
         clearAllHistoryIcon.addEventListener('click', (event) => {
-            event.stopPropagation(); // Impede que o clique no ícone também feche/abra o painel de histórico
+            event.stopPropagation();
             clearAllHistory();
-        });
-
-
-        // Listener para o botão de configurações no header (agora está fora da sidebar)
-        headerSettingsBtn.addEventListener('click', () => {
-            showToast("Em breve, as configurações estarão disponíveis aqui!", 2500);
         });
 
 
@@ -1325,7 +1796,11 @@
                 role: "user",
                 parts: [{ text: messageText }]
             });
-            saveCurrentChat();
+            // Salva o chat apenas se o 'saveHistory' estiver ativado nas configurações
+            if (localStorage.getItem('saveHistory') !== 'false') {
+                saveCurrentChat();
+            }
+
 
             const loadingIndicator = showLoadingIndicator();
             sendButton.disabled = true;
@@ -1357,7 +1832,10 @@
                         role: "model",
                         parts: [{ text: aiResponse }]
                     });
-                    saveCurrentChat();
+                    // Salva o chat apenas se o 'saveHistory' estiver ativado nas configurações
+                    if (localStorage.getItem('saveHistory') !== 'false') {
+                        saveCurrentChat();
+                    }
                 } else if (data.promptFeedback && data.promptFeedback.safetyRatings) {
                     const safetyReasons = data.promptFeedback.safetyRatings
                         .filter(rating => rating.blocked)
